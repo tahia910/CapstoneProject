@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+    </android.support.design.widget.AppBarLayout>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="@string/home_github_recyclerview_title"
+        android:textColor="@color/color_white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:background="@color/colorPrimary"
+        android:elevation="4dp"
+        app:layout_constraintTop_toBottomOf="@+id/appbar"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/github_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_marginBottom="8dp"
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        android:scrollbarStyle="outsideOverlay"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="@string/home_meetup_recyclerview_title"
+        android:textColor="@color/color_white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:background="@color/colorPrimary"
+        android:elevation="4dp"
+        app:layout_constraintTop_toTopOf="@+id/guideline2"
+        tools:layout_editor_absoluteX="16dp" />
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintTop_toBottomOf="@+id/textView2">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/meetup_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:scrollbarStyle="outsideOverlay" />
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.4" />
+
+</android.support.constraint.ConstraintLayout>

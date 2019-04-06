@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home"
+            android:title="@string/home_title" />
+        <item
+            android:id="@+id/nav_bookmarks"
+            android:icon="@drawable/ic_bookmark"
+            android:title="@string/bookmarks_title" />
+        <item
+            android:id="@+id/nav_github"
+            android:icon="@drawable/ic_home"
+            android:title="@string/github_title" />
+        <item
+            android:id="@+id/nav_meetup"
+            android:icon="@drawable/ic_home"
+            android:title="@string/meetup_title" />
+    </group>
+
+</menu>

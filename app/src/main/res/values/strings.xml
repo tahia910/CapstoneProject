@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">DailyUpdate</string>
+    <string name="app_name">Daily Update</string>
+    <string name="home_title">Home</string>
+    <string name="bookmarks_title">Bookmarks</string>
+    <string name="github_title">GitHub</string>
+    <string name="meetup_title">Meetup</string>
+    <string name="home_github_recyclerview_title">Trending on GitHub</string>
+    <string name="home_meetup_recyclerview_title">Popular on Meetup</string>
 </resources>
