@@ -2,21 +2,19 @@ package com.example.dailyupdate;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
-import com.google.android.material.navigation.NavigationView;
-import androidx.core.app.ActivityCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.Places;
+import com.google.android.material.navigation.NavigationView;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -26,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout mDrawer;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.nav_view)
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,31 +39,27 @@ public class MainActivity extends AppCompatActivity {
         ab.setHomeAsUpIndicator(R.drawable.ic_menu);
         ab.setDisplayHomeAsUpEnabled(true);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         if (navigationView != null) {
             setupDrawerContent(navigationView);
         }
+        permissionCheck();
+    }
 
-        // Ask for location permission in order to display trending Meetup events near the user
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // The Meetup search default location will be Tokyo.
-            // Display a toast explaining the situation to user.
-            // Set up the meetup recycler view.
-        } else {
-            // Get the user location.
-
-            GoogleApiClient client = new GoogleApiClient.Builder(this)
-//                    .addConnectionCallbacks(this)
-//                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .addApi(Places.GEO_DATA_API)
-//                    .enableAutoManage(this, this)
-                    .build();
-
-
-            // Set up the meetup recycler view.
+    /**
+     * Ask for location permission in order to display trending Meetup events near the user
+     */
+    private void permissionCheck() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ActivityCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // The Meetup search default location will be Tokyo.
+                // Display a toast explaining the situation to user.
+                // Set up the meetup recycler view.
+            } else {
+                // Get the user location.
+                // Set up the meetup recycler view.
+            }
         }
-
     }
 
     @Override
