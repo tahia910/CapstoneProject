@@ -1,12 +1,17 @@
 package com.example.dailyupdate;
 
-import android.Manifest;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.appcompat.app.ActionBar;
@@ -18,6 +23,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+
 public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.drawer_layout)
@@ -26,6 +33,13 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     @BindView(R.id.nav_view)
     NavigationView navigationView;
+
+    public static final String TAG = MainActivity.class.getSimpleName();
+    private static final int PERMISSIONS_REQUEST_COARSE_LOCATION = 111;
+    private static final long LOCATION_UPDATE_INTERVAL = 24 * 60 * 60 * 1000; // 24 hours
+    private FusedLocationProviderClient mFusedLocationClient;
+    private Location mLocation;
+    private LocationSettingsRequest mLocationSettingsRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,22 +56,53 @@ public class MainActivity extends AppCompatActivity {
         if (navigationView != null) {
             setupDrawerContent(navigationView);
         }
-        permissionCheck();
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        checkPermission();
+        setLocation();
+        // Set up the meetup recycler view.
+    }
+
+    private void setLocation() {
+        if (ActivityCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            // Get the user location.
+            getLocation();
+        } else {
+            // The Meetup search default location will be Tokyo.
+            // Display a toast explaining the situation to user.
+            Toast.makeText(this, "The default location will be Tokyo", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @SuppressWarnings("MissingPermission")
+    private void getLocation() {
+        // Request city level accuracy
+        LocationRequest locationRequest =
+                new LocationRequest().setInterval(LOCATION_UPDATE_INTERVAL).setPriority(LocationRequest.PRIORITY_LOW_POWER);
+        LocationSettingsRequest.Builder builder =
+                new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
+        mLocationSettingsRequest = builder.build();
+
+        mFusedLocationClient.getLastLocation().addOnSuccessListener(this,
+                new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if (location != null) {
+                    // Do something with the location
+                }
+            }
+        });
     }
 
     /**
      * Ask for location permission in order to display trending Meetup events near the user
      */
-    private void permissionCheck() {
+    private void checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ActivityCompat.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // The Meetup search default location will be Tokyo.
-                // Display a toast explaining the situation to user.
-                // Set up the meetup recycler view.
-            } else {
-                // Get the user location.
-                // Set up the meetup recycler view.
+            if (ActivityCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(MainActivity.this,
+                        new String[]{ACCESS_COARSE_LOCATION}, PERMISSIONS_REQUEST_COARSE_LOCATION);
             }
         }
     }
