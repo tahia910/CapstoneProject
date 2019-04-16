@@ -1,4 +1,4 @@
-//package com.example.dailyupdate.di;
+//package com.example.dailyupdate;
 //
 //import android.app.Application;
 //
@@ -13,6 +13,7 @@
 //    @Override
 //    public void onCreate() {
 //        super.onCreate();
+//
 //        initializeApplication();
 //        component = createComponent();
 //    }

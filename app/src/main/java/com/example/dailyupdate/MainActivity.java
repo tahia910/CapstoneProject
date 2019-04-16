@@ -5,14 +5,22 @@ import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.dailyupdate.data.GitHubRepo;
+import com.example.dailyupdate.data.GitHubResponse;
+import com.example.dailyupdate.networking.GitHubService;
+import com.example.dailyupdate.networking.RetrofitClientInstance;
+import com.example.dailyupdate.ui.GitHubRepoAdapter;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.List;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,8 +28,13 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 
@@ -33,6 +46,10 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     @BindView(R.id.nav_view)
     NavigationView navigationView;
+    @BindView(R.id.github_recycler_view)
+    RecyclerView githubRecyclerView;
+    @BindView(R.id.github_spinner)
+    ProgressBar gitHubSpinner;
 
     public static final String TAG = MainActivity.class.getSimpleName();
     private static final int PERMISSIONS_REQUEST_COARSE_LOCATION = 111;
@@ -57,11 +74,38 @@ public class MainActivity extends AppCompatActivity {
             setupDrawerContent(navigationView);
         }
 
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        // Check if connected to internet
 
-        checkPermission();
-        setLocation();
-        // Set up the meetup recycler view.
+//        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+//
+//        checkPermission();
+//        setLocation();
+        // Set up the recycler views.
+
+        gitHubSpinner.setVisibility(View.VISIBLE);
+        githubRecyclerView.setLayoutManager(new LinearLayoutManager(this,
+                LinearLayoutManager.HORIZONTAL, false));
+
+        GitHubService service =
+                RetrofitClientInstance.getRetrofitInstance().create(GitHubService.class);
+        Call<GitHubResponse> repoListCall = service.getGitHubRepoList("android", "updated");
+        repoListCall.enqueue(new Callback<GitHubResponse>() {
+            @Override
+            public void onResponse(Call<GitHubResponse> call, Response<GitHubResponse> response) {
+                gitHubSpinner.setVisibility(View.GONE);
+                GitHubResponse gitHubResponse = response.body();
+                List<GitHubRepo> gitHubRepoList = gitHubResponse.getGitHubRepo();
+                GitHubRepoAdapter gitHubRepoAdapter = new GitHubRepoAdapter(MainActivity.this,
+                        gitHubRepoList);
+                githubRecyclerView.setAdapter(gitHubRepoAdapter);
+
+            }
+
+            @Override
+            public void onFailure(Call<GitHubResponse> call, Throwable t) {
+
+            }
+        });
     }
 
     private void setLocation() {

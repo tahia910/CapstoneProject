@@ -6,4 +6,11 @@
     <string name="meetup_title">Meetup</string>
     <string name="home_github_recyclerview_title">Trending on GitHub</string>
     <string name="home_meetup_recyclerview_title">Popular on Meetup</string>
+    <string name="tools_repository_title">Repository Title</string>
+    <string name="tools_repository_description">Description for the repository that might take two lines</string>
+    <string name="tools_repository_language">Language</string>
+    <string name="tools_repository_stars"># stars</string>
+    <string name="repository_no_description">(No description available.)</string>
+    <string name="repository_no_language">(Language unknown.)</string>
+    <string name="repository_stars_label"> stars</string>
 </resources>
