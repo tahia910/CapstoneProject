@@ -1,7 +1,8 @@
 package com.example.dailyupdate;
 
 import android.content.pm.PackageManager;
-import android.location.Location;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -11,17 +12,24 @@ import android.widget.Toast;
 
 import com.example.dailyupdate.data.GitHubRepo;
 import com.example.dailyupdate.data.GitHubResponse;
+import com.example.dailyupdate.data.MeetupGroup;
+import com.example.dailyupdate.networking.GitHubRetrofitInstance;
 import com.example.dailyupdate.networking.GitHubService;
-import com.example.dailyupdate.networking.RetrofitClientInstance;
+import com.example.dailyupdate.networking.MeetupRetrofitInstance;
+import com.example.dailyupdate.networking.MeetupService;
 import com.example.dailyupdate.ui.GitHubRepoAdapter;
+import com.example.dailyupdate.ui.MeetupGroupAdapter;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -50,13 +58,19 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView githubRecyclerView;
     @BindView(R.id.github_spinner)
     ProgressBar gitHubSpinner;
+    @BindView(R.id.meetup_recycler_view)
+    RecyclerView meetupRecyclerView;
 
     public static final String TAG = MainActivity.class.getSimpleName();
     private static final int PERMISSIONS_REQUEST_COARSE_LOCATION = 111;
     private static final long LOCATION_UPDATE_INTERVAL = 24 * 60 * 60 * 1000; // 24 hours
     private FusedLocationProviderClient mFusedLocationClient;
-    private Location mLocation;
-    private LocationSettingsRequest mLocationSettingsRequest;
+    private String gitHubDefaultSearchKeyword = "android";
+    private String gitHubDefaultSortOrder = "updated";
+    private String userLocation;
+    private int meetupGroupCategoryNumber = 34; // Category "Tech"
+    private int meetupGroupResponsePageNumber = 20;
+    private String MEETUP_API_KEY = "***";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,30 +79,31 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-
         final ActionBar ab = getSupportActionBar();
         ab.setHomeAsUpIndicator(R.drawable.ic_menu);
         ab.setDisplayHomeAsUpEnabled(true);
-
         if (navigationView != null) {
             setupDrawerContent(navigationView);
         }
 
-        // Check if connected to internet
-
-//        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-//
-//        checkPermission();
-//        setLocation();
         // Set up the recycler views.
-
         gitHubSpinner.setVisibility(View.VISIBLE);
         githubRecyclerView.setLayoutManager(new LinearLayoutManager(this,
                 LinearLayoutManager.HORIZONTAL, false));
+        meetupRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        //TODO: Check if connected to internet
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        checkPermission();
+
+        retrieveGithubRepo();
+    }
+
+    private void retrieveGithubRepo() {
         GitHubService service =
-                RetrofitClientInstance.getRetrofitInstance().create(GitHubService.class);
-        Call<GitHubResponse> repoListCall = service.getGitHubRepoList("android", "updated");
+                GitHubRetrofitInstance.getRetrofitInstance().create(GitHubService.class);
+        Call<GitHubResponse> repoListCall = service.getGitHubRepoList(gitHubDefaultSearchKeyword, gitHubDefaultSortOrder);
         repoListCall.enqueue(new Callback<GitHubResponse>() {
             @Override
             public void onResponse(Call<GitHubResponse> call, Response<GitHubResponse> response) {
@@ -98,43 +113,70 @@ public class MainActivity extends AppCompatActivity {
                 GitHubRepoAdapter gitHubRepoAdapter = new GitHubRepoAdapter(MainActivity.this,
                         gitHubRepoList);
                 githubRecyclerView.setAdapter(gitHubRepoAdapter);
-
             }
 
             @Override
             public void onFailure(Call<GitHubResponse> call, Throwable t) {
-
+                //TODO: handle failure
             }
         });
     }
 
-    private void setLocation() {
-        if (ActivityCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            // Get the user location.
-            getLocation();
-        } else {
-            // The Meetup search default location will be Tokyo.
-            // Display a toast explaining the situation to user.
-            Toast.makeText(this, "The default location will be Tokyo", Toast.LENGTH_LONG).show();
-        }
+    private void retrieveMeetupGroups() {
+        MeetupService meetupService =
+                MeetupRetrofitInstance.getMeetupRetrofitInstance().create(MeetupService.class);
+        Call<List<MeetupGroup>> meetupGroupCall = meetupService.getMeetupGroupList(MEETUP_API_KEY
+                , userLocation, meetupGroupCategoryNumber, meetupGroupResponsePageNumber);
+        meetupGroupCall.enqueue(new Callback<List<MeetupGroup>>() {
+            @Override
+            public void onResponse(Call<List<MeetupGroup>> call,
+                                   Response<List<MeetupGroup>> response) {
+                List<MeetupGroup> meetupGroupList = response.body();
+                MeetupGroupAdapter meetupGroupAdapter = new MeetupGroupAdapter(MainActivity.this,
+                        meetupGroupList);
+                meetupRecyclerView.setAdapter(meetupGroupAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<List<MeetupGroup>> call, Throwable t) {
+                //TODO: handle failure
+            }
+        });
     }
 
+
+    /**
+     * Request city level accuracy
+     **/
     @SuppressWarnings("MissingPermission")
     private void getLocation() {
-        // Request city level accuracy
-        LocationRequest locationRequest =
-                new LocationRequest().setInterval(LOCATION_UPDATE_INTERVAL).setPriority(LocationRequest.PRIORITY_LOW_POWER);
+        LocationRequest locationRequest = new LocationRequest()
+                .setInterval(LOCATION_UPDATE_INTERVAL)
+                .setPriority(LocationRequest.PRIORITY_LOW_POWER);
         LocationSettingsRequest.Builder builder =
                 new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
-        mLocationSettingsRequest = builder.build();
+        builder.setAlwaysShow(true);
 
-        mFusedLocationClient.getLastLocation().addOnSuccessListener(this,
-                new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                if (location != null) {
-                    // Do something with the location
+        mFusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
+            if (location != null) {
+                double currentLongitude = location.getLongitude();
+                double currentLatitude = location.getLatitude();
+                Geocoder gcd = new Geocoder(getApplicationContext(), Locale.getDefault());
+                try {
+                    List<Address> address = gcd.getFromLocation(currentLatitude, currentLongitude
+                            , 1);
+                    userLocation = address.get(0).getLocality();
+                    retrieveMeetupGroups();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+            } else {
+                Toast.makeText(this,
+                        "The location could not be retrieved. The default location will be " +
+                                "Tokyo.", Toast.LENGTH_LONG).show();
+                userLocation = "tokyo";
+                retrieveMeetupGroups();
             }
         });
     }
@@ -144,9 +186,37 @@ public class MainActivity extends AppCompatActivity {
      */
     private void checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // Ask permission
             if (ActivityCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(MainActivity.this,
                         new String[]{ACCESS_COARSE_LOCATION}, PERMISSIONS_REQUEST_COARSE_LOCATION);
+            } else {
+                getLocation();
+            }
+            //TODO : handle "never ask again" case
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == PERMISSIONS_REQUEST_COARSE_LOCATION) {
+            for (int i = 0; i < permissions.length; i++) {
+                String permission = permissions[i];
+                int grantResult = grantResults[i];
+
+                if (permission.equals(ACCESS_COARSE_LOCATION)) {
+                    if (grantResult == PackageManager.PERMISSION_GRANTED) {
+                        getLocation();
+                    } else {
+                        Toast.makeText(this, "The default location will be Tokyo.",
+                                Toast.LENGTH_LONG).show();
+                        userLocation = "tokyo";
+                        retrieveMeetupGroups();
+                    }
+                }
             }
         }
     }

@@ -25,9 +25,9 @@ public class GitHubRepoAdapter extends RecyclerView.Adapter<GitHubRepoAdapter.Gi
         void onItemClick(int position, View v);
     }
 
-    public void setOnItemClickListener(ClickListener clickListener) {
-        GitHubRepoAdapter.clickListener = clickListener;
-    }
+//    public void setOnItemClickListener(ClickListener clickListener) {
+//        GitHubRepoAdapter.clickListener = clickListener;
+//    }
 
     public GitHubRepoAdapter(Context context, List<GitHubRepo> gitHubRepoList) {
         this.context = context;
@@ -89,7 +89,7 @@ public class GitHubRepoAdapter extends RecyclerView.Adapter<GitHubRepoAdapter.Gi
             repoDescriptionTextView = (TextView) view.findViewById(R.id.textview_description);
             repoLanguage = (TextView) view.findViewById(R.id.textview_language);
             repoStars = (TextView) view.findViewById(R.id.textview_stars);
-            view.setOnClickListener(this);
+//            view.setOnClickListener(this);
         }
 
         @Override

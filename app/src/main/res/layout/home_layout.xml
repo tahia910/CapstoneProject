@@ -49,7 +49,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/github_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
+        android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:clipToPadding="false"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"

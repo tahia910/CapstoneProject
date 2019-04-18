@@ -12,5 +12,6 @@
     <string name="tools_repository_stars"># stars</string>
     <string name="repository_no_description">(No description available.)</string>
     <string name="repository_no_language">(Language unknown.)</string>
-    <string name="repository_stars_label"> stars</string>
+    <string name="repository_stars_label">\u0020stars</string>
+    <string name="meetupgroup_members_label">\u0020members</string>
 </resources>
