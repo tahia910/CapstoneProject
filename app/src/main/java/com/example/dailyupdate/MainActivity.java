@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
     private String userLocation;
     private int meetupGroupCategoryNumber = 34; // Category "Tech"
     private int meetupGroupResponsePageNumber = 20;
-    private String MEETUP_API_KEY = "***";
+    private String API_KEY = BuildConfig.MEETUP_API_KEY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
     private void retrieveMeetupGroups() {
         MeetupService meetupService =
                 MeetupRetrofitInstance.getMeetupRetrofitInstance().create(MeetupService.class);
-        Call<List<MeetupGroup>> meetupGroupCall = meetupService.getMeetupGroupList(MEETUP_API_KEY
+        Call<List<MeetupGroup>> meetupGroupCall = meetupService.getMeetupGroupList(API_KEY
                 , userLocation, meetupGroupCategoryNumber, meetupGroupResponsePageNumber);
         meetupGroupCall.enqueue(new Callback<List<MeetupGroup>>() {
             @Override
