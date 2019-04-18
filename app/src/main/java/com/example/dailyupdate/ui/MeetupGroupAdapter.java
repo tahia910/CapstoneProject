@@ -4,8 +4,10 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.dailyupdate.R;
 import com.example.dailyupdate.data.MeetupGroup;
 
@@ -41,6 +43,13 @@ public class MeetupGroupAdapter extends RecyclerView.Adapter<MeetupGroupAdapter.
         int groupMembers = meetupGroup.getGroupMembers();
         String groupMembersString =
                 String.valueOf(groupMembers) + context.getString(R.string.meetupgroup_members_label);
+
+        if (meetupGroup.getGroupPhoto() != null) {
+            String groupImageUrl = meetupGroup.getGroupPhoto().getGroupPhotoUrl();
+            Glide.with(viewHolder.groupImageView.getContext()).load(groupImageUrl).centerCrop().into(viewHolder.groupImageView);
+        }
+        // TODO: handle empty image
+
         viewHolder.groupTitleTextView.setText(groupTitle);
         viewHolder.groupMembersTextView.setText(groupMembersString);
     }
@@ -55,11 +64,13 @@ public class MeetupGroupAdapter extends RecyclerView.Adapter<MeetupGroupAdapter.
 
         private final TextView groupTitleTextView;
         private final TextView groupMembersTextView;
+        private final ImageView groupImageView;
 
         private MeetupGroupAdapterViewHolder(View view) {
             super(view);
             groupTitleTextView = (TextView) view.findViewById(R.id.textview_group_title);
             groupMembersTextView = (TextView) view.findViewById(R.id.textview_group_members);
+            groupImageView = (ImageView) view.findViewById(R.id.imageview);
         }
     }
 }

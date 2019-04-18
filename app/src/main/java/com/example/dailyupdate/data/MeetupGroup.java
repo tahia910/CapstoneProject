@@ -2,6 +2,8 @@ package com.example.dailyupdate.data;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class MeetupGroup {
 
     @SerializedName("id")
@@ -14,14 +16,17 @@ public class MeetupGroup {
     private String groupDescription;
     @SerializedName("members")
     private int groupMembers;
+    @SerializedName("group_photo")
+    private MeetupGroupImage groupPhoto;
 
     public MeetupGroup(int groupId, String groupName, String groupUrl, String groupDescription,
-                       int groupMembers) {
+                       int groupMembers, MeetupGroupImage groupPhoto) {
         this.groupId = groupId;
         this.groupName = groupName;
         this.groupUrl = groupUrl;
         this.groupDescription = groupDescription;
         this.groupMembers = groupMembers;
+        this.groupPhoto = groupPhoto;
     }
 
     public int getGroupId() {
@@ -42,5 +47,9 @@ public class MeetupGroup {
 
     public int getGroupMembers() {
         return groupMembers;
+    }
+
+    public MeetupGroupImage getGroupPhoto() {
+        return groupPhoto;
     }
 }

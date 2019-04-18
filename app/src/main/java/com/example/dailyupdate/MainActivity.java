@@ -36,6 +36,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
     private String gitHubDefaultSearchKeyword = "android";
     private String gitHubDefaultSortOrder = "updated";
     private String userLocation;
+    private String defaultLocation = "tokyo";
     private int meetupGroupCategoryNumber = 34; // Category "Tech"
     private int meetupGroupResponsePageNumber = 20;
     private String API_KEY = BuildConfig.MEETUP_API_KEY;
@@ -90,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         gitHubSpinner.setVisibility(View.VISIBLE);
         githubRecyclerView.setLayoutManager(new LinearLayoutManager(this,
                 LinearLayoutManager.HORIZONTAL, false));
-        meetupRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        meetupRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
         //TODO: Check if connected to internet
 
@@ -173,9 +175,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             } else {
                 Toast.makeText(this,
-                        "The location could not be retrieved. The default location will be " +
-                                "Tokyo.", Toast.LENGTH_LONG).show();
-                userLocation = "tokyo";
+                        R.string.location_not_retrieved, Toast.LENGTH_LONG).show();
+                userLocation = defaultLocation;
                 retrieveMeetupGroups();
             }
         });
@@ -211,9 +212,9 @@ public class MainActivity extends AppCompatActivity {
                     if (grantResult == PackageManager.PERMISSION_GRANTED) {
                         getLocation();
                     } else {
-                        Toast.makeText(this, "The default location will be Tokyo.",
+                        Toast.makeText(this, R.string.message_default_location,
                                 Toast.LENGTH_LONG).show();
-                        userLocation = "tokyo";
+                        userLocation = defaultLocation;
                         retrieveMeetupGroups();
                     }
                 }
