@@ -4,19 +4,29 @@
     <string name="bookmarks_title">Bookmarks</string>
     <string name="github_title">GitHub</string>
     <string name="meetup_title">Meetup</string>
+
     <string name="home_github_recyclerview_title">Trending on GitHub</string>
     <string name="home_meetup_recyclerview_title">Popular on Meetup</string>
+
     <string name="tools_repository_title">Repository Title</string>
     <string name="tools_repository_description">Description for the repository that might take two lines</string>
     <string name="tools_repository_language">Language</string>
     <string name="tools_repository_stars"># stars</string>
+    <string name="tools_group_members"># members</string>
+    <string name="tools_group_title">Group title</string>
+    <string name="tools_event_date">Saturday, March 30</string>
+    <string name="tools_event_title">Event title</string>
+    <string name="tools_event_time">10:00AM</string>
+    <string name="tools_event_status">Status</string>
+    <string name="tools_event_attendees"># members going</string>
+    <string name="content_description_group_image">Group image</string>
+    <string name="content_description_bookmark_icon">Bookmark icon</string>
+
     <string name="repository_no_description">(No description available.)</string>
     <string name="repository_no_language">(Language unknown.)</string>
     <string name="repository_stars_label">\u0020stars</string>
     <string name="meetupgroup_members_label">\u0020members</string>
-    <string name="content_description_group_image">Group image</string>
-    <string name="tools_group_members"># members</string>
-    <string name="tools_group_title">Group title</string>
+
     <string name="location_not_retrieved">The location could not be retrieved. The default location will be Tokyo.</string>
     <string name="message_default_location">The default location will be Tokyo.</string>
 </resources>

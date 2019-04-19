@@ -48,7 +48,7 @@ public class MeetupGroupAdapter extends RecyclerView.Adapter<MeetupGroupAdapter.
             String groupImageUrl = meetupGroup.getGroupPhoto().getGroupPhotoUrl();
             Glide.with(viewHolder.groupImageView.getContext()).load(groupImageUrl).centerCrop().into(viewHolder.groupImageView);
         }
-        // TODO: handle empty image
+        // TODO: handle empty image case
 
         viewHolder.groupTitleTextView.setText(groupTitle);
         viewHolder.groupMembersTextView.setText(groupMembersString);
@@ -70,7 +70,7 @@ public class MeetupGroupAdapter extends RecyclerView.Adapter<MeetupGroupAdapter.
             super(view);
             groupTitleTextView = (TextView) view.findViewById(R.id.textview_group_title);
             groupMembersTextView = (TextView) view.findViewById(R.id.textview_group_members);
-            groupImageView = (ImageView) view.findViewById(R.id.imageview);
+            groupImageView = (ImageView) view.findViewById(R.id.imageview_group_image);
         }
     }
 }
