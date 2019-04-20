@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
+    <!--<fragment-->
+        <!--android:id="@+id/meetup_main_fragment"-->
+        <!--android:name="com.example.dailyupdate.ui.fragment.MeetupMainFragment"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent" />-->
+
+    <!--<FrameLayout-->
+        <!--android:id="@+id/meetup_main_fragment_container"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent" />-->
+
     <include layout="@layout/meetup_main_layout" />
 
     <com.google.android.material.navigation.NavigationView

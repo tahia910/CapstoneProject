@@ -1,5 +1,6 @@
 package com.example.dailyupdate;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -17,8 +18,9 @@ import com.example.dailyupdate.networking.GitHubRetrofitInstance;
 import com.example.dailyupdate.networking.GitHubService;
 import com.example.dailyupdate.networking.MeetupRetrofitInstance;
 import com.example.dailyupdate.networking.MeetupService;
-import com.example.dailyupdate.ui.GitHubRepoAdapter;
-import com.example.dailyupdate.ui.MeetupGroupAdapter;
+import com.example.dailyupdate.ui.adapter.GitHubRepoAdapter;
+import com.example.dailyupdate.ui.adapter.MeetupGroupAdapter;
+import com.example.dailyupdate.ui.MeetupMainViewActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -80,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.home_drawer);
         ButterKnife.bind(this);
 
+        // Set up the toolbar and drawer
         setSupportActionBar(toolbar);
         final ActionBar ab = getSupportActionBar();
         ab.setHomeAsUpIndicator(R.drawable.ic_menu);
@@ -135,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
                                    Response<List<MeetupGroup>> response) {
                 List<MeetupGroup> meetupGroupList = response.body();
                 MeetupGroupAdapter meetupGroupAdapter = new MeetupGroupAdapter(MainActivity.this,
-                        meetupGroupList);
+                        meetupGroupList, 1);
                 meetupRecyclerView.setAdapter(meetupGroupAdapter);
             }
 
@@ -255,7 +258,9 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Github", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_meetup:
-                Toast.makeText(this, "Meetup", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity
+                        .this, MeetupMainViewActivity.class);
+                startActivity(intent);
                 break;
             default:
                 break;

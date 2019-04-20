@@ -29,4 +29,8 @@
 
     <string name="location_not_retrieved">The location could not be retrieved. The default location will be Tokyo.</string>
     <string name="message_default_location">The default location will be Tokyo.</string>
+
+    <string name="cancel_label">Cancel</string>
+    <string name="save_label">Save</string>
+    <string name="meetup_dialog_title">Event Search Options</string>
 </resources>

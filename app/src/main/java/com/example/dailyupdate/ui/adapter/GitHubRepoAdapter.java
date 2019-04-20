@@ -1,4 +1,4 @@
-package com.example.dailyupdate.ui;
+package com.example.dailyupdate.ui.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;

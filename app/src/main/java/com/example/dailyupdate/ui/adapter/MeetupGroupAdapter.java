@@ -1,4 +1,4 @@
-package com.example.dailyupdate.ui;
+package com.example.dailyupdate.ui.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -19,16 +19,24 @@ public class MeetupGroupAdapter extends RecyclerView.Adapter<MeetupGroupAdapter.
 
     private Context context;
     private final List<MeetupGroup> meetupGroupList;
+    private int layoutOption;
+    int layoutIdForListItem;
 
-    public MeetupGroupAdapter(Context context, List<MeetupGroup> meetupGroupList) {
+    public MeetupGroupAdapter(Context context, List<MeetupGroup> meetupGroupList,
+                              int layoutOption) {
         this.context = context;
         this.meetupGroupList = meetupGroupList;
+        this.layoutOption = layoutOption;
     }
 
     @Override
     public MeetupGroupAdapterViewHolder onCreateViewHolder(ViewGroup parent, int i) {
         context = parent.getContext();
-        int layoutIdForListItem = R.layout.home_meetupgroup_item;
+        if(layoutOption == 1){
+            layoutIdForListItem = R.layout.home_meetupgroup_item;
+        } else if (layoutOption == 2){
+            layoutIdForListItem = R.layout.meetup_main_group_item;
+        }
         LayoutInflater inflater = LayoutInflater.from(context);
 
         View view = inflater.inflate(layoutIdForListItem, parent, false);
