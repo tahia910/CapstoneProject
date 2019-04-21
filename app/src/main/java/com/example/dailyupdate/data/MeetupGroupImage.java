@@ -1,8 +1,11 @@
 package com.example.dailyupdate.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
-public class MeetupGroupImage {
+public class MeetupGroupImage implements Parcelable {
 
     @SerializedName("id")
     private int imageId;
@@ -14,6 +17,23 @@ public class MeetupGroupImage {
         this.groupPhotoUrl = groupPhotoUrl;
     }
 
+    private MeetupGroupImage(Parcel in) {
+        imageId = in.readInt();
+        groupPhotoUrl = in.readString();
+    }
+
+    public static final Creator<MeetupGroupImage> CREATOR = new Creator<MeetupGroupImage>() {
+        @Override
+        public MeetupGroupImage createFromParcel(Parcel in) {
+            return new MeetupGroupImage(in);
+        }
+
+        @Override
+        public MeetupGroupImage[] newArray(int size) {
+            return new MeetupGroupImage[size];
+        }
+    };
+
     public int getImageId() {
         return imageId;
     }
@@ -22,4 +42,14 @@ public class MeetupGroupImage {
         return groupPhotoUrl;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(imageId);
+        dest.writeString(groupPhotoUrl);
+    }
 }

@@ -1,10 +1,12 @@
 package com.example.dailyupdate.data;
 
+import android.annotation.SuppressLint;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
-public class MeetupGroup {
+public class MeetupGroup implements Parcelable {
 
     @SerializedName("id")
     private int groupId;
@@ -29,6 +31,28 @@ public class MeetupGroup {
         this.groupPhoto = groupPhoto;
     }
 
+    @SuppressLint("NewApi")
+    private MeetupGroup(Parcel in) {
+        groupId = in.readInt();
+        groupName = in.readString();
+        groupUrl = in.readString();
+        groupDescription = in.readString();
+        groupMembers = in.readInt();
+        groupPhoto = in.readTypedObject(MeetupGroupImage.CREATOR);
+    }
+
+    public static final Creator<MeetupGroup> CREATOR = new Creator<MeetupGroup>() {
+        @Override
+        public MeetupGroup createFromParcel(Parcel in) {
+            return new MeetupGroup(in);
+        }
+
+        @Override
+        public MeetupGroup[] newArray(int size) {
+            return new MeetupGroup[size];
+        }
+    };
+
     public int getGroupId() {
         return groupId;
     }
@@ -51,5 +75,20 @@ public class MeetupGroup {
 
     public MeetupGroupImage getGroupPhoto() {
         return groupPhoto;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(groupId);
+        dest.writeString(groupName);
+        dest.writeString(groupUrl);
+        dest.writeString(groupDescription);
+        dest.writeInt(groupMembers);
+        dest.writeValue(groupPhoto);
     }
 }

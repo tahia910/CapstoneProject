@@ -6,20 +6,22 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RadioButton;
 
-import com.example.dailyupdate.R;
-
 import androidx.fragment.app.DialogFragment;
+
+import com.example.dailyupdate.R;
 
 public class MeetupDialogFragment extends DialogFragment {
 
 
+    public static final String KEY_KEYWORD = "key_keyword";
+    public static final String KEY_SORT_BY = "key_sort_by";
+    public static final String KEY_LOCATION = "key_location";
     private String searchKeyword;
     private String sortBy;
     private String searchLocation;
@@ -64,9 +66,9 @@ public class MeetupDialogFragment extends DialogFragment {
                 getDialogValues();
 
                 Bundle bundle = new Bundle();
-                bundle.putString("KEYWORD", searchKeyword);
-                bundle.putString("SORT_BY", sortBy);
-                bundle.putString("LOCATION", searchLocation);
+                bundle.putString(KEY_KEYWORD, searchKeyword);
+                bundle.putString(KEY_SORT_BY, sortBy);
+                bundle.putString(KEY_LOCATION, searchLocation);
                 listener.onDialogPositiveClick(MeetupDialogFragment.this, bundle);
             }
         }).setNegativeButton(R.string.cancel_label, new DialogInterface.OnClickListener() {
@@ -101,6 +103,7 @@ public class MeetupDialogFragment extends DialogFragment {
         }
 
         // Get the location
+        // TODO: put current user location if known
         EditText locationInputEditText =
                 (EditText) dialog.findViewById(R.id.edittext_location_input);
         String locationInputValue = locationInputEditText.getText().toString();

@@ -11,26 +11,6 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.dailyupdate.data.GitHubRepo;
-import com.example.dailyupdate.data.GitHubResponse;
-import com.example.dailyupdate.data.MeetupGroup;
-import com.example.dailyupdate.networking.GitHubRetrofitInstance;
-import com.example.dailyupdate.networking.GitHubService;
-import com.example.dailyupdate.networking.MeetupRetrofitInstance;
-import com.example.dailyupdate.networking.MeetupService;
-import com.example.dailyupdate.ui.adapter.GitHubRepoAdapter;
-import com.example.dailyupdate.ui.adapter.MeetupGroupAdapter;
-import com.example.dailyupdate.ui.MeetupMainViewActivity;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.material.navigation.NavigationView;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -41,6 +21,27 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.dailyupdate.data.GitHubRepo;
+import com.example.dailyupdate.data.GitHubResponse;
+import com.example.dailyupdate.data.MeetupGroup;
+import com.example.dailyupdate.networking.GitHubRetrofitInstance;
+import com.example.dailyupdate.networking.GitHubService;
+import com.example.dailyupdate.networking.MeetupRetrofitInstance;
+import com.example.dailyupdate.networking.MeetupService;
+import com.example.dailyupdate.ui.MeetupMainViewActivity;
+import com.example.dailyupdate.ui.adapter.GitHubRepoAdapter;
+import com.example.dailyupdate.ui.adapter.MeetupGroupAdapter;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.material.navigation.NavigationView;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
@@ -108,7 +109,8 @@ public class MainActivity extends AppCompatActivity {
     private void retrieveGithubRepo() {
         GitHubService service =
                 GitHubRetrofitInstance.getRetrofitInstance().create(GitHubService.class);
-        Call<GitHubResponse> repoListCall = service.getGitHubRepoList(gitHubDefaultSearchKeyword, gitHubDefaultSortOrder);
+        Call<GitHubResponse> repoListCall = service.getGitHubRepoList(gitHubDefaultSearchKeyword,
+                gitHubDefaultSortOrder);
         repoListCall.enqueue(new Callback<GitHubResponse>() {
             @Override
             public void onResponse(Call<GitHubResponse> call, Response<GitHubResponse> response) {
@@ -130,8 +132,8 @@ public class MainActivity extends AppCompatActivity {
     private void retrieveMeetupGroups() {
         MeetupService meetupService =
                 MeetupRetrofitInstance.getMeetupRetrofitInstance().create(MeetupService.class);
-        Call<List<MeetupGroup>> meetupGroupCall = meetupService.getMeetupGroupList(API_KEY
-                , userLocation, meetupGroupCategoryNumber, meetupGroupResponsePageNumber);
+        Call<List<MeetupGroup>> meetupGroupCall = meetupService.getMeetupGroupList(API_KEY,
+                userLocation, meetupGroupCategoryNumber, meetupGroupResponsePageNumber);
         meetupGroupCall.enqueue(new Callback<List<MeetupGroup>>() {
             @Override
             public void onResponse(Call<List<MeetupGroup>> call,
@@ -155,9 +157,8 @@ public class MainActivity extends AppCompatActivity {
      **/
     @SuppressWarnings("MissingPermission")
     private void getLocation() {
-        LocationRequest locationRequest = new LocationRequest()
-                .setInterval(LOCATION_UPDATE_INTERVAL)
-                .setPriority(LocationRequest.PRIORITY_LOW_POWER);
+        LocationRequest locationRequest =
+                new LocationRequest().setInterval(LOCATION_UPDATE_INTERVAL).setPriority(LocationRequest.PRIORITY_LOW_POWER);
         LocationSettingsRequest.Builder builder =
                 new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
         builder.setAlwaysShow(true);
@@ -177,8 +178,7 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             } else {
-                Toast.makeText(this,
-                        R.string.location_not_retrieved, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.location_not_retrieved, Toast.LENGTH_LONG).show();
                 userLocation = defaultLocation;
                 retrieveMeetupGroups();
             }
