@@ -17,7 +17,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="BuildConfig.GEO_API_KEY" />
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,7 +27,12 @@
         <activity android:name=".ui.MainViewActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.dailyupdate.MainActivity" />
+                android:value="com.example.dailyupdate.ui.MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".ui.PreferenceActivity"
+            android:label="@string/preference_label">
         </activity>
     </application>
 

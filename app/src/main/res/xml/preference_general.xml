@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <SwitchPreferenceCompat
+        app:key="@string/pref_location_key"
+        app:title="@string/pref_location_label" />
+
+    <PreferenceCategory app:title="GitHub Search">
+        <EditTextPreference
+            app:dialogTitle="@string/pref_edittext_hint"
+            app:key="@string/pref_github_edittext_key"
+            app:summary="@string/pref_github_edittext_summary"
+            app:title="@string/pref_github_edittext_label" />
+
+        <ListPreference
+            app:defaultValue="@string/pref_github_sort_default"
+            app:entries="@array/pref_github_sort_labels"
+            app:entryValues="@array/pref_github_sort_values"
+            app:key="@string/pref_github_sort_key"
+            app:summary="@string/pref_github_sort_summary"
+            app:title="@string/pref_github_sort_label" />
+
+        <ListPreference
+            app:defaultValue="@string/pref_github_order_default"
+            app:entries="@array/pref_github_order_labels"
+            app:entryValues="@array/pref_github_order_values"
+            app:key="@string/pref_github_order_key"
+            app:summary="@string/pref_github_order_summary"
+            app:title="@string/pref_github_order_label" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Meetup Search">
+        <EditTextPreference
+            app:dialogTitle="@string/pref_edittext_hint"
+            app:key="@string/pref_meetup_edittext_key"
+            app:summary="@string/pref_meetup_edittext_summary"
+            app:title="@string/pref_meetup_edittext_label" />/>
+
+        <ListPreference
+            app:defaultValue="@string/pref_meetup_sort_default"
+            app:entries="@array/pref_meetup_sort_labels"
+            app:entryValues="@array/pref_meetup_sort_values"
+            app:key="@string/pref_meetup_sort_key"
+            app:summary="@string/pref_meetup_sort_summary"
+            app:title="@string/pref_meetup_sort_label" />
+    </PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>

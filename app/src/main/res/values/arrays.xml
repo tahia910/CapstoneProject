@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="pref_github_sort_values">
+        <item>@string/pref_github_sort_updated_value</item>
+        <item>@string/pref_github_sort_stars_value</item>
+        <item>@string/pref_github_sort_forks_value</item>
+    </string-array>
+    <string-array name="pref_github_sort_labels">
+        <item>@string/pref_github_sort_updated_label</item>
+        <item>@string/pref_github_sort_stars_label</item>
+        <item>@string/pref_github_sort_forks_label</item>
+    </string-array>
+
+    <string-array name="pref_github_order_values">
+        <item>@string/pref_github_order_descending_value</item>
+        <item>@string/pref_github_order_ascending_value</item>
+    </string-array>
+    <string-array name="pref_github_order_labels">
+        <item>@string/pref_github_order_descending_label</item>
+        <item>@string/pref_github_order_ascending_label</item>
+    </string-array>
+
+    <string-array name="pref_meetup_sort_values">
+        <item>@string/pref_meetup_sort_groups_value</item>
+        <item>@string/pref_meetup_sort_calendar_value</item>
+    </string-array>
+    <string-array name="pref_meetup_sort_labels">
+        <item>@string/pref_meetup_sort_groups_label</item>
+        <item>@string/pref_meetup_sort_calendar_label</item>
+    </string-array>
+</resources>

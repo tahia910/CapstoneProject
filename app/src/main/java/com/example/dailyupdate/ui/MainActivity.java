@@ -1,4 +1,4 @@
-package com.example.dailyupdate;
+package com.example.dailyupdate.ui;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -6,6 +6,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -22,13 +23,14 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.dailyupdate.BuildConfig;
+import com.example.dailyupdate.R;
 import com.example.dailyupdate.data.GitHubRepo;
 import com.example.dailyupdate.data.GitHubResponse;
 import com.example.dailyupdate.data.MeetupGroup;
 import com.example.dailyupdate.networking.RetrofitInstance;
 import com.example.dailyupdate.networking.GitHubService;
 import com.example.dailyupdate.networking.MeetupService;
-import com.example.dailyupdate.ui.MainViewActivity;
 import com.example.dailyupdate.ui.adapter.GitHubRepoAdapter;
 import com.example.dailyupdate.ui.adapter.MeetupGroupAdapter;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -226,11 +228,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.general_menu, menu);
+        return true;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 mDrawer.openDrawer(GravityCompat.START);
+                return true;
+            case R.id.action_pref:
+                Intent preferenceIntent = new Intent(this, PreferenceActivity.class);
+                startActivity(preferenceIntent);
                 return true;
         }
         return super.onOptionsItemSelected(item);

@@ -1,6 +1,9 @@
 package com.example.dailyupdate.ui;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -22,9 +25,9 @@ import com.google.android.material.navigation.NavigationView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.example.dailyupdate.MainActivity.GITHUB_MAIN_KEY;
-import static com.example.dailyupdate.MainActivity.MAIN_KEY;
-import static com.example.dailyupdate.MainActivity.MEETUP_MAIN_KEY;
+import static com.example.dailyupdate.ui.MainActivity.GITHUB_MAIN_KEY;
+import static com.example.dailyupdate.ui.MainActivity.MAIN_KEY;
+import static com.example.dailyupdate.ui.MainActivity.MEETUP_MAIN_KEY;
 
 public class MainViewActivity extends AppCompatActivity implements MeetupDialogFragment.MeetupDialogListener, GitHubDialogFragment.GitHubDialogListener {
 
@@ -61,16 +64,24 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
         }
         if (mainViewOption.equals(MEETUP_MAIN_KEY)) {
             ab.setTitle(getApplicationContext().getString(R.string.meetup_search_title));
-            DialogFragment meetupDialogFragment = new MeetupDialogFragment();
-            meetupDialogFragment.show(getSupportFragmentManager(), "meetup_search");
 
         } else if (mainViewOption.equals(GITHUB_MAIN_KEY)) {
             ab.setTitle(getApplicationContext().getString(R.string.github_search_title));
+        }
+
+        getDialog();
+    }
+
+    public void getDialog(){
+        if (mainViewOption.equals(MEETUP_MAIN_KEY)){
+            DialogFragment meetupDialogFragment = new MeetupDialogFragment();
+            meetupDialogFragment.show(getSupportFragmentManager(), "meetup_search");
+        } else if (mainViewOption.equals(GITHUB_MAIN_KEY)){
             DialogFragment gitHubDialogFragment = new GitHubDialogFragment();
             gitHubDialogFragment.show(getSupportFragmentManager(), "github_search");
         }
     }
-
+    
     @Override
     public void onDialogPositiveClick(DialogFragment dialog, Bundle bundle) {
         // TODO: check if bundle is empty?
@@ -96,10 +107,23 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search_menu, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
+            case R.id.home:
                 mDrawer.openDrawer(GravityCompat.START);
+                return true;
+            case R.id.action_search:
+                getDialog();
+                return true;
+            case R.id.action_pref:
+                Intent preferenceIntent = new Intent(this, PreferenceActivity.class);
+                startActivity(preferenceIntent);
                 return true;
         }
         return super.onOptionsItemSelected(item);

@@ -16,7 +16,7 @@
         android:gravity="center_horizontal"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
-        android:text="Repository Search options"
+        android:text="@string/github_dialog_title"
         android:textAllCaps="true"
         android:textColor="@color/color_white"
         android:textSize="18sp"
@@ -39,7 +39,7 @@
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:gravity="center_vertical"
-        android:text="Keywords: "
+        android:text="@string/dialog_keyword_label"
         android:textColor="@color/colorPrimary"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/view2"
@@ -51,8 +51,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:autofillHints="Input keywords"
-        android:hint="Input keywords"
+        android:autofillHints="@string/dialog_keyword_hint"
+        android:hint="@string/dialog_keyword_hint"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline"
@@ -69,31 +69,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edittext_keywords_input" />
 
-    <!--<TextView-->
-        <!--android:id="@+id/textview_language_label"-->
-        <!--android:layout_width="74dp"-->
-        <!--android:layout_height="0dp"-->
-        <!--android:layout_marginStart="8dp"-->
-        <!--android:gravity="center_vertical"-->
-        <!--android:text="Language"-->
-        <!--android:textColor="@color/colorPrimary"-->
-        <!--android:textSize="16sp"-->
-        <!--app:layout_constraintBottom_toTopOf="@+id/view3"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toBottomOf="@+id/view2" />-->
-
-    <!--<EditText-->
-        <!--android:id="@+id/edittext_language_input"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginEnd="8dp"-->
-        <!--android:autofillHints="Input language"-->
-        <!--android:hint="Input language"-->
-        <!--android:inputType="text"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintStart_toStartOf="@+id/guideline"-->
-        <!--app:layout_constraintTop_toBottomOf="@+id/view2" />-->
-
     <View
         android:id="@+id/view3"
         android:layout_width="match_parent"
@@ -109,7 +84,7 @@
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:gravity="center_vertical"
-        android:text="Sort by: "
+        android:text="@string/dialog_sort_label"
         android:textColor="@color/colorPrimary"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/view4"
@@ -131,21 +106,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="Updated"
+            android:text="@string/dialog_sort_updated_label"
             android:textColor="@color/colorPrimary" />
 
         <RadioButton
             android:id="@+id/sortby_stars"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Stars"
+            android:text="@string/dialog_sort_stars_label"
             android:textColor="@color/colorPrimary" />
 
         <RadioButton
             android:id="@+id/sortby_forks"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Forks"
+            android:text="@string/dialog_sort_forks_label"
             android:textColor="@color/colorPrimary" />
     </RadioGroup>
 
@@ -164,7 +139,7 @@
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:gravity="center_vertical"
-        android:text="Order: "
+        android:text="@string/dialog_order_label"
         android:textColor="@color/colorPrimary"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/view5"
@@ -186,14 +161,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="Descending"
+            android:text="@string/dialog_order_descending_label"
             android:textColor="@color/colorPrimary" />
 
         <RadioButton
             android:id="@+id/order_ascending_option"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ascending"
+            android:text="@string/dialog_order_ascending_label"
             android:textColor="@color/colorPrimary" />
 
     </RadioGroup>

@@ -7,6 +7,32 @@
 
     <string name="home_github_recyclerview_title">Trending on GitHub</string>
     <string name="home_meetup_recyclerview_title">Popular on Meetup</string>
+    <string name="meetup_search_title">Meetup Search</string>
+    <string name="github_search_title">GitHub Search</string>
+    <string name="search_label">Search</string>
+    <string name="preference_label">Search Preferences</string>
+
+
+    <!-- Strings for the Search Dialog -->
+    <string name="meetup_dialog_title">Event Search Options</string>
+    <string name="github_dialog_title">Repository Search Options</string>
+    <string name="cancel_label">Cancel</string>
+    <string name="save_label">Save</string>
+    <string name="dialog_keyword_label">Keyword(s):</string>
+    <string name="dialog_keyword_hint">Input keywords</string>
+    <string name="dialog_sort_label">Sort by:</string>
+    <string name="dialog_sort_updated_label">Updated</string>
+    <string name="dialog_sort_stars_label">Stars</string>
+    <string name="dialog_sort_forks_label">Forks</string>
+    <string name="dialog_sort_groups_label">Groups</string>
+    <string name="dialog_sort_calendar_label">Calendar</string>
+    <string name="dialog_order_label">Order:</string>
+    <string name="dialog_order_descending_label">Descending</string>
+    <string name="dialog_order_ascending_label">Ascending</string>
+    <string name="dialog_location_label">Location</string>
+    <string name="dialog_location_hint">Input location</string>
+    <string name="dialog_location_explanation">(If empty, current location will be used.)</string>
+
 
     <string name="tools_repository_title">Repository Title</string>
     <string name="tools_repository_description">Description for the repository that might take two lines</string>
@@ -30,9 +56,51 @@
     <string name="location_not_retrieved">The location could not be retrieved. The default location will be Tokyo.</string>
     <string name="message_default_location">The default location will be Tokyo.</string>
 
-    <string name="cancel_label">Cancel</string>
-    <string name="save_label">Save</string>
-    <string name="meetup_dialog_title">Event Search Options</string>
-    <string name="meetup_search_title">Meetup Search</string>
-    <string name="github_search_title">GitHub Search</string>
+
+    <!-- Strings for the Preferences -->
+
+    <string name="pref_edittext_hint">Please enter your topics of interest</string>
+    <!-- Location preference-->
+    <string name="pref_location_label">Allow app to access the device location</string>
+    <string name="pref_location_key">location</string>
+    <!-- GitHub repository keyword search EditText -->
+    <string name="pref_github_edittext_label">GitHub Search Keyword(s)</string>
+    <string name="pref_github_edittext_key" translatable="false">github-search-keyword</string>
+    <string name="pref_github_edittext_summary">Update the repository search
+        keywords</string>
+    <!-- GitHub repository sorting preference -->
+    <string name="pref_github_sort_label">Sort By</string>
+    <string name="pref_github_sort_summary">Modify the repository sorting</string>
+    <string name="pref_github_sort_key" translatable="false">sort-by</string>
+    <string name="pref_github_sort_default" translatable="false">@string/pref_github_sort_updated_value</string>
+    <string name="pref_github_sort_updated_label">Last updated</string>
+    <string name="pref_github_sort_updated_value" translatable="false">updated</string>
+    <string name="pref_github_sort_stars_label">Stars count</string>
+    <string name="pref_github_sort_stars_value" translatable="false">stars</string>
+    <string name="pref_github_sort_forks_label">Forks count</string>
+    <string name="pref_github_sort_forks_value" translatable="false">forks</string>
+    <!-- GitHub repository order preference -->
+    <string name="pref_github_order_label">Order</string>
+    <string name="pref_github_order_summary">Modify the repository display order</string>
+    <string name="pref_github_order_key" translatable="false">order</string>
+    <string name="pref_github_order_default" translatable="false">@string/pref_github_order_descending_value</string>
+    <string name="pref_github_order_descending_label">Descending</string>
+    <string name="pref_github_order_descending_value" translatable="false">descending</string>
+    <string name="pref_github_order_ascending_label">Ascending</string>
+    <string name="pref_github_order_ascending_value" translatable="false">ascending</string>
+    <!-- Meetup events/groups keyword search EditText -->
+    <string name="pref_meetup_edittext_label">Meetup Search Keyword(s)</string>
+    <string name="pref_meetup_edittext_key" translatable="false">meetup-search-keyword</string>
+    <string name="pref_meetup_edittext_summary">Update the Meetup search
+        keywords</string>
+    <!-- Meetup events/groups sorting preference -->
+    <string name="pref_meetup_sort_label">Sort By</string>
+    <string name="pref_meetup_sort_summary">Modify the event or group sorting</string>
+    <string name="pref_meetup_sort_key" translatable="false">sort-by</string>
+    <string name="pref_meetup_sort_default" translatable="false">@string/pref_meetup_sort_groups_value</string>
+    <string name="pref_meetup_sort_groups_label">Groups</string>
+    <string name="pref_meetup_sort_groups_value" translatable="false">groups</string>
+    <string name="pref_meetup_sort_calendar_label">Events</string>
+    <string name="pref_meetup_sort_calendar_value" translatable="false">calendar</string>
+
 </resources>
