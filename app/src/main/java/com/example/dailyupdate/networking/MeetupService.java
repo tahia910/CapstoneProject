@@ -1,6 +1,5 @@
 package com.example.dailyupdate.networking;
 
-import com.example.dailyupdate.data.MeetupEvent;
 import com.example.dailyupdate.data.MeetupEventResponse;
 import com.example.dailyupdate.data.MeetupGroup;
 
@@ -24,9 +23,9 @@ public interface MeetupService {
                                                            @Query("category") int categoryNumber,
                                                            @Query("text") String searchKeyword);
 
-//    @GET("/find/upcoming_events")
-//    Call<List<MeetupEvent>> getMeetupEventList(@Query("key") String apiKey,
-//                                                       @Query("location") String location,
-//                                                       @Query("category") int categoryNumber,
-//                                                       @Query("text") String searchKeyword);
+    @GET("/find/upcoming_events")
+    Call<MeetupEventResponse> getMeetupEventList(@Query("key") String apiKey,
+                                                 @Query("location") String location,
+                                                 @Query("category") int categoryNumber,
+                                                 @Query("text") String searchKeyword);
 }

@@ -20,6 +20,8 @@ public class GitHubRepoAdapter extends RecyclerView.Adapter<GitHubRepoAdapter.Gi
     private static ClickListener clickListener;
     private String repoDescription;
     private String repoLanguage;
+    private int layoutOption;
+    int layoutIdForListItem;
 
     public interface ClickListener {
         void onItemClick(int position, View v);
@@ -29,16 +31,21 @@ public class GitHubRepoAdapter extends RecyclerView.Adapter<GitHubRepoAdapter.Gi
 //        GitHubRepoAdapter.clickListener = clickListener;
 //    }
 
-    public GitHubRepoAdapter(Context context, List<GitHubRepo> gitHubRepoList) {
+    public GitHubRepoAdapter(Context context, List<GitHubRepo> gitHubRepoList, int layoutOption) {
         this.context = context;
         this.gitHubRepoList = gitHubRepoList;
+        this.layoutOption = layoutOption;
     }
 
 
     @Override
     public GitHubRepoAdapterViewHolder onCreateViewHolder(ViewGroup parent, int i) {
         context = parent.getContext();
-        int layoutIdForListItem = R.layout.home_githubrepo_item;
+        if(layoutOption == 1){
+            layoutIdForListItem = R.layout.home_githubrepo_item;
+        } else if (layoutOption == 2){
+            layoutIdForListItem = R.layout.github_main_repo_item;
+        }
         LayoutInflater inflater = LayoutInflater.from(context);
 
         View view = inflater.inflate(layoutIdForListItem, parent, false);

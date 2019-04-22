@@ -11,10 +11,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dailyupdate.BuildConfig;
 import com.example.dailyupdate.R;
+import com.example.dailyupdate.data.MeetupEvent;
+import com.example.dailyupdate.data.MeetupEventResponse;
 import com.example.dailyupdate.data.MeetupGroup;
-import com.example.dailyupdate.networking.MeetupRetrofitInstance;
 import com.example.dailyupdate.networking.MeetupService;
+import com.example.dailyupdate.networking.RetrofitInstance;
+import com.example.dailyupdate.ui.adapter.MeetupEventAdapter;
 import com.example.dailyupdate.ui.adapter.MeetupGroupAdapter;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
@@ -30,11 +35,11 @@ import static com.example.dailyupdate.ui.fragment.MeetupDialogFragment.KEY_SORT_
 
 public class MeetupMainFragment extends Fragment {
 
-    @BindView(R.id.meetup_main_recycler_view)
+    @BindView(R.id.main_recycler_view)
     RecyclerView recyclerView;
     private String userLocation;
     private String defaultLocation = "tokyo";
-    private int meetupGroupCategoryNumber = 34; // Category "Tech"
+    private int searchCategoryNumber = 34; // Category "Tech"
     private String API_KEY = BuildConfig.MEETUP_API_KEY;
     private String searchKeyword = "android";
 
@@ -66,17 +71,20 @@ public class MeetupMainFragment extends Fragment {
         }
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        retrieveMeetupGroups();
-
+        if (sortBy.equals("groups")) {
+            retrieveMeetupGroups();
+        } else if (sortBy.equals("events")) {
+            retrieveMeetupEvents();
+        }
         return rootView;
     }
 
     private void retrieveMeetupGroups() {
         MeetupService meetupService =
-                MeetupRetrofitInstance.getMeetupRetrofitInstance().create(MeetupService.class);
+                RetrofitInstance.getMeetupRetrofitInstance().create(MeetupService.class);
         Call<List<MeetupGroup>> meetupGroupCall =
                 meetupService.getMeetupGroupListWithKeywords(API_KEY, userLocation,
-                        meetupGroupCategoryNumber, searchKeyword);
+                        searchCategoryNumber, searchKeyword);
         meetupGroupCall.enqueue(new Callback<List<MeetupGroup>>() {
             @Override
             public void onResponse(Call<List<MeetupGroup>> call,
@@ -90,6 +98,32 @@ public class MeetupMainFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<MeetupGroup>> call, Throwable t) {
+                //TODO: handle failure
+            }
+        });
+    }
+
+    private void retrieveMeetupEvents() {
+
+        MeetupService meetupService =
+                RetrofitInstance.getMeetupRetrofitInstance().create(MeetupService.class);
+
+        Call<MeetupEventResponse> meetupEventCall = meetupService.getMeetupEventList(API_KEY,
+                userLocation, searchCategoryNumber, searchKeyword);
+        meetupEventCall.enqueue(new Callback<MeetupEventResponse>() {
+            @Override
+            public void onResponse(Call<MeetupEventResponse> call,
+                                   Response<MeetupEventResponse> response) {
+                MeetupEventResponse meetupEventResponse = response.body();
+                List<MeetupEvent> meetupEventList = meetupEventResponse.getMeetupEventsList();
+
+                MeetupEventAdapter meetupEventAdapter = new MeetupEventAdapter(getContext(),
+                        meetupEventList);
+                recyclerView.setAdapter(meetupEventAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<MeetupEventResponse> call, Throwable t) {
                 //TODO: handle failure
             }
         });

@@ -2,7 +2,6 @@ package com.example.dailyupdate.ui;
 
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -14,6 +13,8 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.dailyupdate.R;
+import com.example.dailyupdate.ui.fragment.GitHubDialogFragment;
+import com.example.dailyupdate.ui.fragment.GitHubMainFragment;
 import com.example.dailyupdate.ui.fragment.MeetupDialogFragment;
 import com.example.dailyupdate.ui.fragment.MeetupMainFragment;
 import com.google.android.material.navigation.NavigationView;
@@ -21,7 +22,11 @@ import com.google.android.material.navigation.NavigationView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MeetupMainViewActivity extends AppCompatActivity implements MeetupDialogFragment.MeetupDialogListener {
+import static com.example.dailyupdate.MainActivity.GITHUB_MAIN_KEY;
+import static com.example.dailyupdate.MainActivity.MAIN_KEY;
+import static com.example.dailyupdate.MainActivity.MEETUP_MAIN_KEY;
+
+public class MainViewActivity extends AppCompatActivity implements MeetupDialogFragment.MeetupDialogListener, GitHubDialogFragment.GitHubDialogListener {
 
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawer;
@@ -30,8 +35,10 @@ public class MeetupMainViewActivity extends AppCompatActivity implements MeetupD
     @BindView(R.id.nav_view)
     NavigationView navigationView;
 
-    MeetupMainFragment mainFragment;
+    MeetupMainFragment meetupFragment;
+    GitHubMainFragment gitHubFragment;
     private FragmentManager fragmentManager;
+    private String mainViewOption;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,32 +48,51 @@ public class MeetupMainViewActivity extends AppCompatActivity implements MeetupD
 
         setSupportActionBar(toolbar);
         final ActionBar ab = getSupportActionBar();
-        ab.setTitle("Meetup Search");
         ab.setHomeAsUpIndicator(R.drawable.ic_menu);
         ab.setDisplayHomeAsUpEnabled(true);
-
         if (navigationView != null) {
             setupDrawerContent(navigationView);
         }
         fragmentManager = getSupportFragmentManager();
-        showSearchDialog();
-    }
 
-    private void showSearchDialog() {
-        DialogFragment newFragment = new MeetupDialogFragment();
-        newFragment.show(getSupportFragmentManager(), "meetup_search");
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            mainViewOption = bundle.getString(MAIN_KEY);
+        }
+        if (mainViewOption.equals(MEETUP_MAIN_KEY)) {
+            ab.setTitle(getApplicationContext().getString(R.string.meetup_search_title));
+            DialogFragment meetupDialogFragment = new MeetupDialogFragment();
+            meetupDialogFragment.show(getSupportFragmentManager(), "meetup_search");
+
+        } else if (mainViewOption.equals(GITHUB_MAIN_KEY)) {
+            ab.setTitle(getApplicationContext().getString(R.string.github_search_title));
+            DialogFragment gitHubDialogFragment = new GitHubDialogFragment();
+            gitHubDialogFragment.show(getSupportFragmentManager(), "github_search");
+        }
     }
 
     @Override
     public void onDialogPositiveClick(DialogFragment dialog, Bundle bundle) {
         // TODO: check if bundle is empty?
-        mainFragment = MeetupMainFragment.newInstance(bundle);
-        fragmentManager.beginTransaction().add(R.id.fragment_container, mainFragment).commit();
+        meetupFragment = MeetupMainFragment.newInstance(bundle);
+        fragmentManager.beginTransaction().add(R.id.fragment_container, meetupFragment).commit();
     }
 
     @Override
     public void onDialogNegativeClick(DialogFragment dialog) {
-        // TODO: handle dialog cancel option(2)
+        // TODO: handle meetup dialog cancel option(2)
+    }
+
+    @Override
+    public void onGitHubDialogPositiveClick(DialogFragment dialog, Bundle bundle) {
+        gitHubFragment = GitHubMainFragment.newInstance(bundle);
+        fragmentManager.beginTransaction().add(R.id.fragment_container, gitHubFragment).commit();
+
+    }
+
+    @Override
+    public void onGitHubDialogNegativeClick(DialogFragment dialog) {
+        // TODO: handle github dialog cancel option(2)
     }
 
     @Override

@@ -33,4 +33,6 @@
     <string name="cancel_label">Cancel</string>
     <string name="save_label">Save</string>
     <string name="meetup_dialog_title">Event Search Options</string>
+    <string name="meetup_search_title">Meetup Search</string>
+    <string name="github_search_title">GitHub Search</string>
 </resources>
