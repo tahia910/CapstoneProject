@@ -3,7 +3,7 @@ package com.example.dailyupdate.ui.fragment;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,20 +13,19 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 
 import androidx.fragment.app.DialogFragment;
+import androidx.preference.PreferenceManager;
 
 import com.example.dailyupdate.R;
 
 public class GitHubDialogFragment extends DialogFragment {
 
-    public static final String KEY_GITHUB_KEYWORD = "key_keyword";
-    public static final String KEY_GITHUB_SORT_BY = "key_sort_by";
-    public static final String KEY_GITHUB_ORDER = "key_order";
     private String searchKeyword;
     private String sortBy;
     private String searchOrder;
+    SharedPreferences sharedPref;
 
     public interface GitHubDialogListener {
-        void onGitHubDialogPositiveClick(DialogFragment dialog, Bundle bundle);
+        void onGitHubDialogPositiveClick(DialogFragment dialog);
 
         void onGitHubDialogNegativeClick(DialogFragment dialog);
     }
@@ -56,23 +55,13 @@ public class GitHubDialogFragment extends DialogFragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             builder.setView(R.layout.github_dialog);
         }
-        builder.setPositiveButton(R.string.save_label, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // TODO: handle empty keyword
-                getDialogValues();
-
-                Bundle bundle = new Bundle();
-                bundle.putString(KEY_GITHUB_KEYWORD, searchKeyword);
-                bundle.putString(KEY_GITHUB_SORT_BY, sortBy);
-                bundle.putString(KEY_GITHUB_ORDER, searchOrder);
-                listener.onGitHubDialogPositiveClick(GitHubDialogFragment.this, bundle);
-            }
-        }).setNegativeButton(R.string.cancel_label, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                listener.onGitHubDialogNegativeClick(GitHubDialogFragment.this);
-                // TODO: handle dialog cancel option
-                // reset options? (EditText.setText(null);)
-            }
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        builder.setPositiveButton(R.string.save_label, (dialog, id) -> {
+            getDialogValues();
+            listener.onGitHubDialogPositiveClick(GitHubDialogFragment.this);
+        }).setNegativeButton(R.string.cancel_label, (dialog, id) -> {
+            listener.onGitHubDialogNegativeClick(GitHubDialogFragment.this);
+            // TODO: handle dialog cancel option
         });
         return builder.create();
     }
@@ -85,31 +74,32 @@ public class GitHubDialogFragment extends DialogFragment {
                 (EditText) dialog.findViewById(R.id.edittext_keywords_input);
         String keywordInputValue = keywordInputEditText.getText().toString();
         keywordInputEditText.setText(keywordInputValue);
-        if (!keywordInputValue.isEmpty()) {
-            searchKeyword = keywordInputValue;
-        }
+        searchKeyword = keywordInputValue;
+        sharedPref.edit().putString(getString(R.string.pref_github_edittext_key), searchKeyword).apply();
 
         // Get the sorting preference. Default sorting option is by updated date.
         RadioButton sortByUpdated = (RadioButton) dialog.findViewById(R.id.sortby_updated);
         RadioButton sortByStars = (RadioButton) dialog.findViewById(R.id.sortby_stars);
         RadioButton sortByForks = (RadioButton) dialog.findViewById(R.id.sortby_forks);
         if (sortByUpdated.isChecked()) {
-            sortBy = "updated";
+            sortBy = getString(R.string.pref_github_sort_updated_value);
         } else if (sortByStars.isChecked()) {
-            sortBy = "stars";
+            sortBy = getString(R.string.pref_github_sort_stars_value);
         } else if (sortByForks.isChecked()) {
-            sortBy = "forks";
+            sortBy = getString(R.string.pref_github_sort_forks_value);
         }
+        sharedPref.edit().putString(getString(R.string.pref_github_sort_key), sortBy).apply();
 
         // Get the order preference. Default order option is descending.
         RadioButton orderDescending =
                 (RadioButton) dialog.findViewById(R.id.order_descending_option);
         RadioButton orderAscending = (RadioButton) dialog.findViewById(R.id.order_ascending_option);
         if (orderDescending.isChecked()) {
-            searchOrder = "descending";
+            searchOrder = getString(R.string.pref_github_order_descending_value);
         } else if (orderAscending.isChecked()) {
-            searchOrder = "ascending";
+            searchOrder = getString(R.string.pref_github_order_ascending_value);
         }
+        sharedPref.edit().putString(getString(R.string.pref_github_order_key), searchOrder).apply();
     }
 
 }

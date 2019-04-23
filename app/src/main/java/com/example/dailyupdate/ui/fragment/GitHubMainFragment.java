@@ -1,11 +1,14 @@
 package com.example.dailyupdate.ui.fragment;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,10 +27,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.example.dailyupdate.ui.fragment.GitHubDialogFragment.KEY_GITHUB_KEYWORD;
-import static com.example.dailyupdate.ui.fragment.GitHubDialogFragment.KEY_GITHUB_ORDER;
-import static com.example.dailyupdate.ui.fragment.GitHubDialogFragment.KEY_GITHUB_SORT_BY;
-
 public class GitHubMainFragment extends Fragment {
 
     @BindView(R.id.main_recycler_view)
@@ -36,16 +35,13 @@ public class GitHubMainFragment extends Fragment {
     private String searchKeyword = "android";
     private String sortBy;
     private String searchOrder;
+    SharedPreferences sharedPref;
 
     public GitHubMainFragment() {
     }
 
-    public static GitHubMainFragment newInstance(Bundle searchArguments) {
-        GitHubMainFragment gitHubMainFragment = new GitHubMainFragment();
-        Bundle args = new Bundle();
-        args.putBundle("KEY_GITHUB_SEARCH_ARGUMENTS", searchArguments);
-        gitHubMainFragment.setArguments(args);
-        return gitHubMainFragment;
+    public static GitHubMainFragment newInstance() {
+        return new GitHubMainFragment();
     }
 
     @Override
@@ -54,18 +50,25 @@ public class GitHubMainFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.main_layout, container, false);
         ButterKnife.bind(this, rootView);
 
-        Bundle bundle = getArguments().getParcelable("KEY_GITHUB_SEARCH_ARGUMENTS");
-        if (!bundle.isEmpty()) {
-            searchKeyword = bundle.getString(KEY_GITHUB_KEYWORD);
-            sortBy = bundle.getString(KEY_GITHUB_SORT_BY);
-            searchOrder = bundle.getString(KEY_GITHUB_ORDER);
-        }
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        searchKeyword = sharedPref.getString(getString(R.string.pref_github_edittext_key), "");
+        sortBy = sharedPref.getString(getString(R.string.pref_github_sort_key),
+                getString(R.string.pref_github_sort_default));
+        searchOrder = sharedPref.getString(getString(R.string.pref_github_order_key),
+                getString(R.string.pref_github_order_default));
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        retrieveMeetupGroups();
+
+        if (searchKeyword.isEmpty()) {
+            Toast.makeText(getContext(), getString(R.string.mainview_toast_empty_search),
+                    Toast.LENGTH_LONG).show();
+        } else {
+            retrieveGitHubRepository();
+        }
         return rootView;
     }
 
-    private void retrieveMeetupGroups() {
+    private void retrieveGitHubRepository() {
         GitHubService gitHubservice =
                 RetrofitInstance.getGitHubRetrofitInstance().create(GitHubService.class);
         Call<GitHubResponse> repoListCall =

@@ -1,11 +1,13 @@
 package com.example.dailyupdate.ui.fragment;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,8 +20,6 @@ import com.example.dailyupdate.networking.MeetupService;
 import com.example.dailyupdate.networking.RetrofitInstance;
 import com.example.dailyupdate.ui.adapter.MeetupEventAdapter;
 import com.example.dailyupdate.ui.adapter.MeetupGroupAdapter;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
@@ -29,32 +29,23 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.example.dailyupdate.ui.fragment.MeetupDialogFragment.KEY_KEYWORD;
-import static com.example.dailyupdate.ui.fragment.MeetupDialogFragment.KEY_LOCATION;
-import static com.example.dailyupdate.ui.fragment.MeetupDialogFragment.KEY_SORT_BY;
-
 public class MeetupMainFragment extends Fragment {
 
     @BindView(R.id.main_recycler_view)
     RecyclerView recyclerView;
-    private String userLocation;
     private String defaultLocation = "tokyo";
     private int searchCategoryNumber = 34; // Category "Tech"
     private String API_KEY = BuildConfig.MEETUP_API_KEY;
-    private String searchKeyword = "android";
-
+    private String searchKeyword;
     private String sortBy;
     private String searchLocation;
+    SharedPreferences sharedPref;
 
     public MeetupMainFragment() {
     }
 
-    public static MeetupMainFragment newInstance(Bundle searchArguments) {
-        MeetupMainFragment meetupMainFragment = new MeetupMainFragment();
-        Bundle args = new Bundle();
-        args.putBundle("KEY_SEARCH_ARGUMENTS", searchArguments);
-        meetupMainFragment.setArguments(args);
-        return meetupMainFragment;
+    public static MeetupMainFragment newInstance() {
+        return new MeetupMainFragment();
     }
 
     @Override
@@ -63,17 +54,17 @@ public class MeetupMainFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.main_layout, container, false);
         ButterKnife.bind(this, rootView);
 
-        Bundle bundle = getArguments().getParcelable("KEY_SEARCH_ARGUMENTS");
-        if (!bundle.isEmpty()) {
-            searchKeyword = bundle.getString(KEY_KEYWORD);
-            sortBy = bundle.getString(KEY_SORT_BY);
-            searchLocation = bundle.getString(KEY_LOCATION);
-        }
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        searchKeyword = sharedPref.getString(getString(R.string.pref_meetup_edittext_key), "");
+        sortBy = sharedPref.getString(getString(R.string.pref_meetup_sort_key),
+                getString(R.string.pref_meetup_sort_default));
+        searchLocation = sharedPref.getString(getString(R.string.pref_meetup_location_key), "");
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        if (sortBy.equals("groups")) {
+        if (sortBy.equals(getString(R.string.pref_meetup_sort_groups_value))) {
             retrieveMeetupGroups();
-        } else if (sortBy.equals("events")) {
+        } else if (sortBy.equals(getString(R.string.pref_meetup_sort_calendar_value))) {
             retrieveMeetupEvents();
         }
         return rootView;
@@ -83,7 +74,7 @@ public class MeetupMainFragment extends Fragment {
         MeetupService meetupService =
                 RetrofitInstance.getMeetupRetrofitInstance().create(MeetupService.class);
         Call<List<MeetupGroup>> meetupGroupCall =
-                meetupService.getMeetupGroupListWithKeywords(API_KEY, userLocation,
+                meetupService.getMeetupGroupListWithKeywords(API_KEY, searchLocation,
                         searchCategoryNumber, searchKeyword);
         meetupGroupCall.enqueue(new Callback<List<MeetupGroup>>() {
             @Override
@@ -109,7 +100,7 @@ public class MeetupMainFragment extends Fragment {
                 RetrofitInstance.getMeetupRetrofitInstance().create(MeetupService.class);
 
         Call<MeetupEventResponse> meetupEventCall = meetupService.getMeetupEventList(API_KEY,
-                userLocation, searchCategoryNumber, searchKeyword);
+                searchLocation, searchCategoryNumber, searchKeyword);
         meetupEventCall.enqueue(new Callback<MeetupEventResponse>() {
             @Override
             public void onResponse(Call<MeetupEventResponse> call,

@@ -34,7 +34,7 @@
             app:dialogTitle="@string/pref_edittext_hint"
             app:key="@string/pref_meetup_edittext_key"
             app:summary="@string/pref_meetup_edittext_summary"
-            app:title="@string/pref_meetup_edittext_label" />/>
+            app:title="@string/pref_meetup_edittext_label" />
 
         <ListPreference
             app:defaultValue="@string/pref_meetup_sort_default"
@@ -43,6 +43,13 @@
             app:key="@string/pref_meetup_sort_key"
             app:summary="@string/pref_meetup_sort_summary"
             app:title="@string/pref_meetup_sort_label" />
+
+        <EditTextPreference
+            app:dialogTitle="@string/pref_location_hint"
+            app:key="@string/pref_meetup_location_key"
+            app:summary="@string/pref_meetup_location_summary"
+            app:title="@string/pref_meetup_location_label" />
+
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

@@ -1,6 +1,8 @@
 package com.example.dailyupdate.ui;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -19,6 +21,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,9 +31,9 @@ import com.example.dailyupdate.R;
 import com.example.dailyupdate.data.GitHubRepo;
 import com.example.dailyupdate.data.GitHubResponse;
 import com.example.dailyupdate.data.MeetupGroup;
-import com.example.dailyupdate.networking.RetrofitInstance;
 import com.example.dailyupdate.networking.GitHubService;
 import com.example.dailyupdate.networking.MeetupService;
+import com.example.dailyupdate.networking.RetrofitInstance;
 import com.example.dailyupdate.ui.adapter.GitHubRepoAdapter;
 import com.example.dailyupdate.ui.adapter.MeetupGroupAdapter;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -69,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String MAIN_KEY = "mainKey";
     public static final String MEETUP_MAIN_KEY = "meetupMainKey";
     public static final String GITHUB_MAIN_KEY = "gitHubMainKey";
+
     private static final int PERMISSIONS_REQUEST_COARSE_LOCATION = 111;
     private static final long LOCATION_UPDATE_INTERVAL = 24 * 60 * 60 * 1000; // 24 hours
     private FusedLocationProviderClient mFusedLocationClient;
@@ -79,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
     private int meetupGroupCategoryNumber = 34; // Category "Tech"
     private int meetupGroupResponsePageNumber = 20;
     private String API_KEY = BuildConfig.MEETUP_API_KEY;
+    SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,9 +106,12 @@ public class MainActivity extends AppCompatActivity {
                 LinearLayoutManager.HORIZONTAL, false));
         meetupRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
         //TODO: Check if connected to internet
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
         checkPermission();
 
         retrieveGithubRepo();
@@ -133,6 +141,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void retrieveMeetupGroups() {
+        boolean locationSwitchValue = sharedPref.getBoolean(getString(R.string.pref_location_key)
+                , false);
+        if (locationSwitchValue) {
+            userLocation = sharedPref.getString(getString(R.string.pref_meetup_location_key), "");
+        } else {
+            Toast.makeText(this, R.string.location_not_retrieved, Toast.LENGTH_LONG).show();
+            userLocation = defaultLocation;
+        }
         MeetupService meetupService =
                 RetrofitInstance.getMeetupRetrofitInstance().create(MeetupService.class);
         Call<List<MeetupGroup>> meetupGroupCall = meetupService.getMeetupGroupList(API_KEY,
@@ -156,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     /**
-     * Request city level accuracy
+     * Get the device current location (city accuracy)
      **/
     @SuppressWarnings("MissingPermission")
     private void getLocation() {
@@ -172,38 +188,46 @@ public class MainActivity extends AppCompatActivity {
                 double currentLatitude = location.getLatitude();
                 Geocoder gcd = new Geocoder(getApplicationContext(), Locale.getDefault());
                 try {
+                    // Request city level accuracy
                     List<Address> address = gcd.getFromLocation(currentLatitude, currentLongitude
                             , 1);
                     userLocation = address.get(0).getLocality();
-                    retrieveMeetupGroups();
 
+                    // Update the user location in the preferences
+                    sharedPref.edit().putString(getString(R.string.pref_meetup_location_key),
+                            userLocation).apply();
+                    retrieveMeetupGroups();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             } else {
-                Toast.makeText(this, R.string.location_not_retrieved, Toast.LENGTH_LONG).show();
-                userLocation = defaultLocation;
+                // Could not retrieve the location
+                // Default location will be used
                 retrieveMeetupGroups();
             }
         });
     }
 
     /**
-     * Ask for location permission in order to display trending Meetup events near the user
-     */
+     * Check if the location permission was granted in order to display trending Meetup tech
+     * groups near the user
+     **/
+    @TargetApi(Build.VERSION_CODES.M)
     private void checkPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            // Ask permission
-            if (ActivityCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(MainActivity.this,
-                        new String[]{ACCESS_COARSE_LOCATION}, PERMISSIONS_REQUEST_COARSE_LOCATION);
-            } else {
-                getLocation();
-            }
-            //TODO : handle "never ask again" case
+        if (ActivityCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // Ask for permission
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{ACCESS_COARSE_LOCATION}, PERMISSIONS_REQUEST_COARSE_LOCATION);
+        } else {
+            // Permission is already granted
+            getLocation();
         }
     }
 
+    /**
+     * Get the location permission result
+     **/
+    @TargetApi(Build.VERSION_CODES.M)
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -216,16 +240,21 @@ public class MainActivity extends AppCompatActivity {
 
                 if (permission.equals(ACCESS_COARSE_LOCATION)) {
                     if (grantResult == PackageManager.PERMISSION_GRANTED) {
+                        // Location permission was granted this time
+                        // Update the location switch in the preferences
+                        sharedPref.edit().putBoolean(getString(R.string.pref_location_key), true).apply();
                         getLocation();
                     } else {
+                        // Permission was not granted
+                        // Use default location (Tokyo)
                         Toast.makeText(this, R.string.message_default_location,
                                 Toast.LENGTH_LONG).show();
-                        userLocation = defaultLocation;
                         retrieveMeetupGroups();
                     }
                 }
             }
         }
+
     }
 
 

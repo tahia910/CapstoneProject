@@ -1,6 +1,7 @@
 package com.example.dailyupdate.ui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,6 +15,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.preference.PreferenceManager;
 
 import com.example.dailyupdate.R;
 import com.example.dailyupdate.ui.fragment.GitHubDialogFragment;
@@ -43,6 +45,9 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
     private FragmentManager fragmentManager;
     private String mainViewOption;
     ActionBarDrawerToggle mDrawerToggle;
+    SharedPreferences sharedPref;
+    String meetupSearchKeyword;
+    String gitHubSearchKeyword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +65,7 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
             setupDrawerContent(navigationView);
         }
         fragmentManager = getSupportFragmentManager();
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -67,15 +73,26 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
         }
         if (mainViewOption.equals(MEETUP_MAIN_KEY)) {
             ab.setTitle(getApplicationContext().getString(R.string.meetup_search_title));
-
+            meetupSearchKeyword =
+                    sharedPref.getString(getString(R.string.pref_meetup_edittext_key), "");
+            if (!meetupSearchKeyword.isEmpty()) {
+                getMeetupFragment();
+            } else {
+                getSearchDialog();
+            }
         } else if (mainViewOption.equals(GITHUB_MAIN_KEY)) {
             ab.setTitle(getApplicationContext().getString(R.string.github_search_title));
+            gitHubSearchKeyword =
+                    sharedPref.getString(getString(R.string.pref_github_edittext_key), "");
+            if (!gitHubSearchKeyword.isEmpty()) {
+                getGitHubFragment();
+            } else {
+                getSearchDialog();
+            }
         }
-
-        getDialog();
     }
 
-    public void getDialog() {
+    public void getSearchDialog() {
         if (mainViewOption.equals(MEETUP_MAIN_KEY)) {
             DialogFragment meetupDialogFragment = new MeetupDialogFragment();
             meetupDialogFragment.show(getSupportFragmentManager(), "meetup_search");
@@ -85,22 +102,39 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
         }
     }
 
-    @Override
-    public void onDialogPositiveClick(DialogFragment dialog, Bundle bundle) {
-        // TODO: check if bundle is empty?
-        meetupFragment = MeetupMainFragment.newInstance(bundle);
+    public void getMeetupFragment() {
+        meetupFragment = MeetupMainFragment.newInstance();
         fragmentManager.beginTransaction().replace(R.id.fragment_container, meetupFragment).commit();
     }
 
+    public void getGitHubFragment() {
+        gitHubFragment = GitHubMainFragment.newInstance();
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, gitHubFragment).commit();
+    }
+
     @Override
-    public void onDialogNegativeClick(DialogFragment dialog) {
+    public void onMeetupDialogPositiveClick(DialogFragment dialog) {
+        if (!meetupSearchKeyword.isEmpty()) {
+            getMeetupFragment();
+        } else {
+            Toast.makeText(this, getString(R.string.mainview_toast_empty_search),
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onMeetupDialogNegativeClick(DialogFragment dialog) {
         // TODO: handle meetup dialog cancel option(2)
     }
 
     @Override
-    public void onGitHubDialogPositiveClick(DialogFragment dialog, Bundle bundle) {
-        gitHubFragment = GitHubMainFragment.newInstance(bundle);
-        fragmentManager.beginTransaction().replace(R.id.fragment_container, gitHubFragment).commit();
+    public void onGitHubDialogPositiveClick(DialogFragment dialog) {
+        if (!gitHubSearchKeyword.isEmpty()) {
+            getGitHubFragment();
+        } else {
+            Toast.makeText(this, getString(R.string.mainview_toast_empty_search),
+                    Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -121,7 +155,7 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
                 mDrawer.openDrawer(GravityCompat.START);
                 return true;
             case R.id.action_search:
-                getDialog();
+                getSearchDialog();
                 return true;
             case R.id.action_pref:
                 Intent preferenceIntent = new Intent(this, PreferenceActivity.class);
