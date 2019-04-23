@@ -25,9 +25,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.MainViewActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.dailyupdate.ui.MainActivity" />
         </activity>
 
         <activity

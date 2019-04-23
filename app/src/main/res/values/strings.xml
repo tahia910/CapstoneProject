@@ -103,4 +103,8 @@
     <string name="pref_meetup_sort_calendar_label">Events</string>
     <string name="pref_meetup_sort_calendar_value" translatable="false">calendar</string>
 
+
+    <string name="content_description_open_drawer">Drawer opened</string>
+    <string name="content_description_close_drawer">Drawer closed</string>
+
 </resources>

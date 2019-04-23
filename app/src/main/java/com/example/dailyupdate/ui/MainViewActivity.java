@@ -1,6 +1,5 @@
 package com.example.dailyupdate.ui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -8,6 +7,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -42,6 +42,7 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
     GitHubMainFragment gitHubFragment;
     private FragmentManager fragmentManager;
     private String mainViewOption;
+    ActionBarDrawerToggle mDrawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,8 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
         final ActionBar ab = getSupportActionBar();
         ab.setHomeAsUpIndicator(R.drawable.ic_menu);
         ab.setDisplayHomeAsUpEnabled(true);
+        ab.setHomeButtonEnabled(true);
+
         if (navigationView != null) {
             setupDrawerContent(navigationView);
         }
@@ -72,21 +75,21 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
         getDialog();
     }
 
-    public void getDialog(){
-        if (mainViewOption.equals(MEETUP_MAIN_KEY)){
+    public void getDialog() {
+        if (mainViewOption.equals(MEETUP_MAIN_KEY)) {
             DialogFragment meetupDialogFragment = new MeetupDialogFragment();
             meetupDialogFragment.show(getSupportFragmentManager(), "meetup_search");
-        } else if (mainViewOption.equals(GITHUB_MAIN_KEY)){
+        } else if (mainViewOption.equals(GITHUB_MAIN_KEY)) {
             DialogFragment gitHubDialogFragment = new GitHubDialogFragment();
             gitHubDialogFragment.show(getSupportFragmentManager(), "github_search");
         }
     }
-    
+
     @Override
     public void onDialogPositiveClick(DialogFragment dialog, Bundle bundle) {
         // TODO: check if bundle is empty?
         meetupFragment = MeetupMainFragment.newInstance(bundle);
-        fragmentManager.beginTransaction().add(R.id.fragment_container, meetupFragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, meetupFragment).commit();
     }
 
     @Override
@@ -97,8 +100,7 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
     @Override
     public void onGitHubDialogPositiveClick(DialogFragment dialog, Bundle bundle) {
         gitHubFragment = GitHubMainFragment.newInstance(bundle);
-        fragmentManager.beginTransaction().add(R.id.fragment_container, gitHubFragment).commit();
-
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, gitHubFragment).commit();
     }
 
     @Override
@@ -130,6 +132,10 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar,
+                R.string.content_description_open_drawer,
+                R.string.content_description_close_drawer);
+
         navigationView.setNavigationItemSelectedListener(menuItem -> {
             menuItem.setChecked(true);
             selectDrawerItem(menuItem);
@@ -140,16 +146,24 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
     public void selectDrawerItem(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.nav_home:
-                Toast.makeText(this, "Home", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, MainActivity.class));
                 break;
             case R.id.nav_bookmarks:
                 Toast.makeText(this, "Bookmarks", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_github:
-                Toast.makeText(this, "Github", Toast.LENGTH_SHORT).show();
+                if (!mainViewOption.equals(GITHUB_MAIN_KEY)) {
+                    Intent gitHubIntent = new Intent(this, MainViewActivity.class);
+                    gitHubIntent.putExtra(MAIN_KEY, GITHUB_MAIN_KEY);
+                    startActivity(gitHubIntent);
+                }
                 break;
             case R.id.nav_meetup:
-                Toast.makeText(this, "Meetup", Toast.LENGTH_SHORT).show();
+                if (!mainViewOption.equals(MEETUP_MAIN_KEY)) {
+                    Intent meetupIntent = new Intent(this, MainViewActivity.class);
+                    meetupIntent.putExtra(MAIN_KEY, MEETUP_MAIN_KEY);
+                    startActivity(meetupIntent);
+                }
                 break;
             default:
                 break;

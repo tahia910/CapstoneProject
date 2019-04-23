@@ -263,7 +263,6 @@ public class MainActivity extends AppCompatActivity {
     public void selectDrawerItem(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.nav_home:
-                Toast.makeText(this, "Home", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_bookmarks:
                 Toast.makeText(this, "Bookmarks", Toast.LENGTH_SHORT).show();
