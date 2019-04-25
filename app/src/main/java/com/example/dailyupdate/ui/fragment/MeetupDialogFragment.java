@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +22,8 @@ import com.example.dailyupdate.R;
 public class MeetupDialogFragment extends DialogFragment {
 
     private EditText keywordInputEditText;
-    private RadioButton sortByGroups;
-    private RadioButton sortByCalendar;
+    private RadioButton sortByBest;
+    private RadioButton sortByTime;
     private EditText locationInputEditText;
 
     private String searchKeyword;
@@ -82,24 +83,25 @@ public class MeetupDialogFragment extends DialogFragment {
     private void getDialogValues() {
         Dialog dialog = MeetupDialogFragment.this.getDialog();
         // Get the search keywords
-        keywordInputEditText = (EditText) dialog.findViewById(R.id.edittext_keywords_input);
+        keywordInputEditText = (EditText) dialog.findViewById(R.id.meetup_dialog_edittext_keywords_input);
         String keywordInputValue = keywordInputEditText.getText().toString();
         keywordInputEditText.setText(keywordInputValue);
         searchKeyword = keywordInputValue;
+        Log.e("DIAL", "KEYWORD IS : " + searchKeyword);
         sharedPref.edit().putString(getString(R.string.pref_meetup_edittext_key), searchKeyword).apply();
 
-        // Get the sorting preference. Default sorting option is by Meetup groups.
-        sortByGroups = (RadioButton) dialog.findViewById(R.id.sortby_group);
-        sortByCalendar = (RadioButton) dialog.findViewById(R.id.sortby_calendar);
-        if (sortByGroups.isChecked()) {
-            sortBy = getString(R.string.pref_meetup_sort_groups_value);
-        } else if (sortByCalendar.isChecked()) {
-            sortBy = getString(R.string.pref_meetup_sort_calendar_value);
+        // Get the sorting preference. Default sorting option is by time order.
+        sortByBest = (RadioButton) dialog.findViewById(R.id.meetup_dialog_sortby_best);
+        sortByTime = (RadioButton) dialog.findViewById(R.id.meetup_dialog_sortby_time);
+        if (sortByBest.isChecked()) {
+            sortBy = getString(R.string.pref_meetup_sort_best_value);
+        } else if (sortByTime.isChecked()) {
+            sortBy = getString(R.string.pref_meetup_sort_time_value);
         }
         sharedPref.edit().putString(getString(R.string.pref_meetup_sort_key), sortBy).apply();
 
         // Get the location
-        locationInputEditText = (EditText) dialog.findViewById(R.id.edittext_location_input);
+        locationInputEditText = (EditText) dialog.findViewById(R.id.meetup_dialog_edittext_location_input);
         String locationInputValue = locationInputEditText.getText().toString();
         locationInputEditText.setText(locationInputValue);
         if (!locationInputValue.isEmpty()) {

@@ -2,6 +2,7 @@ package com.example.dailyupdate.ui.fragment;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +16,9 @@ import com.example.dailyupdate.BuildConfig;
 import com.example.dailyupdate.R;
 import com.example.dailyupdate.data.MeetupEvent;
 import com.example.dailyupdate.data.MeetupEventResponse;
-import com.example.dailyupdate.data.MeetupGroup;
 import com.example.dailyupdate.networking.MeetupService;
 import com.example.dailyupdate.networking.RetrofitInstance;
 import com.example.dailyupdate.ui.adapter.MeetupEventAdapter;
-import com.example.dailyupdate.ui.adapter.MeetupGroupAdapter;
 
 import java.util.List;
 
@@ -33,7 +32,6 @@ public class MeetupMainFragment extends Fragment {
 
     @BindView(R.id.main_recycler_view)
     RecyclerView recyclerView;
-    private String defaultLocation = "tokyo";
     private int searchCategoryNumber = 34; // Category "Tech"
     private String API_KEY = BuildConfig.MEETUP_API_KEY;
     private String searchKeyword;
@@ -53,6 +51,7 @@ public class MeetupMainFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.main_layout, container, false);
         ButterKnife.bind(this, rootView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         searchKeyword = sharedPref.getString(getString(R.string.pref_meetup_edittext_key), "");
@@ -60,47 +59,16 @@ public class MeetupMainFragment extends Fragment {
                 getString(R.string.pref_meetup_sort_default));
         searchLocation = sharedPref.getString(getString(R.string.pref_meetup_location_key), "");
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        if (sortBy.equals(getString(R.string.pref_meetup_sort_groups_value))) {
-            retrieveMeetupGroups();
-        } else if (sortBy.equals(getString(R.string.pref_meetup_sort_calendar_value))) {
-            retrieveMeetupEvents();
-        }
+        retrieveMeetupEvents();
         return rootView;
     }
 
-    private void retrieveMeetupGroups() {
-        MeetupService meetupService =
-                RetrofitInstance.getMeetupRetrofitInstance().create(MeetupService.class);
-        Call<List<MeetupGroup>> meetupGroupCall =
-                meetupService.getMeetupGroupListWithKeywords(API_KEY, searchLocation,
-                        searchCategoryNumber, searchKeyword);
-        meetupGroupCall.enqueue(new Callback<List<MeetupGroup>>() {
-            @Override
-            public void onResponse(Call<List<MeetupGroup>> call,
-                                   Response<List<MeetupGroup>> response) {
-                List<MeetupGroup> meetupGroupList = response.body();
-
-                MeetupGroupAdapter meetupGroupAdapter = new MeetupGroupAdapter(getContext(),
-                        meetupGroupList, 2);
-                recyclerView.setAdapter(meetupGroupAdapter);
-            }
-
-            @Override
-            public void onFailure(Call<List<MeetupGroup>> call, Throwable t) {
-                //TODO: handle failure
-            }
-        });
-    }
-
     private void retrieveMeetupEvents() {
-
         MeetupService meetupService =
                 RetrofitInstance.getMeetupRetrofitInstance().create(MeetupService.class);
 
         Call<MeetupEventResponse> meetupEventCall = meetupService.getMeetupEventList(API_KEY,
-                searchLocation, searchCategoryNumber, searchKeyword);
+                searchLocation, sortBy, searchCategoryNumber, searchKeyword);
         meetupEventCall.enqueue(new Callback<MeetupEventResponse>() {
             @Override
             public void onResponse(Call<MeetupEventResponse> call,

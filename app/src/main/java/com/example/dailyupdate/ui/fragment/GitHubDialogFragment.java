@@ -71,16 +71,19 @@ public class GitHubDialogFragment extends DialogFragment {
 
         // Get the search keywords
         EditText keywordInputEditText =
-                (EditText) dialog.findViewById(R.id.edittext_keywords_input);
+                (EditText) dialog.findViewById(R.id.github_dialog_edittext_keywords_input);
         String keywordInputValue = keywordInputEditText.getText().toString();
         keywordInputEditText.setText(keywordInputValue);
         searchKeyword = keywordInputValue;
         sharedPref.edit().putString(getString(R.string.pref_github_edittext_key), searchKeyword).apply();
 
         // Get the sorting preference. Default sorting option is by updated date.
-        RadioButton sortByUpdated = (RadioButton) dialog.findViewById(R.id.sortby_updated);
-        RadioButton sortByStars = (RadioButton) dialog.findViewById(R.id.sortby_stars);
-        RadioButton sortByForks = (RadioButton) dialog.findViewById(R.id.sortby_forks);
+        RadioButton sortByUpdated =
+                (RadioButton) dialog.findViewById(R.id.github_dialog_sortby_updated);
+        RadioButton sortByStars =
+                (RadioButton) dialog.findViewById(R.id.github_dialog_sortby_stars);
+        RadioButton sortByForks =
+                (RadioButton) dialog.findViewById(R.id.github_dialog_sortby_forks);
         if (sortByUpdated.isChecked()) {
             sortBy = getString(R.string.pref_github_sort_updated_value);
         } else if (sortByStars.isChecked()) {
@@ -92,8 +95,9 @@ public class GitHubDialogFragment extends DialogFragment {
 
         // Get the order preference. Default order option is descending.
         RadioButton orderDescending =
-                (RadioButton) dialog.findViewById(R.id.order_descending_option);
-        RadioButton orderAscending = (RadioButton) dialog.findViewById(R.id.order_ascending_option);
+                (RadioButton) dialog.findViewById(R.id.github_dialog_order_descending_option);
+        RadioButton orderAscending =
+                (RadioButton) dialog.findViewById(R.id.github_dialog_order_ascending_option);
         if (orderDescending.isChecked()) {
             searchOrder = getString(R.string.pref_github_order_descending_value);
         } else if (orderAscending.isChecked()) {

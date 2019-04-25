@@ -21,11 +21,11 @@
     </string-array>
 
     <string-array name="pref_meetup_sort_values">
-        <item>@string/pref_meetup_sort_groups_value</item>
-        <item>@string/pref_meetup_sort_calendar_value</item>
+        <item>@string/pref_meetup_sort_best_value</item>
+        <item>@string/pref_meetup_sort_time_value</item>
     </string-array>
     <string-array name="pref_meetup_sort_labels">
-        <item>@string/pref_meetup_sort_groups_label</item>
-        <item>@string/pref_meetup_sort_calendar_label</item>
+        <item>@string/pref_meetup_sort_best_label</item>
+        <item>@string/pref_meetup_sort_time_label</item>
     </string-array>
 </resources>

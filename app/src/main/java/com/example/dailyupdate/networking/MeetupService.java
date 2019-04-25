@@ -17,15 +17,16 @@ public interface MeetupService {
                                                @Query("category") int categoryNumber,
                                                @Query("page") int responsePageNumber);
 
-    @GET("/find/groups")
-    Call<List<MeetupGroup>> getMeetupGroupListWithKeywords(@Query("key") String apiKey,
-                                                           @Query("location") String location,
-                                                           @Query("category") int categoryNumber,
-                                                           @Query("text") String searchKeyword);
+//    @GET("/find/groups")
+//    Call<List<MeetupGroup>> getMeetupGroupListWithKeywords(@Query("key") String apiKey,
+//                                                           @Query("location") String location,
+//                                                           @Query("category") int categoryNumber,
+//                                                           @Query("text") String searchKeyword);
 
     @GET("/find/upcoming_events")
     Call<MeetupEventResponse> getMeetupEventList(@Query("key") String apiKey,
                                                  @Query("location") String location,
+                                                 @Query("order") String sortBy,
                                                  @Query("category") int categoryNumber,
                                                  @Query("text") String searchKeyword);
 }

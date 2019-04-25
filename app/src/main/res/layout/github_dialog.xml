@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/github_dialog_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
@@ -25,16 +25,16 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
-        android:id="@+id/view"
+        android:id="@+id/github_dialog_view"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:background="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title" />
+        app:layout_constraintTop_toBottomOf="@id/github_dialog_title" />
 
     <TextView
-        android:id="@+id/textview_keywords_label"
+        android:id="@+id/github_dialog_textview_keywords_label"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -42,12 +42,12 @@
         android:text="@string/dialog_keyword_label"
         android:textColor="@color/colorPrimary"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/view2"
+        app:layout_constraintBottom_toTopOf="@id/github_dialog_view2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view" />
+        app:layout_constraintTop_toBottomOf="@id/github_dialog_view" />
 
     <EditText
-        android:id="@+id/edittext_keywords_input"
+        android:id="@+id/github_dialog_edittext_keywords_input"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -55,11 +55,11 @@
         android:hint="@string/dialog_keyword_hint"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toBottomOf="@+id/view" />
+        app:layout_constraintStart_toStartOf="@id/github_dialog_guideline"
+        app:layout_constraintTop_toBottomOf="@id/github_dialog_view" />
 
     <View
-        android:id="@+id/view2"
+        android:id="@+id/github_dialog_view2"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:layout_marginTop="8dp"
@@ -67,20 +67,20 @@
         android:background="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edittext_keywords_input" />
+        app:layout_constraintTop_toBottomOf="@id/github_dialog_edittext_keywords_input" />
 
     <View
-        android:id="@+id/view3"
+        android:id="@+id/github_dialog_view3"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:layout_marginTop="8dp"
         android:background="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edittext_keywords_input" />
+        app:layout_constraintTop_toBottomOf="@id/github_dialog_edittext_keywords_input" />
 
     <TextView
-        android:id="@+id/textview_sortby_label"
+        android:id="@+id/github_dialog_textview_sortby_label"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -88,22 +88,22 @@
         android:text="@string/dialog_sort_label"
         android:textColor="@color/colorPrimary"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/view4"
+        app:layout_constraintBottom_toTopOf="@id/github_dialog_view4"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view3" />
+        app:layout_constraintTop_toBottomOf="@id/github_dialog_view3" />
 
     <RadioGroup
-        android:id="@+id/radiogroup_sortby"
+        android:id="@+id/github_dialog_radiogroup_sortby"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toBottomOf="@+id/view3">
+        app:layout_constraintStart_toStartOf="@id/github_dialog_guideline"
+        app:layout_constraintTop_toBottomOf="@id/github_dialog_view3">
 
         <RadioButton
-            android:id="@+id/sortby_updated"
+            android:id="@+id/github_dialog_sortby_updated"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
@@ -111,14 +111,14 @@
             android:textColor="@color/colorPrimary" />
 
         <RadioButton
-            android:id="@+id/sortby_stars"
+            android:id="@+id/github_dialog_sortby_stars"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/dialog_sort_stars_label"
             android:textColor="@color/colorPrimary" />
 
         <RadioButton
-            android:id="@+id/sortby_forks"
+            android:id="@+id/github_dialog_sortby_forks"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/dialog_sort_forks_label"
@@ -126,17 +126,17 @@
     </RadioGroup>
 
     <View
-        android:id="@+id/view4"
+        android:id="@+id/github_dialog_view4"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:layout_marginTop="8dp"
         android:background="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radiogroup_sortby" />
+        app:layout_constraintTop_toBottomOf="@id/github_dialog_radiogroup_sortby" />
 
     <TextView
-        android:id="@+id/textview_order_label"
+        android:id="@+id/github_dialog_textview_order_label"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -144,22 +144,22 @@
         android:text="@string/dialog_order_label"
         android:textColor="@color/colorPrimary"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/view5"
+        app:layout_constraintBottom_toTopOf="@id/github_dialog_view5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view4" />
+        app:layout_constraintTop_toBottomOf="@id/github_dialog_view4" />
 
     <RadioGroup
-        android:id="@+id/radiogroup_order"
+        android:id="@+id/github_dialog_radiogroup_order"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toBottomOf="@+id/view4">
+        app:layout_constraintStart_toStartOf="@id/github_dialog_guideline"
+        app:layout_constraintTop_toBottomOf="@id/github_dialog_view4">
 
         <RadioButton
-            android:id="@+id/order_descending_option"
+            android:id="@+id/github_dialog_order_descending_option"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
@@ -167,7 +167,7 @@
             android:textColor="@color/colorPrimary" />
 
         <RadioButton
-            android:id="@+id/order_ascending_option"
+            android:id="@+id/github_dialog_order_ascending_option"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/dialog_order_ascending_label"
@@ -176,17 +176,17 @@
     </RadioGroup>
 
     <View
-        android:id="@+id/view5"
+        android:id="@+id/github_dialog_view5"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:layout_marginTop="8dp"
         android:background="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radiogroup_order" />
+        app:layout_constraintTop_toBottomOf="@id/github_dialog_radiogroup_order" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
+        android:id="@+id/github_dialog_guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"

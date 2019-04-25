@@ -3,6 +3,7 @@ package com.example.dailyupdate.ui;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -114,6 +115,8 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
 
     @Override
     public void onMeetupDialogPositiveClick(DialogFragment dialog) {
+        meetupSearchKeyword = sharedPref.getString(getString(R.string.pref_meetup_edittext_key),
+                "");
         if (!meetupSearchKeyword.isEmpty()) {
             getMeetupFragment();
         } else {
@@ -129,6 +132,8 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
 
     @Override
     public void onGitHubDialogPositiveClick(DialogFragment dialog) {
+        gitHubSearchKeyword =
+                sharedPref.getString(getString(R.string.pref_github_edittext_key), "");
         if (!gitHubSearchKeyword.isEmpty()) {
             getGitHubFragment();
         } else {

@@ -7,39 +7,38 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.example.dailyupdate.R;
 import com.example.dailyupdate.data.MeetupGroup;
 
 import java.util.List;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 public class MeetupGroupAdapter extends RecyclerView.Adapter<MeetupGroupAdapter.MeetupGroupAdapterViewHolder> {
 
     private Context context;
+    private static ClickListener clickListener;
     private final List<MeetupGroup> meetupGroupList;
-    private int layoutOption;
-    int layoutIdForListItem;
 
-    public MeetupGroupAdapter(Context context, List<MeetupGroup> meetupGroupList,
-                              int layoutOption) {
+    public interface ClickListener {
+        void onItemClick(int position, View v);
+    }
+
+    public void setOnItemClickListener(ClickListener clickListener) {
+        MeetupGroupAdapter.clickListener = clickListener;
+    }
+
+    public MeetupGroupAdapter(Context context, List<MeetupGroup> meetupGroupList) {
         this.context = context;
         this.meetupGroupList = meetupGroupList;
-        this.layoutOption = layoutOption;
     }
 
     @Override
     public MeetupGroupAdapterViewHolder onCreateViewHolder(ViewGroup parent, int i) {
         context = parent.getContext();
-        if(layoutOption == 1){
-            layoutIdForListItem = R.layout.home_meetupgroup_item;
-        } else if (layoutOption == 2){
-            layoutIdForListItem = R.layout.meetup_main_group_item;
-        }
         LayoutInflater inflater = LayoutInflater.from(context);
-
-        View view = inflater.inflate(layoutIdForListItem, parent, false);
+        View view = inflater.inflate(R.layout.home_meetupgroup_item, parent, false);
         MeetupGroupAdapterViewHolder viewHolder = new MeetupGroupAdapterViewHolder(view);
         return viewHolder;
     }
@@ -68,7 +67,7 @@ public class MeetupGroupAdapter extends RecyclerView.Adapter<MeetupGroupAdapter.
         return meetupGroupList.size();
     }
 
-    public class MeetupGroupAdapterViewHolder extends RecyclerView.ViewHolder {
+    public class MeetupGroupAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private final TextView groupTitleTextView;
         private final TextView groupMembersTextView;
@@ -79,6 +78,12 @@ public class MeetupGroupAdapter extends RecyclerView.Adapter<MeetupGroupAdapter.
             groupTitleTextView = (TextView) view.findViewById(R.id.textview_group_title);
             groupMembersTextView = (TextView) view.findViewById(R.id.textview_group_members);
             groupImageView = (ImageView) view.findViewById(R.id.imageview_group_image);
+            view.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(final View v) {
+            clickListener.onItemClick(getAdapterPosition(), v);
         }
     }
 }

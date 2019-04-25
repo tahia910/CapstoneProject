@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
@@ -159,8 +160,16 @@ public class MainActivity extends AppCompatActivity {
                                    Response<List<MeetupGroup>> response) {
                 List<MeetupGroup> meetupGroupList = response.body();
                 MeetupGroupAdapter meetupGroupAdapter = new MeetupGroupAdapter(MainActivity.this,
-                        meetupGroupList, 1);
+                        meetupGroupList);
                 meetupRecyclerView.setAdapter(meetupGroupAdapter);
+
+                // Use an intent to open a browser and display the group details
+                meetupGroupAdapter.setOnItemClickListener((position, v) -> {
+                    MeetupGroup meetupGroup = meetupGroupList.get(position);
+                    String groupUrlString = meetupGroup.getGroupUrl();
+                    Uri groupUrl = Uri.parse(groupUrlString);
+                    startActivity(new Intent(Intent.ACTION_VIEW, groupUrl));
+                });
             }
 
             @Override

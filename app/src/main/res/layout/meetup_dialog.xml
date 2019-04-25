@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/dialog_layout_root"
+    android:id="@+id/meetup_dialog_layout_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/meetup_dialog_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
@@ -25,16 +25,16 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
-        android:id="@+id/view"
+        android:id="@+id/meetup_dialog_view"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:background="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title" />
+        app:layout_constraintTop_toBottomOf="@id/meetup_dialog_title" />
 
     <TextView
-        android:id="@+id/textview_keywords_label"
+        android:id="@+id/meetup_dialog_textview_keywords_label"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -42,12 +42,12 @@
         android:text="@string/dialog_keyword_label"
         android:textColor="@color/colorPrimary"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/view2"
+        app:layout_constraintBottom_toTopOf="@id/meetup_dialog_view2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view" />
+        app:layout_constraintTop_toBottomOf="@id/meetup_dialog_view" />
 
     <EditText
-        android:id="@+id/edittext_keywords_input"
+        android:id="@+id/meetup_dialog_edittext_keywords_input"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -56,21 +56,21 @@
         android:hint="@string/dialog_keyword_hint"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toBottomOf="@+id/view" />
+        app:layout_constraintStart_toStartOf="@id/meetup_dialog_guideline"
+        app:layout_constraintTop_toBottomOf="@id/meetup_dialog_view" />
 
     <View
-        android:id="@+id/view2"
+        android:id="@+id/meetup_dialog_view2"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:layout_marginTop="8dp"
         android:background="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edittext_keywords_input" />
+        app:layout_constraintTop_toBottomOf="@id/meetup_dialog_edittext_keywords_input" />
 
     <TextView
-        android:id="@+id/textview_sortby_label"
+        android:id="@+id/meetup_dialog_textview_sortby_label"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -78,48 +78,49 @@
         android:text="@string/dialog_sort_label"
         android:textColor="@color/colorPrimary"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/view3"
+        app:layout_constraintBottom_toTopOf="@id/meetup_dialog_view3"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view2" />
+        app:layout_constraintTop_toBottomOf="@id/meetup_dialog_view2" />
 
     <RadioGroup
-        android:id="@+id/radiogroup_sortby"
+        android:id="@+id/meetup_dialog_radiogroup_sortby"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toBottomOf="@+id/view2">
+        app:layout_constraintStart_toStartOf="@id/meetup_dialog_guideline"
+        app:layout_constraintTop_toBottomOf="@id/meetup_dialog_view2">
 
         <RadioButton
-            android:id="@+id/sortby_group"
+            android:id="@+id/meetup_dialog_sortby_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="@string/dialog_sort_groups_label"
+            android:text="@string/dialog_sort_time_label"
             android:textColor="@color/colorPrimary" />
 
         <RadioButton
-            android:id="@+id/sortby_calendar"
+            android:id="@+id/meetup_dialog_sortby_best"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/dialog_sort_calendar_label"
+            android:text="@string/dialog_sort_best_label"
             android:textColor="@color/colorPrimary" />
+
     </RadioGroup>
 
     <View
-        android:id="@+id/view3"
+        android:id="@+id/meetup_dialog_view3"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:layout_marginTop="8dp"
         android:background="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/radiogroup_sortby" />
+        app:layout_constraintTop_toBottomOf="@id/meetup_dialog_radiogroup_sortby" />
 
     <TextView
-        android:id="@+id/textview_location_label"
+        android:id="@+id/meetup_dialog_textview_location_label"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -127,12 +128,12 @@
         android:text="@string/dialog_location_label"
         android:textColor="@color/colorPrimary"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/textview_location_label2"
+        app:layout_constraintBottom_toTopOf="@id/meetup_dialog_textview_location_label2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view3" />
+        app:layout_constraintTop_toBottomOf="@id/meetup_dialog_view3" />
 
     <EditText
-        android:id="@+id/edittext_location_input"
+        android:id="@+id/meetup_dialog_edittext_location_input"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -141,11 +142,11 @@
         android:hint="@string/dialog_location_hint"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toBottomOf="@+id/view3" />
+        app:layout_constraintStart_toStartOf="@id/meetup_dialog_guideline"
+        app:layout_constraintTop_toBottomOf="@id/meetup_dialog_view3" />
 
     <TextView
-        android:id="@+id/textview_location_label2"
+        android:id="@+id/meetup_dialog_textview_location_label2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -155,20 +156,20 @@
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edittext_location_input" />
+        app:layout_constraintTop_toBottomOf="@id/meetup_dialog_edittext_location_input" />
 
     <View
-        android:id="@+id/view4"
+        android:id="@+id/meetup_dialog_view4"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:layout_marginTop="8dp"
         android:background="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textview_location_label2" />
+        app:layout_constraintTop_toBottomOf="@id/meetup_dialog_textview_location_label2" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
+        android:id="@+id/meetup_dialog_guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
