@@ -8,6 +8,8 @@ import com.google.gson.annotations.SerializedName;
 
 public class MeetupEvent implements Parcelable {
 
+    @SerializedName("id")
+    private String eventId;
     @SerializedName("name")
     private String eventName;
     @SerializedName("status")
@@ -23,8 +25,10 @@ public class MeetupEvent implements Parcelable {
     @SerializedName("yes_rsvp_count")
     private int attendeesCount;
 
-    public MeetupEvent(String eventName, String eventStatus, String eventDate, String eventTime,
+    public MeetupEvent(String eventId, String eventName, String eventStatus, String eventDate,
+                       String eventTime,
                        MeetupEventGroupName groupName, String eventUrl, int attendeesCount) {
+        this.eventId = eventId;
         this.eventName = eventName;
         this.eventStatus = eventStatus;
         this.eventDate = eventDate;
@@ -36,6 +40,7 @@ public class MeetupEvent implements Parcelable {
 
     @SuppressLint("NewApi")
     private MeetupEvent(Parcel in) {
+        eventId = in.readString();
         eventName = in.readString();
         eventStatus = in.readString();
         eventDate = in.readString();
@@ -57,6 +62,8 @@ public class MeetupEvent implements Parcelable {
         }
     };
 
+    public String getEventId(){return eventId;}
+
     public String getEventName() {
         return eventName;
     }
@@ -73,7 +80,7 @@ public class MeetupEvent implements Parcelable {
         return eventTime;
     }
 
-    public MeetupEventGroupName getGroupName() {
+    public MeetupEventGroupName getGroupNameObject() {
         return groupName;
     }
 
@@ -92,6 +99,7 @@ public class MeetupEvent implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(eventId);
         dest.writeString(eventName);
         dest.writeString(eventStatus);
         dest.writeString(eventDate);

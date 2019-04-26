@@ -3,7 +3,6 @@ package com.example.dailyupdate.ui;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -21,6 +20,7 @@ import androidx.preference.PreferenceManager;
 import com.example.dailyupdate.R;
 import com.example.dailyupdate.ui.fragment.GitHubDialogFragment;
 import com.example.dailyupdate.ui.fragment.GitHubMainFragment;
+import com.example.dailyupdate.ui.fragment.MeetupDetailsFragment;
 import com.example.dailyupdate.ui.fragment.MeetupDialogFragment;
 import com.example.dailyupdate.ui.fragment.MeetupMainFragment;
 import com.google.android.material.navigation.NavigationView;
@@ -32,7 +32,7 @@ import static com.example.dailyupdate.ui.MainActivity.GITHUB_MAIN_KEY;
 import static com.example.dailyupdate.ui.MainActivity.MAIN_KEY;
 import static com.example.dailyupdate.ui.MainActivity.MEETUP_MAIN_KEY;
 
-public class MainViewActivity extends AppCompatActivity implements MeetupDialogFragment.MeetupDialogListener, GitHubDialogFragment.GitHubDialogListener {
+public class MainViewActivity extends AppCompatActivity implements MeetupDialogFragment.MeetupDialogListener, GitHubDialogFragment.GitHubDialogListener, MeetupMainFragment.MeetupMainFragmentListener {
 
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawer;
@@ -41,6 +41,8 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
     @BindView(R.id.nav_view)
     NavigationView navigationView;
 
+    public static final String KEY_GROUP_URL = "keyGroupUrl";
+    public static final String KEY_EVENT_ID = "keyEventId";
     MeetupMainFragment meetupFragment;
     GitHubMainFragment gitHubFragment;
     private FragmentManager fragmentManager;
@@ -96,10 +98,10 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
     public void getSearchDialog() {
         if (mainViewOption.equals(MEETUP_MAIN_KEY)) {
             DialogFragment meetupDialogFragment = new MeetupDialogFragment();
-            meetupDialogFragment.show(getSupportFragmentManager(), "meetup_search");
+            meetupDialogFragment.show(fragmentManager, "meetup_search");
         } else if (mainViewOption.equals(GITHUB_MAIN_KEY)) {
             DialogFragment gitHubDialogFragment = new GitHubDialogFragment();
-            gitHubDialogFragment.show(getSupportFragmentManager(), "github_search");
+            gitHubDialogFragment.show(fragmentManager, "github_search");
         }
     }
 
@@ -132,8 +134,8 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
 
     @Override
     public void onGitHubDialogPositiveClick(DialogFragment dialog) {
-        gitHubSearchKeyword =
-                sharedPref.getString(getString(R.string.pref_github_edittext_key), "");
+        gitHubSearchKeyword = sharedPref.getString(getString(R.string.pref_github_edittext_key),
+                "");
         if (!gitHubSearchKeyword.isEmpty()) {
             getGitHubFragment();
         } else {
@@ -145,6 +147,14 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
     @Override
     public void onGitHubDialogNegativeClick(DialogFragment dialog) {
         // TODO: handle github dialog cancel option(2)
+    }
+
+    @Override
+    public void currentEventInfo(String groupUrl, String eventId) {
+        MeetupDetailsFragment meetupDetailsFragment = MeetupDetailsFragment.newInstance(groupUrl,
+                eventId);
+        meetupDetailsFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.Dialog_FullScreen);
+        meetupDetailsFragment.show(getSupportFragmentManager(), "meetup_details");
     }
 
     @Override
@@ -188,7 +198,7 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
                 startActivity(new Intent(this, MainActivity.class));
                 break;
             case R.id.nav_bookmarks:
-                Toast.makeText(this, "Bookmarks", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, BookmarksActivity.class));
                 break;
             case R.id.nav_github:
                 if (!mainViewOption.equals(GITHUB_MAIN_KEY)) {

@@ -39,7 +39,7 @@ public class GitHubDialogFragment extends DialogFragment {
             listener = (GitHubDialogListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(getActivity().toString() + " must implement " +
-                    "NoticeDialogListener");
+                    "GitHubDialogListener");
         }
     }
 

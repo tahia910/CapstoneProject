@@ -1,6 +1,9 @@
 package com.example.dailyupdate.ui.fragment;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +19,7 @@ import com.example.dailyupdate.BuildConfig;
 import com.example.dailyupdate.R;
 import com.example.dailyupdate.data.MeetupEvent;
 import com.example.dailyupdate.data.MeetupEventResponse;
+import com.example.dailyupdate.data.MeetupGroup;
 import com.example.dailyupdate.networking.MeetupService;
 import com.example.dailyupdate.networking.RetrofitInstance;
 import com.example.dailyupdate.ui.adapter.MeetupEventAdapter;
@@ -39,7 +43,21 @@ public class MeetupMainFragment extends Fragment {
     private String searchLocation;
     SharedPreferences sharedPref;
 
-    public MeetupMainFragment() {
+    MeetupMainFragmentListener listener;
+
+    public interface MeetupMainFragmentListener{
+        void currentEventInfo(String groupUrl, String eventId);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof MeetupMainFragmentListener) {
+            listener = (MeetupMainFragmentListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement MeetupMainFragmentListener");
+        }
     }
 
     public static MeetupMainFragment newInstance() {
@@ -79,6 +97,13 @@ public class MeetupMainFragment extends Fragment {
                 MeetupEventAdapter meetupEventAdapter = new MeetupEventAdapter(getContext(),
                         meetupEventList);
                 recyclerView.setAdapter(meetupEventAdapter);
+
+                meetupEventAdapter.setOnItemClickListener((position, v) -> {
+                    MeetupEvent meetupEvent = meetupEventList.get(position);
+                    String eventId = meetupEvent.getEventId();
+                    String groupUrl = meetupEvent.getGroupNameObject().getEventGroupUrl();
+                    listener.currentEventInfo(groupUrl, eventId);
+                });
             }
 
             @Override

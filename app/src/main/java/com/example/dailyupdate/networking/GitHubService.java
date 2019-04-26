@@ -14,6 +14,6 @@ public interface GitHubService {
 
     @GET("search/repositories")
     Call<GitHubResponse> getGitHubRepoListWithOrder(@Query("q") String searchKeyword,
-                                           @Query("sort") String sortBy,
-                                           @Query("order") String searchOrder);
+                                                    @Query("sort") String sortBy,
+                                                    @Query("order") String searchOrder);
 }

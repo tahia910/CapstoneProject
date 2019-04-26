@@ -50,6 +50,7 @@ dependencies {
     // Google Location Service
     implementation 'com.google.android.gms:play-services-places:16.0.0'
     implementation 'com.google.android.gms:play-services-location:16.0.0'
+    implementation 'com.google.android.gms:play-services-maps:16.0.0'
 
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'

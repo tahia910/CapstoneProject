@@ -11,6 +11,7 @@
     <string name="github_search_title">GitHub Search</string>
     <string name="search_label">Search</string>
     <string name="preference_label">Search Preferences</string>
+    <string name="bookmarks_label">Bookmarked Events</string>
 
 
     <!-- Strings for the Search Dialog -->
@@ -46,6 +47,7 @@
     <string name="tools_event_status">Status</string>
     <string name="tools_event_attendees"># members going</string>
     <string name="content_description_group_image">Group image</string>
+    <string name="content_description_event_image">Event image</string>
     <string name="content_description_bookmark_icon">Bookmark icon</string>
 
     <string name="repository_no_description">(No description available.)</string>

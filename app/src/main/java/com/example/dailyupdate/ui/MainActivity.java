@@ -303,7 +303,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.nav_home:
                 break;
             case R.id.nav_bookmarks:
-                Toast.makeText(this, "Bookmarks", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, BookmarksActivity.class));
                 break;
             case R.id.nav_github:
                 Intent gitHubIntent = new Intent(MainActivity

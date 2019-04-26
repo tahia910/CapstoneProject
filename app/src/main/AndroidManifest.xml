@@ -31,6 +31,11 @@
             android:name=".ui.PreferenceActivity"
             android:label="@string/preference_label">
         </activity>
+
+        <activity
+            android:name=".ui.BookmarksActivity"
+            android:label="@string/bookmarks_label">
+        </activity>
     </application>
 
 </manifest>

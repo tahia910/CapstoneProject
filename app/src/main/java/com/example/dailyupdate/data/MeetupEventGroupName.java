@@ -8,13 +8,17 @@ import com.google.gson.annotations.SerializedName;
 public class MeetupEventGroupName implements Parcelable {
     @SerializedName("name")
     private String eventGroupName;
+    @SerializedName("urlname")
+    private String eventGroupUrl;
 
-    public MeetupEventGroupName(String eventGroupName) {
+    public MeetupEventGroupName(String eventGroupName, String eventGroupUrl) {
         this.eventGroupName = eventGroupName;
+        this.eventGroupUrl = eventGroupUrl;
     }
 
     private MeetupEventGroupName(Parcel in) {
         eventGroupName = in.readString();
+        eventGroupUrl = in.readString();
     }
 
     public static final Creator<MeetupEventGroupName> CREATOR =
@@ -34,6 +38,8 @@ public class MeetupEventGroupName implements Parcelable {
         return eventGroupName;
     }
 
+    public String getEventGroupUrl(){return eventGroupUrl;}
+
     @Override
     public int describeContents() {
         return 0;
@@ -42,5 +48,6 @@ public class MeetupEventGroupName implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(eventGroupName);
+        dest.writeString(eventGroupUrl);
     }
 }

@@ -17,8 +17,16 @@ import java.util.List;
 public class MeetupEventAdapter extends RecyclerView.Adapter<MeetupEventAdapter.MeetupEventAdapterViewHolder> {
 
     private Context context;
+    private static ClickListener clickListener;
     private final List<MeetupEvent> meetupEventList;
 
+    public interface ClickListener {
+        void onItemClick(int position, View v);
+    }
+
+    public void setOnItemClickListener(ClickListener clickListener) {
+        MeetupEventAdapter.clickListener = clickListener;
+    }
     public MeetupEventAdapter(Context context, List<MeetupEvent> meetupEventList) {
         this.context = context;
         this.meetupEventList = meetupEventList;
@@ -41,9 +49,7 @@ public class MeetupEventAdapter extends RecyclerView.Adapter<MeetupEventAdapter.
         String eventStatus = meetupEvent.getEventStatus();
         String eventDate = meetupEvent.getEventDate();
         String eventTime = meetupEvent.getEventTime();
-        MeetupEventGroupName groupNameObject = meetupEvent.getGroupName();
-        String groupName = groupNameObject.getEventGroupName();
-        String eventUrl = meetupEvent.getEventUrl();
+        String groupName = meetupEvent.getGroupNameObject().getEventGroupName();
 
         int attendeesCount = meetupEvent.getAttendeesCount();
         String attendeesCountString = String.valueOf(attendeesCount) + " members going";
@@ -62,7 +68,7 @@ public class MeetupEventAdapter extends RecyclerView.Adapter<MeetupEventAdapter.
         return meetupEventList.size();
     }
 
-    public class MeetupEventAdapterViewHolder extends RecyclerView.ViewHolder {
+    public class MeetupEventAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private final TextView eventNameTextView;
         private final TextView eventStatusTextView;
@@ -80,6 +86,12 @@ public class MeetupEventAdapter extends RecyclerView.Adapter<MeetupEventAdapter.
             eventTimeTextView = (TextView) view.findViewById(R.id.textview_event_time);
             groupNameTextView = (TextView) view.findViewById(R.id.textview_group_title);
             attendeesCountTextView = (TextView) view.findViewById(R.id.textview_event_attendees);
+            view.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(final View v) {
+            clickListener.onItemClick(getAdapterPosition(), v);
         }
     }
 }

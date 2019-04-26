@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/textview_event_title_meetup_detail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/tools_event_title" />
+
+        <ImageView
+            android:id="@+id/imageview_group_icon_meetup_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/ic_group"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textview_event_title_meetup_detail" />
+
+        <TextView
+            android:id="@+id/textview_group_title_meetup_detail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imageview_group_icon_meetup_detail"
+            app:layout_constraintTop_toBottomOf="@id/textview_event_title_meetup_detail"
+            tools:text="@string/tools_group_title" />
+
+
+        <ImageView
+            android:id="@+id/imageview_status_icon_meetup_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/ic_check"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imageview_group_icon_meetup_detail" />
+
+        <TextView
+            android:id="@+id/textview_status_meetup_detail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:textColor="@color/colorPrimary"
+            app:layout_constraintEnd_toStartOf="@id/textview_place_left_meetup_detail"
+            app:layout_constraintStart_toEndOf="@id/imageview_status_icon_meetup_detail"
+            app:layout_constraintTop_toBottomOf="@id/imageview_group_icon_meetup_detail"
+            tools:text="Status: upcoming" />
+
+        <TextView
+            android:id="@+id/textview_attendees_meetup_detail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:textColor="@color/colorPrimary"
+            app:layout_constraintEnd_toStartOf="@id/textview_waitlist_meetup_detail"
+            app:layout_constraintStart_toEndOf="@id/imageview_status_icon_meetup_detail"
+            app:layout_constraintTop_toBottomOf="@id/textview_status_meetup_detail"
+            tools:text="@string/tools_event_attendees" />
+
+        <TextView
+            android:id="@+id/textview_place_left_meetup_detail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:textColor="@color/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/textview_status_meetup_detail"
+            app:layout_constraintTop_toBottomOf="@id/imageview_group_icon_meetup_detail"
+            tools:text="*** places left" />
+
+        <TextView
+            android:id="@+id/textview_waitlist_meetup_detail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:textColor="@color/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/textview_attendees_meetup_detail"
+            app:layout_constraintTop_toBottomOf="@id/textview_status_meetup_detail"
+            tools:text="*** members on waitlist" />
+
+
+        <ImageView
+            android:id="@+id/imageview_time_icon_meetup_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/ic_time"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textview_attendees_meetup_detail" />
+
+        <TextView
+            android:id="@+id/textview_date_meetup_detail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:gravity="center_horizontal"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/textview_time_meetup_detail"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@id/imageview_time_icon_meetup_detail"
+            app:layout_constraintTop_toBottomOf="@id/textview_attendees_meetup_detail"
+            tools:text="@string/tools_event_date" />
+
+        <TextView
+            android:id="@+id/textview_time_meetup_detail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="center_horizontal"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/textview_date_meetup_detail"
+            app:layout_constraintTop_toBottomOf="@id/textview_attendees_meetup_detail"
+            tools:text="@string/tools_event_time" />
+
+        <ImageView
+            android:id="@+id/imageview_place_icon_meetup_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/ic_place"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imageview_time_icon_meetup_detail" />
+
+        <TextView
+            android:id="@+id/textview_address_meetup_detail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="center_horizontal"
+            android:textColor="@color/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imageview_place_icon_meetup_detail"
+            app:layout_constraintTop_toBottomOf="@id/imageview_time_icon_meetup_detail"
+            tools:text="*** Tower 14F, Shinjuku 0-00-0, Tokyo, Japan" />
+
+        <!-- TODO: Add a map?-->
+
+        <TextView
+            android:id="@+id/textview_description_label_meetup_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:text="Description"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imageview_place_icon_meetup_detail" />
+
+        <TextView
+            android:id="@+id/textview_description_meetup_detail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:textColor="@color/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textview_description_label_meetup_detail"
+            tools:text="Description of the event that will probably take many lines" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
