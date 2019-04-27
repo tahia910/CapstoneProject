@@ -1,4 +1,4 @@
-package com.example.dailyupdate.ui;
+package com.example.dailyupdate.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,9 +20,9 @@ import com.google.android.material.navigation.NavigationView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.example.dailyupdate.ui.MainActivity.GITHUB_MAIN_KEY;
-import static com.example.dailyupdate.ui.MainActivity.MAIN_KEY;
-import static com.example.dailyupdate.ui.MainActivity.MEETUP_MAIN_KEY;
+import static com.example.dailyupdate.ui.activity.MainActivity.GITHUB_MAIN_KEY;
+import static com.example.dailyupdate.ui.activity.MainActivity.MAIN_KEY;
+import static com.example.dailyupdate.ui.activity.MainActivity.MEETUP_MAIN_KEY;
 
 public class BookmarksActivity extends AppCompatActivity {
     @BindView(R.id.drawer_layout)

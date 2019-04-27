@@ -1,13 +1,28 @@
-package com.example.dailyupdate.data;
+package com.example.dailyupdate.data.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
 import com.google.gson.annotations.SerializedName;
 
+@Entity(foreignKeys = @ForeignKey(
+        entity = MeetupEventDetails.class,
+        parentColumns = "event_id",
+        childColumns = "group_name"))
 public class MeetupEventGroupName implements Parcelable {
+
+    @PrimaryKey
+    @ColumnInfo(name = "group_name")
     @SerializedName("name")
     private String eventGroupName;
+
+    @ColumnInfo(name = "group_url")
     @SerializedName("urlname")
     private String eventGroupUrl;
 
@@ -16,6 +31,7 @@ public class MeetupEventGroupName implements Parcelable {
         this.eventGroupUrl = eventGroupUrl;
     }
 
+    @Ignore
     private MeetupEventGroupName(Parcel in) {
         eventGroupName = in.readString();
         eventGroupUrl = in.readString();
@@ -38,7 +54,17 @@ public class MeetupEventGroupName implements Parcelable {
         return eventGroupName;
     }
 
-    public String getEventGroupUrl(){return eventGroupUrl;}
+    public void setEventGroupName(String eventGroupName) {
+        this.eventGroupName = eventGroupName;
+    }
+
+    public String getEventGroupUrl() {
+        return eventGroupUrl;
+    }
+
+    public void setEventGroupUrl(String eventGroupUrl) {
+        this.eventGroupUrl = eventGroupUrl;
+    }
 
     @Override
     public int describeContents() {

@@ -1,13 +1,12 @@
 package com.example.dailyupdate.networking;
 
-import com.example.dailyupdate.data.MeetupEventDetails;
-import com.example.dailyupdate.data.MeetupEventResponse;
-import com.example.dailyupdate.data.MeetupGroup;
+import com.example.dailyupdate.data.model.MeetupEventDetails;
+import com.example.dailyupdate.data.model.MeetupEventResponse;
+import com.example.dailyupdate.data.model.MeetupGroup;
 
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Response;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;

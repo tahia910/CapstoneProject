@@ -2,7 +2,6 @@ package com.example.dailyupdate.ui.fragment;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +10,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.example.dailyupdate.BuildConfig;
+import com.example.dailyupdate.MainViewModel;
 import com.example.dailyupdate.R;
-import com.example.dailyupdate.data.MeetupEventDetails;
-import com.example.dailyupdate.data.MeetupEventLocation;
+import com.example.dailyupdate.data.model.MeetupEventDetails;
+import com.example.dailyupdate.data.model.MeetupEventLocation;
 import com.example.dailyupdate.networking.MeetupService;
 import com.example.dailyupdate.networking.RetrofitInstance;
 
@@ -25,8 +26,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.example.dailyupdate.ui.MainViewActivity.KEY_EVENT_ID;
-import static com.example.dailyupdate.ui.MainViewActivity.KEY_GROUP_URL;
+import static com.example.dailyupdate.ui.activity.MainViewActivity.KEY_EVENT_ID;
+import static com.example.dailyupdate.ui.activity.MainViewActivity.KEY_GROUP_URL;
 
 public class MeetupDetailsFragment extends DialogFragment {
 
@@ -57,11 +58,13 @@ public class MeetupDetailsFragment extends DialogFragment {
     ImageView bookmarkIcon;
 
     Dialog dialog;
+    private MainViewModel viewModel;
 
 
     private String API_KEY = BuildConfig.MEETUP_API_KEY;
     private String groupId;
     private String eventId;
+    MeetupEventDetails currentEvent;
 
     public static MeetupDetailsFragment newInstance(String groupUrl, String eventId) {
         MeetupDetailsFragment meetupDetailsFragment = new MeetupDetailsFragment();
@@ -84,6 +87,7 @@ public class MeetupDetailsFragment extends DialogFragment {
             groupId = getArguments().getString(KEY_GROUP_URL);
             eventId = getArguments().getString(KEY_EVENT_ID);
         }
+        viewModel = ViewModelProviders.of(MeetupDetailsFragment.this).get(MainViewModel.class);
         retrieveEventDetails();
         return rootView;
     }
@@ -99,7 +103,12 @@ public class MeetupDetailsFragment extends DialogFragment {
         backIcon = dialog.findViewById(R.id.back_icon_meetup_detail);
         backIcon.setOnClickListener(v -> dialog.dismiss());
         bookmarkIcon = dialog.findViewById(R.id.bookmark_icon_meetup_detail);
-        bookmarkIcon.setOnClickListener(v -> Log.e("Details Dialog", "Bookmarked"));
+        bookmarkIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewModel.insertBookmarkedEvent(currentEvent);
+            }
+        });
     }
 
     private void retrieveEventDetails() {
@@ -112,8 +121,10 @@ public class MeetupDetailsFragment extends DialogFragment {
             @Override
             public void onResponse(Call<MeetupEventDetails> call,
                                    Response<MeetupEventDetails> response) {
-                MeetupEventDetails meetupEventDetails = response.body();
-                setEventInformation(meetupEventDetails);
+                if (response.body() != null) {
+                    currentEvent = response.body();
+                }
+                setEventInformation(currentEvent);
             }
 
             @Override

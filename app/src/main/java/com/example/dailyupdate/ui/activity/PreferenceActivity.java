@@ -1,4 +1,4 @@
-package com.example.dailyupdate.ui;
+package com.example.dailyupdate.ui.activity;
 
 import android.os.Bundle;
 

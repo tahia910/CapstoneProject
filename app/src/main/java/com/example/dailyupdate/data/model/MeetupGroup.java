@@ -1,4 +1,4 @@
-package com.example.dailyupdate.data;
+package com.example.dailyupdate.data.model;
 
 import android.annotation.SuppressLint;
 import android.os.Parcel;

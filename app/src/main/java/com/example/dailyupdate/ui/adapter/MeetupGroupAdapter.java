@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.dailyupdate.R;
-import com.example.dailyupdate.data.MeetupGroup;
+import com.example.dailyupdate.data.model.MeetupGroup;
 
 import java.util.List;
 

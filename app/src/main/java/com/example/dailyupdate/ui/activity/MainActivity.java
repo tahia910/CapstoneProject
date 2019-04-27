@@ -1,4 +1,4 @@
-package com.example.dailyupdate.ui;
+package com.example.dailyupdate.ui.activity;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
@@ -29,9 +29,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dailyupdate.BuildConfig;
 import com.example.dailyupdate.R;
-import com.example.dailyupdate.data.GitHubRepo;
-import com.example.dailyupdate.data.GitHubResponse;
-import com.example.dailyupdate.data.MeetupGroup;
+import com.example.dailyupdate.data.model.GitHubRepo;
+import com.example.dailyupdate.data.model.GitHubResponse;
+import com.example.dailyupdate.data.model.MeetupGroup;
 import com.example.dailyupdate.networking.GitHubService;
 import com.example.dailyupdate.networking.MeetupService;
 import com.example.dailyupdate.networking.RetrofitInstance;

@@ -1,11 +1,8 @@
 package com.example.dailyupdate.ui.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dailyupdate.BuildConfig;
 import com.example.dailyupdate.R;
-import com.example.dailyupdate.data.MeetupEvent;
-import com.example.dailyupdate.data.MeetupEventResponse;
-import com.example.dailyupdate.data.MeetupGroup;
+import com.example.dailyupdate.data.model.MeetupEvent;
+import com.example.dailyupdate.data.model.MeetupEventResponse;
 import com.example.dailyupdate.networking.MeetupService;
 import com.example.dailyupdate.networking.RetrofitInstance;
 import com.example.dailyupdate.ui.adapter.MeetupEventAdapter;

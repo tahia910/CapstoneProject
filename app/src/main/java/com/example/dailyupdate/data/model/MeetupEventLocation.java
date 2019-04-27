@@ -1,4 +1,4 @@
-package com.example.dailyupdate.data;
+package com.example.dailyupdate.data.model;
 
 import com.google.gson.annotations.SerializedName;
 

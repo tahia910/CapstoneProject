@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dailyupdate.R;
-import com.example.dailyupdate.data.GitHubRepo;
-import com.example.dailyupdate.data.GitHubResponse;
+import com.example.dailyupdate.data.model.GitHubRepo;
+import com.example.dailyupdate.data.model.GitHubResponse;
 import com.example.dailyupdate.networking.GitHubService;
 import com.example.dailyupdate.networking.RetrofitInstance;
 import com.example.dailyupdate.ui.adapter.GitHubRepoAdapter;

@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.dailyupdate.R;
-import com.example.dailyupdate.data.GitHubRepo;
+import com.example.dailyupdate.data.model.GitHubRepo;
 
 import java.util.List;
 

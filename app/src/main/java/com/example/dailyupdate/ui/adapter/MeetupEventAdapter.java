@@ -9,8 +9,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dailyupdate.R;
-import com.example.dailyupdate.data.MeetupEvent;
-import com.example.dailyupdate.data.MeetupEventGroupName;
+import com.example.dailyupdate.data.model.MeetupEvent;
 
 import java.util.List;
 
