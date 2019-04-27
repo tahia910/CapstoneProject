@@ -15,7 +15,14 @@ import com.example.dailyupdate.data.model.MeetupGroup;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MeetupGroupAdapter extends RecyclerView.Adapter<MeetupGroupAdapter.MeetupGroupAdapterViewHolder> {
+
+    @BindView(R.id.textview_group_title) TextView groupTitleTextView;
+    @BindView(R.id.textview_group_members) TextView groupMembersTextView;
+    @BindView(R.id.imageview_group_image) ImageView groupImageView;
 
     private Context context;
     private static ClickListener clickListener;
@@ -37,28 +44,24 @@ public class MeetupGroupAdapter extends RecyclerView.Adapter<MeetupGroupAdapter.
     @Override
     public MeetupGroupAdapterViewHolder onCreateViewHolder(ViewGroup parent, int i) {
         context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.home_meetupgroup_item, parent, false);
-        MeetupGroupAdapterViewHolder viewHolder = new MeetupGroupAdapterViewHolder(view);
-        return viewHolder;
+        View view = LayoutInflater.from(context).inflate(R.layout.home_meetupgroup_item, parent, false);
+        ButterKnife.bind(this, view);
+        return new MeetupGroupAdapterViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(MeetupGroupAdapterViewHolder viewHolder, int i) {
         MeetupGroup meetupGroup = meetupGroupList.get(i);
-        String groupTitle = meetupGroup.getGroupName();
-        int groupMembers = meetupGroup.getGroupMembers();
-        String groupMembersString =
-                String.valueOf(groupMembers) + context.getString(R.string.meetupgroup_members_label);
+        String groupMembersString = meetupGroup.getGroupMembers() + context.getString(R.string.meetupgroup_members_label);
 
         if (meetupGroup.getGroupPhoto() != null) {
             String groupImageUrl = meetupGroup.getGroupPhoto().getGroupPhotoUrl();
-            Glide.with(viewHolder.groupImageView.getContext()).load(groupImageUrl).centerCrop().into(viewHolder.groupImageView);
+            Glide.with(groupImageView.getContext()).load(groupImageUrl).centerCrop().into(groupImageView);
         }
         // TODO: handle empty image case
 
-        viewHolder.groupTitleTextView.setText(groupTitle);
-        viewHolder.groupMembersTextView.setText(groupMembersString);
+        groupTitleTextView.setText(meetupGroup.getGroupName());
+        groupMembersTextView.setText(groupMembersString);
     }
 
     @Override
@@ -69,15 +72,8 @@ public class MeetupGroupAdapter extends RecyclerView.Adapter<MeetupGroupAdapter.
 
     public class MeetupGroupAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private final TextView groupTitleTextView;
-        private final TextView groupMembersTextView;
-        private final ImageView groupImageView;
-
         private MeetupGroupAdapterViewHolder(View view) {
             super(view);
-            groupTitleTextView = (TextView) view.findViewById(R.id.textview_group_title);
-            groupMembersTextView = (TextView) view.findViewById(R.id.textview_group_members);
-            groupImageView = (ImageView) view.findViewById(R.id.imageview_group_image);
             view.setOnClickListener(this);
         }
 

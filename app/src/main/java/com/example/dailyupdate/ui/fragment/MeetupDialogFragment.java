@@ -28,15 +28,14 @@ public class MeetupDialogFragment extends DialogFragment {
     private String searchKeyword;
     private String sortBy;
     private String searchLocation;
-    SharedPreferences sharedPref;
+    private SharedPreferences sharedPref;
+    private MeetupDialogListener listener;
 
     public interface MeetupDialogListener {
         void onMeetupDialogPositiveClick(DialogFragment dialog);
 
         void onMeetupDialogNegativeClick(DialogFragment dialog);
     }
-
-    MeetupDialogListener listener;
 
     @Override
     public void onAttach(Context context) {
@@ -82,15 +81,15 @@ public class MeetupDialogFragment extends DialogFragment {
     private void getDialogValues() {
         Dialog dialog = MeetupDialogFragment.this.getDialog();
         // Get the search keywords
-        keywordInputEditText = (EditText) dialog.findViewById(R.id.meetup_dialog_edittext_keywords_input);
+        keywordInputEditText = dialog.findViewById(R.id.meetup_dialog_edittext_keywords_input);
         String keywordInputValue = keywordInputEditText.getText().toString();
         keywordInputEditText.setText(keywordInputValue);
         searchKeyword = keywordInputValue;
         sharedPref.edit().putString(getString(R.string.pref_meetup_edittext_key), searchKeyword).apply();
 
         // Get the sorting preference. Default sorting option is by time order.
-        sortByBest = (RadioButton) dialog.findViewById(R.id.meetup_dialog_sortby_best);
-        sortByTime = (RadioButton) dialog.findViewById(R.id.meetup_dialog_sortby_time);
+        sortByBest = dialog.findViewById(R.id.meetup_dialog_sortby_best);
+        sortByTime = dialog.findViewById(R.id.meetup_dialog_sortby_time);
         if (sortByBest.isChecked()) {
             sortBy = getString(R.string.pref_meetup_sort_best_value);
         } else if (sortByTime.isChecked()) {
@@ -99,7 +98,7 @@ public class MeetupDialogFragment extends DialogFragment {
         sharedPref.edit().putString(getString(R.string.pref_meetup_sort_key), sortBy).apply();
 
         // Get the location
-        locationInputEditText = (EditText) dialog.findViewById(R.id.meetup_dialog_edittext_location_input);
+        locationInputEditText = dialog.findViewById(R.id.meetup_dialog_edittext_location_input);
         String locationInputValue = locationInputEditText.getText().toString();
         locationInputEditText.setText(locationInputValue);
         if (!locationInputValue.isEmpty()) {

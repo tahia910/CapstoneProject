@@ -29,13 +29,12 @@ import retrofit2.Response;
 
 public class GitHubMainFragment extends Fragment {
 
-    @BindView(R.id.main_recycler_view)
-    RecyclerView recyclerView;
+    @BindView(R.id.main_recycler_view) RecyclerView recyclerView;
 
     private String searchKeyword;
     private String sortBy;
     private String searchOrder;
-    SharedPreferences sharedPref;
+    private SharedPreferences sharedPref;
 
     public GitHubMainFragment() {
     }

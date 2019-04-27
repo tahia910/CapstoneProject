@@ -53,18 +53,18 @@ public class MeetupDetailsFragment extends DialogFragment {
     TextView eventDescriptionTextView;
 
     //    @BindView(R.id.back_icon_meetup_detail)
-    ImageView backIcon;
+    private ImageView backIcon;
     //    @BindView(R.id.bookmark_icon_meetup_detail)
-    ImageView bookmarkIcon;
+    private ImageView bookmarkIcon;
 
-    Dialog dialog;
+    private Dialog dialog;
     private MainViewModel viewModel;
 
 
     private String API_KEY = BuildConfig.MEETUP_API_KEY;
     private String groupId;
     private String eventId;
-    MeetupEventDetails currentEvent;
+    private MeetupEventDetails currentEvent;
 
     public static MeetupDetailsFragment newInstance(String groupUrl, String eventId) {
         MeetupDetailsFragment meetupDetailsFragment = new MeetupDetailsFragment();
@@ -102,6 +102,7 @@ public class MeetupDetailsFragment extends DialogFragment {
         dialog = MeetupDetailsFragment.this.getDialog();
         backIcon = dialog.findViewById(R.id.back_icon_meetup_detail);
         backIcon.setOnClickListener(v -> dialog.dismiss());
+
         bookmarkIcon = dialog.findViewById(R.id.bookmark_icon_meetup_detail);
         bookmarkIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,13 +141,12 @@ public class MeetupDetailsFragment extends DialogFragment {
         String status = "Status: " + meetupEventDetails.getEventStatus();
 
         int attendeesCount = meetupEventDetails.getEventAttendees();
-        String attendeesCountString = String.valueOf(attendeesCount) + " members going";
+        String attendeesCountString = attendeesCount + getString(R.string.meetupevent_attendees_label);
 
-        int waitlistCount = meetupEventDetails.getWaitlistCount();
-        String waitlistCountString = String.valueOf(waitlistCount) + " members on waitlist";
+        String waitlistCountString = meetupEventDetails.getWaitlistCount() + " members on waitlist";
 
         int maximumAttendees = meetupEventDetails.getMaximumAttendees();
-        String placeLeftString = String.valueOf(maximumAttendees - attendeesCount) + " places left";
+        String placeLeftString = (maximumAttendees - attendeesCount) + " places left";
 
         MeetupEventLocation locationObject = meetupEventDetails.getLocationObject();
         String placeName = locationObject.getPlaceName();
@@ -155,9 +155,9 @@ public class MeetupDetailsFragment extends DialogFragment {
         String country = locationObject.getCountry();
         String addressString = placeName + ", " + address + ", " + city + ", " + country;
 
+        // TODO: format date and time
         String eventDate = meetupEventDetails.getEventDate();
         String eventTime = meetupEventDetails.getEventTime();
-        String eventDescription = meetupEventDetails.getEventDescription();
         eventTitleTextView.setText(eventName);
         groupTextView.setText(groupName);
         statusTextView.setText(status);
@@ -167,7 +167,7 @@ public class MeetupDetailsFragment extends DialogFragment {
         dateTextView.setText(eventDate);
         timeTextView.setText(eventTime);
         addressTextView.setText(addressString);
-        eventDescriptionTextView.setText(eventDescription);
+        eventDescriptionTextView.setText(meetupEventDetails.getEventDescription());
     }
 
     @Override

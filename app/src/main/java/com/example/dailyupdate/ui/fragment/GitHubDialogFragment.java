@@ -22,15 +22,14 @@ public class GitHubDialogFragment extends DialogFragment {
     private String searchKeyword;
     private String sortBy;
     private String searchOrder;
-    SharedPreferences sharedPref;
+    private SharedPreferences sharedPref;
+    private GitHubDialogListener listener;
 
     public interface GitHubDialogListener {
         void onGitHubDialogPositiveClick(DialogFragment dialog);
 
         void onGitHubDialogNegativeClick(DialogFragment dialog);
     }
-
-    GitHubDialogListener listener;
 
     @Override
     public void onAttach(Context context) {
@@ -70,20 +69,16 @@ public class GitHubDialogFragment extends DialogFragment {
         Dialog dialog = GitHubDialogFragment.this.getDialog();
 
         // Get the search keywords
-        EditText keywordInputEditText =
-                (EditText) dialog.findViewById(R.id.github_dialog_edittext_keywords_input);
+        EditText keywordInputEditText = dialog.findViewById(R.id.github_dialog_edittext_keywords_input);
         String keywordInputValue = keywordInputEditText.getText().toString();
         keywordInputEditText.setText(keywordInputValue);
         searchKeyword = keywordInputValue;
         sharedPref.edit().putString(getString(R.string.pref_github_edittext_key), searchKeyword).apply();
 
         // Get the sorting preference. Default sorting option is by updated date.
-        RadioButton sortByUpdated =
-                (RadioButton) dialog.findViewById(R.id.github_dialog_sortby_updated);
-        RadioButton sortByStars =
-                (RadioButton) dialog.findViewById(R.id.github_dialog_sortby_stars);
-        RadioButton sortByForks =
-                (RadioButton) dialog.findViewById(R.id.github_dialog_sortby_forks);
+        RadioButton sortByUpdated = dialog.findViewById(R.id.github_dialog_sortby_updated);
+        RadioButton sortByStars = dialog.findViewById(R.id.github_dialog_sortby_stars);
+        RadioButton sortByForks = dialog.findViewById(R.id.github_dialog_sortby_forks);
         if (sortByUpdated.isChecked()) {
             sortBy = getString(R.string.pref_github_sort_updated_value);
         } else if (sortByStars.isChecked()) {
@@ -94,10 +89,8 @@ public class GitHubDialogFragment extends DialogFragment {
         sharedPref.edit().putString(getString(R.string.pref_github_sort_key), sortBy).apply();
 
         // Get the order preference. Default order option is descending.
-        RadioButton orderDescending =
-                (RadioButton) dialog.findViewById(R.id.github_dialog_order_descending_option);
-        RadioButton orderAscending =
-                (RadioButton) dialog.findViewById(R.id.github_dialog_order_ascending_option);
+        RadioButton orderDescending = dialog.findViewById(R.id.github_dialog_order_descending_option);
+        RadioButton orderAscending = dialog.findViewById(R.id.github_dialog_order_ascending_option);
         if (orderDescending.isChecked()) {
             searchOrder = getString(R.string.pref_github_order_descending_value);
         } else if (orderAscending.isChecked()) {

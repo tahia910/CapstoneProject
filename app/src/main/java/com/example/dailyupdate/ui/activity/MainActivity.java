@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
     private int meetupGroupCategoryNumber = 34; // Category "Tech"
     private int meetupGroupResponsePageNumber = 20;
     private String API_KEY = BuildConfig.MEETUP_API_KEY;
-    SharedPreferences sharedPref;
+    private SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -288,13 +288,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-                menuItem.setChecked(true);
-                selectDrawerItem(menuItem);
-                return true;
-            }
+        navigationView.setNavigationItemSelectedListener(menuItem -> {
+            menuItem.setChecked(true);
+            selectDrawerItem(menuItem);
+            return true;
         });
     }
 

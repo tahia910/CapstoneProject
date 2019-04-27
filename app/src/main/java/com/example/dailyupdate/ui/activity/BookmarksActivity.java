@@ -25,16 +25,14 @@ import static com.example.dailyupdate.ui.activity.MainActivity.MAIN_KEY;
 import static com.example.dailyupdate.ui.activity.MainActivity.MEETUP_MAIN_KEY;
 
 public class BookmarksActivity extends AppCompatActivity {
-    @BindView(R.id.drawer_layout)
-    DrawerLayout mDrawer;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-    @BindView(R.id.nav_view)
-    NavigationView navigationView;
 
-    ActionBarDrawerToggle mDrawerToggle;
+    @BindView(R.id.drawer_layout) DrawerLayout mDrawer;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.nav_view) NavigationView navigationView;
+
+    private ActionBarDrawerToggle mDrawerToggle;
     private FragmentManager fragmentManager;
-    BookmarksFragment bookmarksFragment;
+    private BookmarksFragment bookmarksFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

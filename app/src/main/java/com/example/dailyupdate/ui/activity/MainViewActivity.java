@@ -34,23 +34,18 @@ import static com.example.dailyupdate.ui.activity.MainActivity.MEETUP_MAIN_KEY;
 
 public class MainViewActivity extends AppCompatActivity implements MeetupDialogFragment.MeetupDialogListener, GitHubDialogFragment.GitHubDialogListener, MeetupMainFragment.MeetupMainFragmentListener {
 
-    @BindView(R.id.drawer_layout)
-    DrawerLayout mDrawer;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-    @BindView(R.id.nav_view)
-    NavigationView navigationView;
+    @BindView(R.id.drawer_layout) DrawerLayout mDrawer;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.nav_view) NavigationView navigationView;
 
     public static final String KEY_GROUP_URL = "keyGroupUrl";
     public static final String KEY_EVENT_ID = "keyEventId";
-    MeetupMainFragment meetupFragment;
-    GitHubMainFragment gitHubFragment;
     private FragmentManager fragmentManager;
     private String mainViewOption;
-    ActionBarDrawerToggle mDrawerToggle;
-    SharedPreferences sharedPref;
-    String meetupSearchKeyword;
-    String gitHubSearchKeyword;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private SharedPreferences sharedPref;
+    private String meetupSearchKeyword;
+    private String gitHubSearchKeyword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +90,7 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
         }
     }
 
-    public void getSearchDialog() {
+    private void getSearchDialog() {
         if (mainViewOption.equals(MEETUP_MAIN_KEY)) {
             DialogFragment meetupDialogFragment = new MeetupDialogFragment();
             meetupDialogFragment.show(fragmentManager, "meetup_search");
@@ -105,13 +100,13 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
         }
     }
 
-    public void getMeetupFragment() {
-        meetupFragment = MeetupMainFragment.newInstance();
+    private void getMeetupFragment() {
+        MeetupMainFragment meetupFragment = MeetupMainFragment.newInstance();
         fragmentManager.beginTransaction().replace(R.id.fragment_container, meetupFragment).commit();
     }
 
-    public void getGitHubFragment() {
-        gitHubFragment = GitHubMainFragment.newInstance();
+    private void getGitHubFragment() {
+        GitHubMainFragment gitHubFragment = GitHubMainFragment.newInstance();
         fragmentManager.beginTransaction().replace(R.id.fragment_container, gitHubFragment).commit();
     }
 

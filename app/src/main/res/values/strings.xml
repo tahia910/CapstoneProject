@@ -69,6 +69,7 @@
     <string name="repository_no_language">(Language unknown.)</string>
     <string name="repository_stars_label">\u0020stars</string>
     <string name="meetupgroup_members_label">\u0020members</string>
+    <string name="meetupevent_attendees_label">\u0020members going</string>
 
     <string name="location_not_retrieved">The location could not be retrieved. The default location will be Tokyo.</string>
     <string name="message_default_location">The default location will be Tokyo.</string>

@@ -37,9 +37,8 @@ public class MeetupMainFragment extends Fragment {
     private String searchKeyword;
     private String sortBy;
     private String searchLocation;
-    SharedPreferences sharedPref;
-
-    MeetupMainFragmentListener listener;
+    private SharedPreferences sharedPref;
+    private MeetupMainFragmentListener listener;
 
     public interface MeetupMainFragmentListener{
         void currentEventInfo(String groupUrl, String eventId);
