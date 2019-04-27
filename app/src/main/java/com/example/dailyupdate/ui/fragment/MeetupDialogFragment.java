@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,7 +86,6 @@ public class MeetupDialogFragment extends DialogFragment {
         String keywordInputValue = keywordInputEditText.getText().toString();
         keywordInputEditText.setText(keywordInputValue);
         searchKeyword = keywordInputValue;
-        Log.e("DIAL", "KEYWORD IS : " + searchKeyword);
         sharedPref.edit().putString(getString(R.string.pref_meetup_edittext_key), searchKeyword).apply();
 
         // Get the sorting preference. Default sorting option is by time order.

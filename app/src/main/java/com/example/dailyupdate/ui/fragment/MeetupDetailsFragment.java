@@ -1,32 +1,23 @@
 package com.example.dailyupdate.ui.fragment;
 
-import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AlertDialog;
-import android.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 
 import com.example.dailyupdate.BuildConfig;
 import com.example.dailyupdate.R;
-import com.example.dailyupdate.data.MeetupEvent;
 import com.example.dailyupdate.data.MeetupEventDetails;
 import com.example.dailyupdate.data.MeetupEventLocation;
-import com.example.dailyupdate.data.MeetupEventResponse;
 import com.example.dailyupdate.networking.MeetupService;
 import com.example.dailyupdate.networking.RetrofitInstance;
-import com.example.dailyupdate.ui.adapter.MeetupEventAdapter;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,6 +51,14 @@ public class MeetupDetailsFragment extends DialogFragment {
     @BindView(R.id.textview_description_meetup_detail)
     TextView eventDescriptionTextView;
 
+    //    @BindView(R.id.back_icon_meetup_detail)
+    ImageView backIcon;
+    //    @BindView(R.id.bookmark_icon_meetup_detail)
+    ImageView bookmarkIcon;
+
+    Dialog dialog;
+
+
     private String API_KEY = BuildConfig.MEETUP_API_KEY;
     private String groupId;
     private String eventId;
@@ -78,11 +77,10 @@ public class MeetupDetailsFragment extends DialogFragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.meetup_detail, container, false);
         ButterKnife.bind(this, rootView);
-
         if (savedInstanceState != null) {
             groupId = savedInstanceState.getString(KEY_GROUP_URL);
             eventId = savedInstanceState.getString(KEY_EVENT_ID);
-        } else  {
+        } else {
             groupId = getArguments().getString(KEY_GROUP_URL);
             eventId = getArguments().getString(KEY_EVENT_ID);
         }
@@ -90,12 +88,26 @@ public class MeetupDetailsFragment extends DialogFragment {
         return rootView;
     }
 
+    @Override
+    public void onActivityCreated(Bundle bundle) {
+        super.onActivityCreated(bundle);
+        setCustomActionBar();
+    }
+
+    private void setCustomActionBar() {
+        dialog = MeetupDetailsFragment.this.getDialog();
+        backIcon = dialog.findViewById(R.id.back_icon_meetup_detail);
+        backIcon.setOnClickListener(v -> dialog.dismiss());
+        bookmarkIcon = dialog.findViewById(R.id.bookmark_icon_meetup_detail);
+        bookmarkIcon.setOnClickListener(v -> Log.e("Details Dialog", "Bookmarked"));
+    }
 
     private void retrieveEventDetails() {
         MeetupService meetupService =
                 RetrofitInstance.getMeetupRetrofitInstance().create(MeetupService.class);
 
-        Call<MeetupEventDetails> meetupEventCall = meetupService.getMeetupEventDetails(groupId, eventId, API_KEY);
+        Call<MeetupEventDetails> meetupEventCall = meetupService.getMeetupEventDetails(groupId,
+                eventId, API_KEY);
         meetupEventCall.enqueue(new Callback<MeetupEventDetails>() {
             @Override
             public void onResponse(Call<MeetupEventDetails> call,
@@ -114,7 +126,7 @@ public class MeetupDetailsFragment extends DialogFragment {
     private void setEventInformation(MeetupEventDetails meetupEventDetails) {
         String eventName = meetupEventDetails.getEventName();
         String groupName = meetupEventDetails.getEventGroupName().getEventGroupName();
-        String status = meetupEventDetails.getEventStatus();
+        String status = "Status: " + meetupEventDetails.getEventStatus();
 
         int attendeesCount = meetupEventDetails.getEventAttendees();
         String attendeesCountString = String.valueOf(attendeesCount) + " members going";
@@ -164,6 +176,8 @@ public class MeetupDetailsFragment extends DialogFragment {
         super.onResume();
     }
 
+}
+
 //    private void openLocationInMap() {
 //        String addressString = "1600 Ampitheatre Parkway, CA";
 //        Uri geoLocation = Uri.parse("geo:0,0?q=" + addressString);
@@ -177,5 +191,4 @@ public class MeetupDetailsFragment extends DialogFragment {
 //            Log.d(TAG, "Couldn't call " + geoLocation.toString()
 //                    + ", no receiving apps installed!");
 //        }
-}
 

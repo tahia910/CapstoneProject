@@ -4,6 +4,7 @@
     <string name="bookmarks_title">Bookmarks</string>
     <string name="github_title">GitHub</string>
     <string name="meetup_title">Meetup</string>
+    <string name="event_details_title">Event Details</string>
 
     <string name="home_github_recyclerview_title">Trending on GitHub</string>
     <string name="home_meetup_recyclerview_title">Popular on Meetup</string>
@@ -12,6 +13,7 @@
     <string name="search_label">Search</string>
     <string name="preference_label">Search Preferences</string>
     <string name="bookmarks_label">Bookmarked Events</string>
+    <string name="description_label">Description</string>
 
 
     <!-- Strings for the Search Dialog -->
@@ -46,9 +48,22 @@
     <string name="tools_event_time">10:00AM</string>
     <string name="tools_event_status">Status</string>
     <string name="tools_event_attendees"># members going</string>
+    <string name="tools_place_left">*** places left</string>
+    <string name="tools_waitlist_count">*** members on waitlist</string>
+    <string name="tools_address">*** Tower 14F, Shinjuku 0-00-0, Tokyo, Japan</string>
+    <string name="tools_event_status_detail">Status: upcoming</string>
+    <string name="tools_description">Description of the event that will probably take many lines</string>
+
+    <string name="content_description_open_drawer">Drawer opened</string>
+    <string name="content_description_close_drawer">Drawer closed</string>
     <string name="content_description_group_image">Group image</string>
     <string name="content_description_event_image">Event image</string>
     <string name="content_description_bookmark_icon">Bookmark icon</string>
+    <string name="content_description_status_icon">Status icon</string>
+    <string name="content_description_time_icon">Time icon</string>
+    <string name="content_description_place_icon">Place icon</string>
+    <string name="content_description_group_icon">Group icon</string>
+    <string name="content_description_back_icon">Back icon</string>
 
     <string name="repository_no_description">(No description available.)</string>
     <string name="repository_no_language">(Language unknown.)</string>
@@ -57,7 +72,7 @@
 
     <string name="location_not_retrieved">The location could not be retrieved. The default location will be Tokyo.</string>
     <string name="message_default_location">The default location will be Tokyo.</string>
-
+    <string name="mainview_toast_empty_search">Please enter a topic of interest to set up the search</string>
 
     <!-- Strings for the Preferences -->
 
@@ -112,10 +127,5 @@
     <string name="pref_meetup_location_summary">Manually update the location for events or
         groups</string>
     <string name="pref_location_hint">Please enter a city name</string>
-
-
-    <string name="content_description_open_drawer">Drawer opened</string>
-    <string name="content_description_close_drawer">Drawer closed</string>
-    <string name="mainview_toast_empty_search">Please enter a topic of interest to set up the search</string>
 
 </resources>

@@ -153,6 +153,8 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
     public void currentEventInfo(String groupUrl, String eventId) {
         MeetupDetailsFragment meetupDetailsFragment = MeetupDetailsFragment.newInstance(groupUrl,
                 eventId);
+        meetupDetailsFragment.setHasOptionsMenu(true);
+        meetupDetailsFragment.setMenuVisibility(true);
         meetupDetailsFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.Dialog_FullScreen);
         meetupDetailsFragment.show(getSupportFragmentManager(), "meetup_details");
     }
