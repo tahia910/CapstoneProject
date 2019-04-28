@@ -52,4 +52,12 @@ public class AppRepository {
         return bookmarkedEvents;
     }
 
+    public void deleteAllEvents(){
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                bookmarksDao.deleteAllBookmarkedEvents();
+            }
+        });
+    }
 }

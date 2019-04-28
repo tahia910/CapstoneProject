@@ -8,13 +8,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dailyupdate.BuildConfig;
+import com.example.dailyupdate.MainViewModel;
 import com.example.dailyupdate.R;
 import com.example.dailyupdate.data.model.MeetupEvent;
+import com.example.dailyupdate.data.model.MeetupEventDetails;
+import com.example.dailyupdate.data.model.MeetupEventGroupName;
 import com.example.dailyupdate.data.model.MeetupEventResponse;
 import com.example.dailyupdate.networking.MeetupService;
 import com.example.dailyupdate.networking.RetrofitInstance;
@@ -39,8 +43,10 @@ public class MeetupMainFragment extends Fragment {
     private String searchLocation;
     private SharedPreferences sharedPref;
     private MeetupMainFragmentListener listener;
+    private MeetupEventAdapter meetupEventAdapter;
+    private MainViewModel viewModel;
 
-    public interface MeetupMainFragmentListener{
+    public interface MeetupMainFragmentListener {
         void currentEventInfo(String groupUrl, String eventId);
     }
 
@@ -50,8 +56,8 @@ public class MeetupMainFragment extends Fragment {
         if (context instanceof MeetupMainFragmentListener) {
             listener = (MeetupMainFragmentListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement MeetupMainFragmentListener");
+            throw new RuntimeException(context.toString() + " must implement " +
+                    "MeetupMainFragmentListener");
         }
     }
 
@@ -72,6 +78,8 @@ public class MeetupMainFragment extends Fragment {
                 getString(R.string.pref_meetup_sort_default));
         searchLocation = sharedPref.getString(getString(R.string.pref_meetup_location_key), "");
 
+        viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+
         retrieveMeetupEvents();
         return rootView;
     }
@@ -89,8 +97,7 @@ public class MeetupMainFragment extends Fragment {
                 MeetupEventResponse meetupEventResponse = response.body();
                 List<MeetupEvent> meetupEventList = meetupEventResponse.getMeetupEventsList();
 
-                MeetupEventAdapter meetupEventAdapter = new MeetupEventAdapter(getContext(),
-                        meetupEventList);
+                meetupEventAdapter = new MeetupEventAdapter(getContext(), meetupEventList);
                 recyclerView.setAdapter(meetupEventAdapter);
 
                 meetupEventAdapter.setOnItemClickListener((position, v) -> {
@@ -98,6 +105,22 @@ public class MeetupMainFragment extends Fragment {
                     String eventId = meetupEvent.getEventId();
                     String groupUrl = meetupEvent.getGroupNameObject().getEventGroupUrl();
                     listener.currentEventInfo(groupUrl, eventId);
+                });
+
+                meetupEventAdapter.setOnBookmarkIconClickListener(new MeetupEventAdapter.BookmarkIconClickListener() {
+                    @Override
+                    public void onBookmarkIconClick(MeetupEvent currentEvent) {
+
+                        String currentEventId = currentEvent.getEventId();
+
+                        MeetupEventDetails bookmarkEvent = new MeetupEventDetails();
+                        bookmarkEvent.setEventId(currentEventId);
+                        bookmarkEvent.setEventName(currentEvent.getEventName());
+                        bookmarkEvent.setMeetupEventGroupName(currentEvent.getGroupNameObject());
+                        bookmarkEvent.setEventDate(currentEvent.getEventDate());
+                        bookmarkEvent.setEventTime(currentEvent.getEventTime());
+                        viewModel.insertBookmarkedEvent(bookmarkEvent);
+                    }
                 });
             }
 

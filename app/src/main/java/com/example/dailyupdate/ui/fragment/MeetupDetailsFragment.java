@@ -2,6 +2,7 @@ package com.example.dailyupdate.ui.fragment;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -137,7 +138,7 @@ public class MeetupDetailsFragment extends DialogFragment {
 
     private void setEventInformation(MeetupEventDetails meetupEventDetails) {
         String eventName = meetupEventDetails.getEventName();
-        String groupName = meetupEventDetails.getEventGroupName().getEventGroupName();
+        String groupName = meetupEventDetails.getMeetupEventGroupName().getEventGroupName();
         String status = "Status: " + meetupEventDetails.getEventStatus();
 
         int attendeesCount = meetupEventDetails.getEventAttendees();

@@ -27,4 +27,6 @@ public interface BookmarksDao {
     @Delete
     void deleteBookmarkedEvent(MeetupEventDetails bookmarkedEvent);
 
+    @Query("DELETE FROM bookmarked_event")
+    void deleteAllBookmarkedEvents();
 }

@@ -38,4 +38,7 @@ public class MainViewModel extends AndroidViewModel {
         return bookmarkedEvents;
     }
 
+    public void deleteAllBookmarkedEvent(){
+        repository.deleteAllEvents();
+    }
 }

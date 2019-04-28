@@ -14,7 +14,7 @@
     <string name="preference_label">Search Preferences</string>
     <string name="bookmarks_label">Bookmarked Events</string>
     <string name="description_label">Description</string>
-
+    <string name="delete_all_bookmarks_label">Delete All Bookmarks</string>
 
     <!-- Strings for the Search Dialog -->
     <string name="meetup_dialog_title">Event Search Options</string>

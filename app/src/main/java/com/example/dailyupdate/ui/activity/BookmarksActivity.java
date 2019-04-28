@@ -11,10 +11,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProviders;
 
+import com.example.dailyupdate.MainViewModel;
 import com.example.dailyupdate.R;
 import com.example.dailyupdate.ui.fragment.BookmarksFragment;
+import com.example.dailyupdate.ui.fragment.MeetupDetailsFragment;
 import com.google.android.material.navigation.NavigationView;
 
 import butterknife.BindView;
@@ -24,7 +28,7 @@ import static com.example.dailyupdate.ui.activity.MainActivity.GITHUB_MAIN_KEY;
 import static com.example.dailyupdate.ui.activity.MainActivity.MAIN_KEY;
 import static com.example.dailyupdate.ui.activity.MainActivity.MEETUP_MAIN_KEY;
 
-public class BookmarksActivity extends AppCompatActivity {
+public class BookmarksActivity extends AppCompatActivity implements BookmarksFragment.BookmarksFragmentListener {
 
     @BindView(R.id.drawer_layout) DrawerLayout mDrawer;
     @BindView(R.id.toolbar) Toolbar toolbar;
@@ -55,8 +59,19 @@ public class BookmarksActivity extends AppCompatActivity {
     }
 
     @Override
+    public void displayEventDetails(String groupUrl, String eventId) {
+        MeetupDetailsFragment meetupDetailsFragment = MeetupDetailsFragment.newInstance(groupUrl,
+                eventId);
+        meetupDetailsFragment.setHasOptionsMenu(true);
+        meetupDetailsFragment.setMenuVisibility(true);
+        meetupDetailsFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.Dialog_FullScreen);
+        meetupDetailsFragment.show(getSupportFragmentManager(), "meetup_details");
+    }
+
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.general_menu, menu);
+        getMenuInflater().inflate(R.menu.bookmarks_menu, menu);
         return true;
     }
 
@@ -69,6 +84,10 @@ public class BookmarksActivity extends AppCompatActivity {
             case R.id.action_pref:
                 Intent preferenceIntent = new Intent(this, PreferenceActivity.class);
                 startActivity(preferenceIntent);
+                return true;
+            case R.id.action_delete_all:
+                MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+                viewModel.deleteAllBookmarkedEvent();
                 return true;
         }
         return super.onOptionsItemSelected(item);

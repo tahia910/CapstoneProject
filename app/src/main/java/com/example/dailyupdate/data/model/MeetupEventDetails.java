@@ -2,6 +2,7 @@ package com.example.dailyupdate.data.model;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
+import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
@@ -21,7 +22,7 @@ public class MeetupEventDetails {
     @SerializedName("name")
     private String eventName;
 
-    @Ignore
+    @Embedded
     @SerializedName("group")
     private MeetupEventGroupName meetupEventGroupName;
 
@@ -72,13 +73,16 @@ public class MeetupEventDetails {
         this.eventDescription = eventDescription;
     }
 
+    @Ignore
     public MeetupEventDetails() {
     }
 
-    public MeetupEventDetails(String eventId, String eventName, String eventDate,
+    public MeetupEventDetails(String eventId, String eventName,
+                              MeetupEventGroupName meetupEventGroupName, String eventDate,
                               String eventTime) {
         this.eventId = eventId;
         this.eventName = eventName;
+        this.meetupEventGroupName = meetupEventGroupName;
         this.eventDate = eventDate;
         this.eventTime = eventTime;
     }
@@ -86,7 +90,6 @@ public class MeetupEventDetails {
     public String getEventId() {
         return eventId;
     }
-
     public void setEventId(String eventId) {
         this.eventId = eventId;
     }
@@ -94,15 +97,13 @@ public class MeetupEventDetails {
     public String getEventName() {
         return eventName;
     }
-
     public void setEventName(String eventName) {
         this.eventName = eventName;
     }
 
-    public MeetupEventGroupName getEventGroupName() {
+    public MeetupEventGroupName getMeetupEventGroupName() {
         return meetupEventGroupName;
     }
-
     public void setMeetupEventGroupName(MeetupEventGroupName meetupEventGroupName) {
         this.meetupEventGroupName = meetupEventGroupName;
     }
@@ -126,7 +127,6 @@ public class MeetupEventDetails {
     public String getEventDate() {
         return eventDate;
     }
-
     public void setEventDate(String eventDate) {
         this.eventDate = eventDate;
     }
@@ -134,7 +134,6 @@ public class MeetupEventDetails {
     public String getEventTime() {
         return eventTime;
     }
-
     public void setEventTime(String eventTime) {
         this.eventTime = eventTime;
     }
