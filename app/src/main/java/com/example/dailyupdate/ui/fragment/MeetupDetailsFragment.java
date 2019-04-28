@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.dailyupdate.BuildConfig;
@@ -20,6 +21,9 @@ import com.example.dailyupdate.data.model.MeetupEventDetails;
 import com.example.dailyupdate.data.model.MeetupEventLocation;
 import com.example.dailyupdate.networking.MeetupService;
 import com.example.dailyupdate.networking.RetrofitInstance;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -66,6 +70,7 @@ public class MeetupDetailsFragment extends DialogFragment {
     private String groupId;
     private String eventId;
     private MeetupEventDetails currentEvent;
+    private Boolean alreadyBookmarked;
 
     public static MeetupDetailsFragment newInstance(String groupUrl, String eventId) {
         MeetupDetailsFragment meetupDetailsFragment = new MeetupDetailsFragment();
@@ -103,12 +108,47 @@ public class MeetupDetailsFragment extends DialogFragment {
         dialog = MeetupDetailsFragment.this.getDialog();
         backIcon = dialog.findViewById(R.id.back_icon_meetup_detail);
         backIcon.setOnClickListener(v -> dialog.dismiss());
+        // TODO: change "alreadyBookmarked" logic
+        checkAlreadyBookmarked();
+    }
 
+    private void checkAlreadyBookmarked() {
         bookmarkIcon = dialog.findViewById(R.id.bookmark_icon_meetup_detail);
+        viewModel.getAllBookmarkedEvents().observe(MeetupDetailsFragment.this,
+                new Observer<List<MeetupEventDetails>>() {
+            @Override
+            public void onChanged(List<MeetupEventDetails> meetupEventDetails) {
+                ArrayList<String> array = new ArrayList<>();
+                for (int i = 0; i < meetupEventDetails.size(); i++) {
+                    final MeetupEventDetails bookmarkItem = meetupEventDetails.get(i);
+                    String currentEventId = bookmarkItem.getEventId();
+                    array.add(currentEventId);
+                }
+                if (!array.contains(eventId)) {
+                    alreadyBookmarked = false;
+                    bookmarkIcon.setImageResource(R.drawable.ic_bookmark_white);
+                } else {
+                    alreadyBookmarked = true;
+                    bookmarkIcon.setImageResource(R.drawable.ic_bookmarked_white);
+                }
+                setBookmarkIconClickListener();
+            }
+        });
+    }
+
+    private void setBookmarkIconClickListener() {
         bookmarkIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewModel.insertBookmarkedEvent(currentEvent);
+                if (alreadyBookmarked) {
+                    alreadyBookmarked = false;
+                    viewModel.deleteBookmarkedEvent(currentEvent);
+                    bookmarkIcon.setImageResource(R.drawable.ic_bookmark_white);
+                } else {
+                    alreadyBookmarked = true;
+                    viewModel.insertBookmarkedEvent(currentEvent);
+                    bookmarkIcon.setImageResource(R.drawable.ic_bookmarked_white);
+                }
             }
         });
     }

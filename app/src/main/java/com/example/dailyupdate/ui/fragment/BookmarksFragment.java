@@ -59,6 +59,8 @@ public class BookmarksFragment extends Fragment {
         ButterKnife.bind(this, rootView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        bookmarksAdapter = new BookmarksAdapter();
+        recyclerView.setAdapter(bookmarksAdapter);
 
         setBookmarkedEventsList();
         setDeleteSwipe();
@@ -70,8 +72,7 @@ public class BookmarksFragment extends Fragment {
         viewModel.getAllBookmarkedEvents().observe(this, new Observer<List<MeetupEventDetails>>() {
             @Override
             public void onChanged(List<MeetupEventDetails> bookmarkedEventsList) {
-                bookmarksAdapter = new BookmarksAdapter(getContext(), bookmarkedEventsList);
-                recyclerView.setAdapter(bookmarksAdapter);
+                bookmarksAdapter.submitList(bookmarkedEventsList);
                 setAdapterClickListeners(bookmarkedEventsList);
             }
         });
