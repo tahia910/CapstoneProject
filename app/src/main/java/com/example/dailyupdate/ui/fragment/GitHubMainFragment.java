@@ -1,5 +1,6 @@
 package com.example.dailyupdate.ui.fragment;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.dailyupdate.R;
 import com.example.dailyupdate.data.model.GitHubRepo;
 import com.example.dailyupdate.data.model.GitHubResponse;
+import com.example.dailyupdate.data.model.MeetupEvent;
 import com.example.dailyupdate.networking.GitHubService;
 import com.example.dailyupdate.networking.RetrofitInstance;
 import com.example.dailyupdate.ui.adapter.GitHubRepoAdapter;
@@ -35,6 +37,22 @@ public class GitHubMainFragment extends Fragment {
     private String sortBy;
     private String searchOrder;
     private SharedPreferences sharedPref;
+    private GitHubMainFragmentListener listener;
+
+    public interface GitHubMainFragmentListener {
+        void currentGitHubRepoUrl(String gitHubRepoUrl);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof GitHubMainFragmentListener) {
+            listener = (GitHubMainFragmentListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement " +
+                    "GitHubMainFragmentListener");
+        }
+    }
 
     public GitHubMainFragment() {
     }
@@ -81,6 +99,13 @@ public class GitHubMainFragment extends Fragment {
                 GitHubRepoAdapter gitHubRepoAdapter = new GitHubRepoAdapter(getContext(),
                         gitHubRepoList, 2);
                 recyclerView.setAdapter(gitHubRepoAdapter);
+
+
+                gitHubRepoAdapter.setOnItemClickListener((position, v) -> {
+                    GitHubRepo gitHubRepo = gitHubRepoList.get(position);
+                    String gitHubRepoUrl = gitHubRepo.getHtmlUrl();
+                    listener.currentGitHubRepoUrl(gitHubRepoUrl);
+                });
             }
 
             @Override

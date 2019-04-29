@@ -1,7 +1,10 @@
 package com.example.dailyupdate.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,6 +14,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.DialogFragment;
@@ -32,11 +36,14 @@ import static com.example.dailyupdate.ui.activity.MainActivity.GITHUB_MAIN_KEY;
 import static com.example.dailyupdate.ui.activity.MainActivity.MAIN_KEY;
 import static com.example.dailyupdate.ui.activity.MainActivity.MEETUP_MAIN_KEY;
 
-public class MainViewActivity extends AppCompatActivity implements MeetupDialogFragment.MeetupDialogListener, GitHubDialogFragment.GitHubDialogListener, MeetupMainFragment.MeetupMainFragmentListener {
+public class MainViewActivity extends AppCompatActivity implements MeetupDialogFragment.MeetupDialogListener, GitHubDialogFragment.GitHubDialogListener, MeetupMainFragment.MeetupMainFragmentListener, GitHubMainFragment.GitHubMainFragmentListener {
 
-    @BindView(R.id.drawer_layout) DrawerLayout mDrawer;
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.nav_view) NavigationView navigationView;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout mDrawer;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.nav_view)
+    NavigationView navigationView;
 
     public static final String KEY_GROUP_URL = "keyGroupUrl";
     public static final String KEY_EVENT_ID = "keyEventId";
@@ -152,6 +159,19 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
         meetupDetailsFragment.setMenuVisibility(true);
         meetupDetailsFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.Dialog_FullScreen);
         meetupDetailsFragment.show(getSupportFragmentManager(), "meetup_details");
+    }
+
+    /**
+     * Open the GitHub repository details using WebView (Chrome Custom Tabs)
+     **/
+    @SuppressLint("NewApi")
+    @Override
+    public void currentGitHubRepoUrl(String gitHubRepoUrl) {
+        // TODO: Add enter/exit animation
+        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+        builder.setToolbarColor(getColor(R.color.colorPrimary));
+        CustomTabsIntent customTabsIntent = builder.build();
+        customTabsIntent.launchUrl(this, Uri.parse(gitHubRepoUrl));
     }
 
     @Override

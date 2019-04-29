@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 
 import com.example.dailyupdate.R;
+import com.example.dailyupdate.ui.activity.BookmarksActivity;
 
 /**
  * Implementation of App Widget functionality.
@@ -48,9 +49,18 @@ public class BookmarksWidget extends AppWidgetProvider {
         if (ACTION_ITEM_CLICK.equals(intent.getAction())) {
             String groupUrl = intent.getStringExtra(EXTRA_GROUP_URL);
             String eventId = intent.getStringExtra(EXTRA_EVENT_ID);
-            // TODO: open BookmarksActivity to display EventDetails using groupUrl and eventId
-        }
-        super.onReceive(context, intent);
+
+            Intent bookmarksActivityIntent = new Intent(context, BookmarksActivity.class);
+            bookmarksActivityIntent.putExtra(EXTRA_GROUP_URL, groupUrl);
+            bookmarksActivityIntent.putExtra(EXTRA_EVENT_ID, eventId);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, bookmarksActivityIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+            try {
+                pendingIntent.send();
+            } catch (PendingIntent.CanceledException e) {
+                e.printStackTrace();
+            }
+        } super.onReceive(context, intent);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.example.dailyupdate.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -19,6 +20,7 @@ import com.example.dailyupdate.MainViewModel;
 import com.example.dailyupdate.R;
 import com.example.dailyupdate.ui.fragment.BookmarksFragment;
 import com.example.dailyupdate.ui.fragment.MeetupDetailsFragment;
+import com.example.dailyupdate.ui.widget.BookmarksWidget;
 import com.google.android.material.navigation.NavigationView;
 
 import butterknife.BindView;
@@ -30,9 +32,12 @@ import static com.example.dailyupdate.ui.activity.MainActivity.MEETUP_MAIN_KEY;
 
 public class BookmarksActivity extends AppCompatActivity implements BookmarksFragment.BookmarksFragmentListener {
 
-    @BindView(R.id.drawer_layout) DrawerLayout mDrawer;
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.nav_view) NavigationView navigationView;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout mDrawer;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.nav_view)
+    NavigationView navigationView;
 
     private ActionBarDrawerToggle mDrawerToggle;
     private FragmentManager fragmentManager;
@@ -53,9 +58,22 @@ public class BookmarksActivity extends AppCompatActivity implements BookmarksFra
         if (navigationView != null) {
             setupDrawerContent(navigationView);
         }
-        fragmentManager = getSupportFragmentManager();
-        bookmarksFragment = BookmarksFragment.newInstance();
-        fragmentManager.beginTransaction().replace(R.id.fragment_container, bookmarksFragment).commit();
+
+        // TODO: handle the case the user presses "back" when coming from widget
+        // & Use broadcast/jobservice instead?
+        Intent intent = getIntent();
+        if (intent.hasExtra(BookmarksWidget.EXTRA_GROUP_URL)) {
+            // If the intent is not empty, it means that the activity was started from the widget to
+            // display a specific bookmarked event's details.
+            String groupUrl = intent.getStringExtra(BookmarksWidget.EXTRA_GROUP_URL);
+            String eventId = intent.getStringExtra(BookmarksWidget.EXTRA_EVENT_ID);
+            displayEventDetails(groupUrl, eventId);
+        } else {
+            fragmentManager = getSupportFragmentManager();
+            bookmarksFragment = BookmarksFragment.newInstance();
+            fragmentManager.beginTransaction().replace(R.id.fragment_container,
+                    bookmarksFragment).commit();
+        }
     }
 
     @Override
