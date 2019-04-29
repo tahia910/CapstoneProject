@@ -24,18 +24,31 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activity.MainViewActivity">
-        </activity>
-
+        <activity android:name=".ui.activity.MainViewActivity"></activity>
         <activity
             android:name=".ui.activity.PreferenceActivity"
-            android:label="@string/preference_label">
-        </activity>
-
+            android:label="@string/preference_label"></activity>
         <activity
             android:name=".ui.activity.BookmarksActivity"
-            android:label="@string/bookmarks_label">
+            android:label="@string/bookmarks_label"
+            android:launchMode="singleTop">
         </activity>
+
+        <receiver android:name=".ui.widget.BookmarksWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/bookmarks_widget_info" />
+        </receiver>
+
+        <service android:name=".ui.widget.WidgetAdapterService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+
+        <service android:name=".ui.widget.WidgetService" />
+
     </application>
 
 </manifest>

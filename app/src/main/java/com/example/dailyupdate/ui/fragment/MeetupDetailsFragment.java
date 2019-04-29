@@ -108,10 +108,10 @@ public class MeetupDetailsFragment extends DialogFragment {
         dialog = MeetupDetailsFragment.this.getDialog();
         backIcon = dialog.findViewById(R.id.back_icon_meetup_detail);
         backIcon.setOnClickListener(v -> dialog.dismiss());
-        // TODO: change "alreadyBookmarked" logic
         checkAlreadyBookmarked();
     }
 
+    // TODO: change "alreadyBookmarked" logic
     private void checkAlreadyBookmarked() {
         bookmarkIcon = dialog.findViewById(R.id.bookmark_icon_meetup_detail);
         viewModel.getAllBookmarkedEvents().observe(MeetupDetailsFragment.this,

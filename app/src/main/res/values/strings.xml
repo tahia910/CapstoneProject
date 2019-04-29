@@ -128,5 +128,7 @@
     <string name="pref_meetup_location_summary">Manually update the location for events or
         groups</string>
     <string name="pref_location_hint">Please enter a city name</string>
+    <string name="add_widget">Add widget</string>
+    <string name="no_bookmarked_events_label">No bookmarked events</string>
 
 </resources>

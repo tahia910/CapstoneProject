@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimary"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/textview_event_title"
+                app:layout_constraintStart_toStartOf="@id/textview_event_title"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="@string/tools_event_date" />
 
@@ -49,9 +49,9 @@
                 android:textStyle="bold"
                 android:ellipsize="end"
                 android:maxLines="1"
-                app:layout_constraintEnd_toStartOf="@+id/textview_event_status"
-                app:layout_constraintStart_toEndOf="@+id/imageButton"
-                app:layout_constraintTop_toBottomOf="@+id/textview_event_date"
+                app:layout_constraintEnd_toStartOf="@id/textview_event_status"
+                app:layout_constraintStart_toEndOf="@id/bookmark_icon_meetup_main"
+                app:layout_constraintTop_toBottomOf="@id/textview_event_date"
                 tools:text="@string/tools_event_title" />
 
             <TextView
@@ -63,9 +63,9 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textColor="@color/colorPrimary"
-                app:layout_constraintEnd_toStartOf="@+id/textview_event_attendees"
-                app:layout_constraintStart_toStartOf="@+id/textview_event_title"
-                app:layout_constraintTop_toBottomOf="@+id/textview_event_title"
+                app:layout_constraintEnd_toStartOf="@id/textview_event_attendees"
+                app:layout_constraintStart_toStartOf="@id/textview_event_title"
+                app:layout_constraintTop_toBottomOf="@id/textview_event_title"
                 tools:text="@string/tools_group_title" />
 
             <TextView
@@ -77,7 +77,7 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.947"
-                app:layout_constraintStart_toEndOf="@+id/textview_event_date"
+                app:layout_constraintStart_toEndOf="@id/textview_event_date"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="@string/tools_event_time" />
 
@@ -89,7 +89,7 @@
                 android:layout_marginEnd="8dp"
                 android:textColor="@color/colorPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textview_event_time"
+                app:layout_constraintTop_toBottomOf="@id/textview_event_time"
                 tools:text="@string/tools_event_status" />
 
             <TextView
@@ -100,7 +100,7 @@
                 android:layout_marginEnd="8dp"
                 android:textColor="@color/colorPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textview_event_status"
+                app:layout_constraintTop_toBottomOf="@id/textview_event_status"
                 tools:text="@string/tools_event_attendees" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

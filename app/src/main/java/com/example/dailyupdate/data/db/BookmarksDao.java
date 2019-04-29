@@ -18,6 +18,9 @@ public interface BookmarksDao {
     @Query("SELECT * FROM bookmarked_event ORDER BY event_id DESC")
     LiveData<List<MeetupEventDetails>> loadAllBookmarkedEvents();
 
+    @Query("SELECT * FROM bookmarked_event ORDER BY event_id DESC")
+    List<MeetupEventDetails> loadAllBookmarkedEventsForWidget();
+
     @Insert
     void insertBookmarkedEvent(MeetupEventDetails bookmarkedEvent);
 
