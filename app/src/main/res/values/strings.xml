@@ -69,6 +69,7 @@
     <string name="repository_no_language">(Language unknown.)</string>
     <string name="repository_stars_label">\u0020stars</string>
     <string name="meetupgroup_members_label">\u0020members</string>
+    <!-- TODO: Pluralization -->
     <string name="meetupevent_attendees_label">\u0020members going</string>
 
     <string name="location_not_retrieved">The location could not be retrieved. The default location will be Tokyo.</string>
@@ -76,21 +77,26 @@
     <string name="mainview_toast_empty_search">Please enter a topic of interest to set up the search</string>
 
     <!-- Strings for the Preferences -->
-
     <string name="pref_edittext_hint">Please enter your topics of interest</string>
+    <!-- Notification preference-->
+    <string name="pref_notification_title">Notifications for new events</string>
+    <string name="pref_notification_label">Get notifications when there is new Meetup
+        events matching your interests</string>
+    <string name="pref_notification_key">notification-key</string>
     <!-- Location preference-->
-    <string name="pref_location_label">Use current location to retrieve Meetups groups or
-        events</string>
-    <string name="pref_location_key" translatable="false">location</string>
+    <string name="pref_location_title">Use current location</string>
+    <string name="pref_location_label">Retrieve nearby Meetups groups or
+        events by using your current location</string>
+    <string name="pref_location_key" translatable="false">location-key</string>
     <!-- GitHub repository keyword search EditText -->
     <string name="pref_github_edittext_label">GitHub Search Keyword(s)</string>
-    <string name="pref_github_edittext_key" translatable="false">github-search-keyword</string>
+    <string name="pref_github_edittext_key" translatable="false">github-search-keyword-key</string>
     <string name="pref_github_edittext_summary">Update the repository search
         keywords</string>
     <!-- GitHub repository sorting preference -->
     <string name="pref_github_sort_label">Sort By</string>
     <string name="pref_github_sort_summary">Modify the repository sorting</string>
-    <string name="pref_github_sort_key" translatable="false">github-sort-by</string>
+    <string name="pref_github_sort_key" translatable="false">github-sort-by-key</string>
     <string name="pref_github_sort_default" translatable="false">@string/pref_github_sort_updated_value</string>
     <string name="pref_github_sort_updated_label">Last updated</string>
     <string name="pref_github_sort_updated_value" translatable="false">updated</string>
@@ -101,7 +107,7 @@
     <!-- GitHub repository order preference -->
     <string name="pref_github_order_label">Repository Order</string>
     <string name="pref_github_order_summary">Modify the repository display order</string>
-    <string name="pref_github_order_key" translatable="false">github-order</string>
+    <string name="pref_github_order_key" translatable="false">github-order-key</string>
     <string name="pref_github_order_default" translatable="false">@string/pref_github_order_descending_value</string>
     <string name="pref_github_order_descending_label">Descending</string>
     <string name="pref_github_order_descending_value" translatable="false">descending</string>
@@ -109,13 +115,13 @@
     <string name="pref_github_order_ascending_value" translatable="false">ascending</string>
     <!-- Meetup events/groups keyword search EditText -->
     <string name="pref_meetup_edittext_label">Meetup Search Keyword(s)</string>
-    <string name="pref_meetup_edittext_key" translatable="false">meetup-search-keyword</string>
+    <string name="pref_meetup_edittext_key" translatable="false">meetup-search-keyword-key</string>
     <string name="pref_meetup_edittext_summary">Update the Meetup search
         keywords</string>
     <!-- Meetup events/groups sorting preference -->
     <string name="pref_meetup_sort_label">Sort by</string>
     <string name="pref_meetup_sort_summary">Modify the events sorting</string>
-    <string name="pref_meetup_sort_key" translatable="false">meetup-sort-by</string>
+    <string name="pref_meetup_sort_key" translatable="false">meetup-sort-by-key</string>
     <string name="pref_meetup_sort_default" translatable="false">@string/pref_meetup_sort_time_value</string>
     <string name="pref_meetup_sort_best_label">Recommendation</string>
     <string name="pref_meetup_sort_best_value" translatable="false">best</string>
@@ -124,11 +130,21 @@
 
     <!-- Meetup events/groups location EditText -->
     <string name="pref_meetup_location_label">Meetup Location</string>
-    <string name="pref_meetup_location_key" translatable="false">meetup-search-location</string>
+    <string name="pref_meetup_location_key" translatable="false">meetup-search-location-key</string>
     <string name="pref_meetup_location_summary">Manually update the location for events or
         groups</string>
     <string name="pref_location_hint">Please enter a city name</string>
     <string name="add_widget">Add widget</string>
     <string name="no_bookmarked_events_label">No bookmarked events</string>
+
+
+    <!-- Strings for the Notifications -->
+    <string name="notif_content_title">New Meetup events available</string>
+    <string name="notif_content_text">There are new events related to your interests</string>
+    <string name="notif_channel_title">Update</string>
+    <string name="notif_big_text">Check out the details of the events as early as possible
+        to be sure to have a place</string>
+    <string name="notif_action_open">Check details now</string>
+    <string name="notif_action_ignore">Later maybe</string>
 
 </resources>

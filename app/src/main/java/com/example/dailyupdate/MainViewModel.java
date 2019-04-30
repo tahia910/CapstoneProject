@@ -9,7 +9,7 @@ import androidx.lifecycle.LiveData;
 
 import com.example.dailyupdate.data.db.AppRepository;
 import com.example.dailyupdate.data.model.MeetupEventDetails;
-import com.example.dailyupdate.ui.widget.WidgetService;
+import com.example.dailyupdate.widget.WidgetService;
 
 import java.util.List;
 

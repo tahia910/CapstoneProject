@@ -3,7 +3,13 @@
 
     <SwitchPreferenceCompat
         app:key="@string/pref_location_key"
-        app:title="@string/pref_location_label" />
+        app:title="@string/pref_location_title"
+        app:summary="@string/pref_location_label"/>
+
+    <SwitchPreferenceCompat
+        app:key="@string/pref_notification_key"
+        app:title="@string/pref_notification_title"
+        app:summary="@string/pref_notification_label"/>
 
     <PreferenceCategory app:title="GitHub Search">
         <EditTextPreference

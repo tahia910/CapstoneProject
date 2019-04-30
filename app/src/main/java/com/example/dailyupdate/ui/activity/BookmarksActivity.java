@@ -2,7 +2,6 @@ package com.example.dailyupdate.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -20,15 +19,11 @@ import com.example.dailyupdate.MainViewModel;
 import com.example.dailyupdate.R;
 import com.example.dailyupdate.ui.fragment.BookmarksFragment;
 import com.example.dailyupdate.ui.fragment.MeetupDetailsFragment;
-import com.example.dailyupdate.ui.widget.BookmarksWidget;
+import com.example.dailyupdate.widget.BookmarksWidget;
 import com.google.android.material.navigation.NavigationView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.example.dailyupdate.ui.activity.MainActivity.GITHUB_MAIN_KEY;
-import static com.example.dailyupdate.ui.activity.MainActivity.MAIN_KEY;
-import static com.example.dailyupdate.ui.activity.MainActivity.MEETUP_MAIN_KEY;
 
 public class BookmarksActivity extends AppCompatActivity implements BookmarksFragment.BookmarksFragmentListener {
 
@@ -132,12 +127,12 @@ public class BookmarksActivity extends AppCompatActivity implements BookmarksFra
                 break;
             case R.id.nav_github:
                 Intent gitHubIntent = new Intent(this, MainViewActivity.class);
-                gitHubIntent.putExtra(MAIN_KEY, GITHUB_MAIN_KEY);
+                gitHubIntent.putExtra(MainActivity.MAIN_KEY, MainActivity.GITHUB_MAIN_KEY);
                 startActivity(gitHubIntent);
                 break;
             case R.id.nav_meetup:
                 Intent meetupIntent = new Intent(this, MainViewActivity.class);
-                meetupIntent.putExtra(MAIN_KEY, MEETUP_MAIN_KEY);
+                meetupIntent.putExtra(MainActivity.MAIN_KEY, MainActivity.MEETUP_MAIN_KEY);
                 startActivity(meetupIntent);
                 break;
             default:

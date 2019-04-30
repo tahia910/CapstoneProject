@@ -18,11 +18,11 @@ import com.example.dailyupdate.MainViewModel;
 import com.example.dailyupdate.R;
 import com.example.dailyupdate.data.model.MeetupEvent;
 import com.example.dailyupdate.data.model.MeetupEventDetails;
-import com.example.dailyupdate.data.model.MeetupEventGroupName;
 import com.example.dailyupdate.data.model.MeetupEventResponse;
 import com.example.dailyupdate.networking.MeetupService;
 import com.example.dailyupdate.networking.RetrofitInstance;
 import com.example.dailyupdate.ui.adapter.MeetupEventAdapter;
+import com.example.dailyupdate.utilities.JobUtilities;
 
 import java.util.List;
 
@@ -81,7 +81,18 @@ public class MeetupMainFragment extends Fragment {
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
         retrieveMeetupEvents();
+        setNotifications();
         return rootView;
+    }
+
+    private void setNotifications() {
+        boolean notificationSwitchValue =
+                sharedPref.getBoolean(getString(R.string.pref_notification_key), false);
+        if (notificationSwitchValue) {
+            JobUtilities.scheduleUpdateJob(getContext());
+        } else {
+            // TODO: ask if the user wants to set up the notifications for this search
+        }
     }
 
     private void retrieveMeetupEvents() {

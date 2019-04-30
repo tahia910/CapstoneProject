@@ -1,4 +1,4 @@
-package com.example.dailyupdate.ui.widget;
+package com.example.dailyupdate.widget;
 
 import android.content.Context;
 import android.content.Intent;

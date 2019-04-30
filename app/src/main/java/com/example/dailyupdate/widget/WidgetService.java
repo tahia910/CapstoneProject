@@ -1,4 +1,4 @@
-package com.example.dailyupdate.ui.widget;
+package com.example.dailyupdate.widget;
 
 import android.app.IntentService;
 import android.appwidget.AppWidgetManager;
@@ -11,7 +11,7 @@ import com.example.dailyupdate.R;
 
 public class WidgetService extends IntentService {
 
-    public static final String ACTION_UPDATE_WIDGET = "com.example.dailyupdate.ui.widget" +
+    public static final String ACTION_UPDATE_WIDGET = "com.example.dailyupdate.widget" +
             ".action.action_update_widget";
 
     public WidgetService() {

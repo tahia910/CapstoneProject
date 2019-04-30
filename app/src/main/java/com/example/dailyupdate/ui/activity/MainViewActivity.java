@@ -3,7 +3,6 @@ package com.example.dailyupdate.ui.activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
@@ -27,14 +26,11 @@ import com.example.dailyupdate.ui.fragment.GitHubMainFragment;
 import com.example.dailyupdate.ui.fragment.MeetupDetailsFragment;
 import com.example.dailyupdate.ui.fragment.MeetupDialogFragment;
 import com.example.dailyupdate.ui.fragment.MeetupMainFragment;
+import com.example.dailyupdate.utilities.JobUtilities;
 import com.google.android.material.navigation.NavigationView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.example.dailyupdate.ui.activity.MainActivity.GITHUB_MAIN_KEY;
-import static com.example.dailyupdate.ui.activity.MainActivity.MAIN_KEY;
-import static com.example.dailyupdate.ui.activity.MainActivity.MEETUP_MAIN_KEY;
 
 public class MainViewActivity extends AppCompatActivity implements MeetupDialogFragment.MeetupDialogListener, GitHubDialogFragment.GitHubDialogListener, MeetupMainFragment.MeetupMainFragmentListener, GitHubMainFragment.GitHubMainFragmentListener {
 
@@ -74,9 +70,9 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            mainViewOption = bundle.getString(MAIN_KEY);
+            mainViewOption = bundle.getString(MainActivity.MAIN_KEY);
         }
-        if (mainViewOption.equals(MEETUP_MAIN_KEY)) {
+        if (mainViewOption.equals(MainActivity.MEETUP_MAIN_KEY)) {
             ab.setTitle(getApplicationContext().getString(R.string.meetup_search_title));
             meetupSearchKeyword =
                     sharedPref.getString(getString(R.string.pref_meetup_edittext_key), "");
@@ -85,7 +81,7 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
             } else {
                 getSearchDialog();
             }
-        } else if (mainViewOption.equals(GITHUB_MAIN_KEY)) {
+        } else if (mainViewOption.equals(MainActivity.GITHUB_MAIN_KEY)) {
             ab.setTitle(getApplicationContext().getString(R.string.github_search_title));
             gitHubSearchKeyword =
                     sharedPref.getString(getString(R.string.pref_github_edittext_key), "");
@@ -98,10 +94,10 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
     }
 
     private void getSearchDialog() {
-        if (mainViewOption.equals(MEETUP_MAIN_KEY)) {
+        if (mainViewOption.equals(MainActivity.MEETUP_MAIN_KEY)) {
             DialogFragment meetupDialogFragment = new MeetupDialogFragment();
             meetupDialogFragment.show(fragmentManager, "meetup_search");
-        } else if (mainViewOption.equals(GITHUB_MAIN_KEY)) {
+        } else if (mainViewOption.equals(MainActivity.GITHUB_MAIN_KEY)) {
             DialogFragment gitHubDialogFragment = new GitHubDialogFragment();
             gitHubDialogFragment.show(fragmentManager, "github_search");
         }
@@ -218,16 +214,16 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
                 startActivity(new Intent(this, BookmarksActivity.class));
                 break;
             case R.id.nav_github:
-                if (!mainViewOption.equals(GITHUB_MAIN_KEY)) {
+                if (!mainViewOption.equals(MainActivity.GITHUB_MAIN_KEY)) {
                     Intent gitHubIntent = new Intent(this, MainViewActivity.class);
-                    gitHubIntent.putExtra(MAIN_KEY, GITHUB_MAIN_KEY);
+                    gitHubIntent.putExtra(MainActivity.MAIN_KEY, MainActivity.GITHUB_MAIN_KEY);
                     startActivity(gitHubIntent);
                 }
                 break;
             case R.id.nav_meetup:
-                if (!mainViewOption.equals(MEETUP_MAIN_KEY)) {
+                if (!mainViewOption.equals(MainActivity.MEETUP_MAIN_KEY)) {
                     Intent meetupIntent = new Intent(this, MainViewActivity.class);
-                    meetupIntent.putExtra(MAIN_KEY, MEETUP_MAIN_KEY);
+                    meetupIntent.putExtra(MainActivity.MAIN_KEY, MainActivity.MEETUP_MAIN_KEY);
                     startActivity(meetupIntent);
                 }
                 break;

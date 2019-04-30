@@ -1,4 +1,4 @@
-package com.example.dailyupdate.ui.widget;
+package com.example.dailyupdate.widget;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -15,10 +15,10 @@ import com.example.dailyupdate.ui.activity.BookmarksActivity;
  */
 public class BookmarksWidget extends AppWidgetProvider {
 
-    public static final String ACTION_ITEM_CLICK = "com.example.dailyupdate.ui.widget.action_toast";
-    public static final String EXTRA_GROUP_URL = "com.example.dailyupdate.ui.widget" +
+    public static final String ACTION_ITEM_CLICK = "com.example.dailyupdate.widget.action_toast";
+    public static final String EXTRA_GROUP_URL = "com.example.dailyupdate.widget" +
             ".extra_group_url";
-    public static final String EXTRA_EVENT_ID = "com.example.dailyupdate.ui.widget.extra_event_id";
+    public static final String EXTRA_EVENT_ID = "com.example.dailyupdate.widget.extra_event_id";
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
