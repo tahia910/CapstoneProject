@@ -15,11 +15,11 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.dailyupdate.viewmodels.BookmarksDatabaseViewModel;
 import com.example.dailyupdate.R;
 import com.example.dailyupdate.ui.fragment.BookmarksFragment;
 import com.example.dailyupdate.ui.fragment.MeetupDetailsFragment;
 import com.example.dailyupdate.utilities.Constants;
+import com.example.dailyupdate.viewmodels.BookmarksDatabaseViewModel;
 import com.google.android.material.navigation.NavigationView;
 
 import butterknife.BindView;
@@ -53,9 +53,8 @@ public class BookmarksActivity extends AppCompatActivity implements BookmarksFra
         if (navigationView != null) {
             setupDrawerContent(navigationView);
         }
-
+        fragmentManager = getSupportFragmentManager();
         // TODO: handle the case the user presses "back" when coming from widget
-        // & Use broadcast/jobservice instead?
         Intent intent = getIntent();
         if (intent.hasExtra(Constants.EXTRA_GROUP_URL)) {
             // If the intent is not empty, it means that the activity was started from the widget to
@@ -64,11 +63,32 @@ public class BookmarksActivity extends AppCompatActivity implements BookmarksFra
             String eventId = intent.getStringExtra(Constants.EXTRA_EVENT_ID);
             displayEventDetails(groupUrl, eventId);
         } else {
-            fragmentManager = getSupportFragmentManager();
+
             bookmarksFragment = BookmarksFragment.newInstance();
             fragmentManager.beginTransaction().replace(R.id.fragment_container,
                     bookmarksFragment).commit();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Intent intent = getIntent();
+        if (intent.hasExtra(Constants.EXTRA_GROUP_URL)) {
+            String groupUrl = intent.getStringExtra(Constants.EXTRA_GROUP_URL);
+            String eventId = intent.getStringExtra(Constants.EXTRA_EVENT_ID);
+            displayEventDetails(groupUrl, eventId);
+        }
+    }
+
+    /**
+     * If the activity was launched from the widget, make sure the intent received is the latest
+     * one in order to have the correct event information
+     **/
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        this.setIntent(intent);
     }
 
     @Override
@@ -78,7 +98,7 @@ public class BookmarksActivity extends AppCompatActivity implements BookmarksFra
         meetupDetailsFragment.setHasOptionsMenu(true);
         meetupDetailsFragment.setMenuVisibility(true);
         meetupDetailsFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.Dialog_FullScreen);
-        meetupDetailsFragment.show(getSupportFragmentManager(), "meetup_details");
+        meetupDetailsFragment.show(fragmentManager, "meetup_details");
     }
 
 
@@ -99,7 +119,8 @@ public class BookmarksActivity extends AppCompatActivity implements BookmarksFra
                 startActivity(preferenceIntent);
                 return true;
             case R.id.action_delete_all:
-                BookmarksDatabaseViewModel viewModel = ViewModelProviders.of(this).get(BookmarksDatabaseViewModel.class);
+                BookmarksDatabaseViewModel viewModel =
+                        ViewModelProviders.of(this).get(BookmarksDatabaseViewModel.class);
                 viewModel.deleteAllBookmarkedEvent();
                 return true;
         }

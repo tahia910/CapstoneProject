@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 
 import com.example.dailyupdate.R;
-import com.example.dailyupdate.ui.activity.BookmarksActivity;
+import com.example.dailyupdate.utilities.AppService;
 import com.example.dailyupdate.utilities.Constants;
 
 /**
@@ -25,8 +25,9 @@ public class BookmarksWidget extends AppWidgetProvider {
             // Set ClickListener on each item in the adapter
             Intent broadcastIntent = new Intent(context, BookmarksWidget.class);
             broadcastIntent.setAction(Constants.ACTION_ITEM_CLICK);
-            PendingIntent broadcastPendingIntent = PendingIntent.getBroadcast(context, 0,
-                    broadcastIntent, 0);
+            PendingIntent broadcastPendingIntent = PendingIntent.getBroadcast(context,
+                    Constants.ACTION_ITEM_CLICK_PENDING_INTENT_ID, broadcastIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
             views.setPendingIntentTemplate(R.id.appwidget_listview, broadcastPendingIntent);
 
             // Attach adapter, set empty view for when the listview doesn't have items
@@ -40,35 +41,30 @@ public class BookmarksWidget extends AppWidgetProvider {
     }
 
 
+    /**
+     * Send the selected event information to AppService, which will take care of opening
+     * BookmarksActivity (to display the selected event details)
+     **/
     @Override
     public void onReceive(Context context, Intent intent) {
         if (Constants.ACTION_ITEM_CLICK.equals(intent.getAction())) {
             String groupUrl = intent.getStringExtra(Constants.EXTRA_GROUP_URL);
             String eventId = intent.getStringExtra(Constants.EXTRA_EVENT_ID);
 
-            Intent bookmarksActivityIntent = new Intent(context, BookmarksActivity.class);
+            Intent bookmarksActivityIntent = new Intent(context, AppService.class);
             bookmarksActivityIntent.putExtra(Constants.EXTRA_GROUP_URL, groupUrl);
             bookmarksActivityIntent.putExtra(Constants.EXTRA_EVENT_ID, eventId);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, bookmarksActivityIntent,
+            bookmarksActivityIntent.setAction(Constants.ACTION_OPEN_DETAILS);
+            PendingIntent pendingIntent = PendingIntent.getService(context,
+                    Constants.ACTION_OPEN_DETAILS_PENDING_INTENT_ID, bookmarksActivityIntent,
                     PendingIntent.FLAG_UPDATE_CURRENT);
             try {
                 pendingIntent.send();
             } catch (PendingIntent.CanceledException e) {
                 e.printStackTrace();
             }
-        } super.onReceive(context, intent);
-    }
-
-    @Override
-    public void onDeleted(Context context, int[] appWidgetIds) {
-    }
-
-    @Override
-    public void onEnabled(Context context) {
-    }
-
-    @Override
-    public void onDisabled(Context context) {
+        }
+        super.onReceive(context, intent);
     }
 }
 

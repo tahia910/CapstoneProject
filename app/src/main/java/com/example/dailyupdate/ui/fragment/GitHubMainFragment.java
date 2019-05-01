@@ -86,6 +86,9 @@ public class GitHubMainFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * Get the search criterias stocked in the SharedPreferences
+     **/
     private void getSharedPreferences() {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         searchKeyword = sharedPref.getString(getString(R.string.pref_github_edittext_key), "");
@@ -94,7 +97,6 @@ public class GitHubMainFragment extends Fragment {
         searchOrder = sharedPref.getString(getString(R.string.pref_github_order_key),
                 getString(R.string.pref_github_order_default));
     }
-
 
     private void subscribeGitHubObserver() {
         gitHubViewModel.getGitHubRepoList().observe(this, new Observer<List<GitHubRepo>>() {

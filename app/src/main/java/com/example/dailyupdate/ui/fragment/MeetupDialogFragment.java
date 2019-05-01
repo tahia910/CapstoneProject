@@ -72,7 +72,6 @@ public class MeetupDialogFragment extends DialogFragment {
         }).setNegativeButton(R.string.cancel_label, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 listener.onMeetupDialogNegativeClick(MeetupDialogFragment.this);
-                // TODO: handle dialog cancel option
             }
         });
         return builder.create();

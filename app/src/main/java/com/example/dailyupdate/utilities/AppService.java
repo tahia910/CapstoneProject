@@ -7,6 +7,7 @@ import android.content.Intent;
 
 import androidx.annotation.Nullable;
 
+import com.example.dailyupdate.ui.activity.BookmarksActivity;
 import com.example.dailyupdate.ui.activity.MainViewActivity;
 import com.example.dailyupdate.utilities.notifications.NotificationUtilities;
 
@@ -40,6 +41,21 @@ public class AppService extends IntentService {
             } else if (Constants.ACTION_GET_UPDATE_NOTIFICATION.equals(action)) {
                 // Display the notification
                 NotificationUtilities.createNotification(context);
+            } else if (Constants.ACTION_OPEN_DETAILS.equals(action)){
+                // Open BookmarksActivity to display the details of an event selected from the
+                // widget
+                String groupUrl = intent.getStringExtra(Constants.EXTRA_GROUP_URL);
+                String eventId = intent.getStringExtra(Constants.EXTRA_EVENT_ID);
+                Intent startBookmarksIntent = new Intent(context, BookmarksActivity.class);
+                startBookmarksIntent.putExtra(Constants.EXTRA_GROUP_URL, groupUrl);
+                startBookmarksIntent.putExtra(Constants.EXTRA_EVENT_ID, eventId);
+                PendingIntent pendingIntent = PendingIntent.getActivity(context, 7,
+                        startBookmarksIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                try {
+                    pendingIntent.send();
+                } catch (PendingIntent.CanceledException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

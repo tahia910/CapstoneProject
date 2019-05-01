@@ -1,11 +1,12 @@
 package com.example.dailyupdate.ui.activity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -36,6 +37,7 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
     @BindView(R.id.drawer_layout) DrawerLayout mDrawer;
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.nav_view) NavigationView navigationView;
+    @BindView(R.id.appbar_layout_emptyview) TextView emptyView;
 
     private FragmentManager fragmentManager;
     private String mainViewOption;
@@ -135,6 +137,7 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
         if (!meetupSearchKeyword.isEmpty()) {
             getMeetupFragment();
         } else {
+            setEmptyView();
             Toast.makeText(this, getString(R.string.mainview_toast_empty_search),
                     Toast.LENGTH_LONG).show();
         }
@@ -142,7 +145,7 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
 
     @Override
     public void onMeetupDialogNegativeClick(DialogFragment dialog) {
-        // TODO: handle meetup dialog cancel option(2)
+        setEmptyView();
     }
 
     /**
@@ -156,6 +159,7 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
         if (!gitHubSearchKeyword.isEmpty()) {
             getGitHubFragment();
         } else {
+            setEmptyView();
             Toast.makeText(this, getString(R.string.mainview_toast_empty_search),
                     Toast.LENGTH_LONG).show();
         }
@@ -163,7 +167,13 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
 
     @Override
     public void onGitHubDialogNegativeClick(DialogFragment dialog) {
-        // TODO: handle github dialog cancel option(2)
+        setEmptyView();
+
+    }
+
+    private void setEmptyView() {
+        emptyView.setVisibility(View.VISIBLE);
+        emptyView.setText(getString(R.string.mainview_emptyview_message));
     }
 
     /**
@@ -184,7 +194,6 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
      * Callback from GitHubMainFragment (fragment displaying the result of a search) to open the
      * GitHub repository details using WebView(Custom Tabs)
      **/
-    @SuppressLint("NewApi")
     @Override
     public void currentGitHubRepoUrl(String gitHubRepoUrl) {
         NetworkUtilities.openCustomTabs(getApplicationContext(), gitHubRepoUrl);
@@ -203,6 +212,7 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
                 mDrawer.openDrawer(GravityCompat.START);
                 return true;
             case R.id.action_search:
+                emptyView.setVisibility(View.GONE);
                 getSearchDialog();
                 return true;
             case R.id.action_pref:

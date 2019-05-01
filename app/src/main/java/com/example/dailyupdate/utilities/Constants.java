@@ -46,8 +46,12 @@ public class Constants {
     public static final String UPDATE_JOB_TAG = "search_update_tag";
 
     // Widget related
+    public static final int ACTION_ITEM_CLICK_PENDING_INTENT_ID = 888;
+    public static final int ACTION_OPEN_DETAILS_PENDING_INTENT_ID = 999;
+    public static final String ACTION_OPEN_DETAILS = "com.example.dailyupdate.widget" +
+            ".action_open_details";
     public static final String ACTION_UPDATE_WIDGET = "com.example.dailyupdate.widget" +
-            ".action.action_update_widget";
+            ".action_update_widget";
     public static final String ACTION_ITEM_CLICK = "com.example.dailyupdate.widget.action_toast";
     public static final String EXTRA_GROUP_URL = "com.example.dailyupdate.widget" +
             ".extra_group_url";

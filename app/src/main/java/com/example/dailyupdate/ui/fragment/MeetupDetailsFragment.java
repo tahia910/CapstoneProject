@@ -14,22 +14,18 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.dailyupdate.viewmodels.BookmarksDatabaseViewModel;
 import com.example.dailyupdate.R;
 import com.example.dailyupdate.data.model.MeetupEventDetails;
 import com.example.dailyupdate.data.model.MeetupEventLocation;
-import com.example.dailyupdate.networking.MeetupService;
-import com.example.dailyupdate.networking.RetrofitInstance;
 import com.example.dailyupdate.utilities.Constants;
+import com.example.dailyupdate.viewmodels.BookmarksDatabaseViewModel;
+import com.example.dailyupdate.viewmodels.MeetupViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MeetupDetailsFragment extends DialogFragment {
 
@@ -70,7 +66,8 @@ public class MeetupDetailsFragment extends DialogFragment {
     private ImageView bookmarkIcon;
 
     private Dialog dialog;
-    private BookmarksDatabaseViewModel viewModel;
+    private BookmarksDatabaseViewModel databaseViewModel;
+    private MeetupViewModel meetupViewModel;
 
     private String groupId;
     private String eventId;
@@ -99,8 +96,12 @@ public class MeetupDetailsFragment extends DialogFragment {
             groupId = getArguments().getString(Constants.KEY_GROUP_URL);
             eventId = getArguments().getString(Constants.KEY_EVENT_ID);
         }
-        viewModel = ViewModelProviders.of(MeetupDetailsFragment.this).get(BookmarksDatabaseViewModel.class);
-        retrieveEventDetails();
+        databaseViewModel =
+                ViewModelProviders.of(MeetupDetailsFragment.this).get(BookmarksDatabaseViewModel.class);
+        meetupViewModel =
+                ViewModelProviders.of(MeetupDetailsFragment.this).get(MeetupViewModel.class);
+        subscribeMeetupEventDetailsObserver();
+        meetupViewModel.searchMeetupEventDetails(groupId, eventId);
         return rootView;
     }
 
@@ -120,7 +121,7 @@ public class MeetupDetailsFragment extends DialogFragment {
     // TODO: change "alreadyBookmarked" logic
     private void checkAlreadyBookmarked() {
         bookmarkIcon = dialog.findViewById(R.id.bookmark_icon_meetup_detail);
-        viewModel.getAllBookmarkedEvents().observe(MeetupDetailsFragment.this,
+        databaseViewModel.getAllBookmarkedEvents().observe(MeetupDetailsFragment.this,
                 new Observer<List<MeetupEventDetails>>() {
             @Override
             public void onChanged(List<MeetupEventDetails> meetupEventDetails) {
@@ -148,40 +149,27 @@ public class MeetupDetailsFragment extends DialogFragment {
             public void onClick(View v) {
                 if (alreadyBookmarked) {
                     alreadyBookmarked = false;
-                    viewModel.deleteBookmarkedEvent(currentEvent);
+                    databaseViewModel.deleteBookmarkedEvent(currentEvent);
                     bookmarkIcon.setImageResource(R.drawable.ic_bookmark_white);
                 } else {
                     alreadyBookmarked = true;
-                    viewModel.insertBookmarkedEvent(currentEvent);
+                    databaseViewModel.insertBookmarkedEvent(currentEvent);
                     bookmarkIcon.setImageResource(R.drawable.ic_bookmarked_white);
                 }
             }
         });
     }
 
-    private void retrieveEventDetails() {
-        MeetupService meetupService =
-                RetrofitInstance.getMeetupRetrofitInstance().create(MeetupService.class);
 
-        Call<MeetupEventDetails> meetupEventCall = meetupService.getMeetupEventDetails(groupId,
-                eventId, Constants.MEETUP_API_KEY);
-        meetupEventCall.enqueue(new Callback<MeetupEventDetails>() {
+    private void subscribeMeetupEventDetailsObserver() {
+        meetupViewModel.getMeetupEventDetails().observe(this, new Observer<MeetupEventDetails>() {
             @Override
-            public void onResponse(Call<MeetupEventDetails> call,
-                                   Response<MeetupEventDetails> response) {
-                spinner.setVisibility(View.INVISIBLE);
-                if (response.body() != null) {
-                    currentEvent = response.body();
+            public void onChanged(MeetupEventDetails currentMeetupEvent) {
+                if (currentMeetupEvent != null) {
+                    spinner.setVisibility(View.INVISIBLE);
+                    currentEvent = currentMeetupEvent;
                     setEventInformation(currentEvent);
-                }else {
-                    emptyView.setText(getString(R.string.meetup_details_error_message));
                 }
-            }
-
-            @Override
-            public void onFailure(Call<MeetupEventDetails> call, Throwable t) {
-                spinner.setVisibility(View.INVISIBLE);
-                emptyView.setText(getString(R.string.meetup_details_error_message));
             }
         });
     }
@@ -192,7 +180,8 @@ public class MeetupDetailsFragment extends DialogFragment {
         String status = "Status: " + meetupEventDetails.getEventStatus();
 
         int attendeesCount = meetupEventDetails.getEventAttendees();
-        String attendeesCountString = attendeesCount + getString(R.string.meetupevent_attendees_label);
+        String attendeesCountString =
+                attendeesCount + getString(R.string.meetupevent_attendees_label);
 
         String waitlistCountString = meetupEventDetails.getWaitlistCount() + " members on waitlist";
 

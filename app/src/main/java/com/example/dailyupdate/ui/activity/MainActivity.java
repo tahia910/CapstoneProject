@@ -31,16 +31,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.dailyupdate.viewmodels.GitHubViewModel;
 import com.example.dailyupdate.R;
 import com.example.dailyupdate.data.model.GitHubRepo;
 import com.example.dailyupdate.data.model.MeetupGroup;
-import com.example.dailyupdate.networking.MeetupService;
-import com.example.dailyupdate.networking.RetrofitInstance;
 import com.example.dailyupdate.ui.adapter.GitHubRepoAdapter;
 import com.example.dailyupdate.ui.adapter.MeetupGroupAdapter;
 import com.example.dailyupdate.utilities.Constants;
 import com.example.dailyupdate.utilities.NetworkUtilities;
+import com.example.dailyupdate.viewmodels.GitHubViewModel;
+import com.example.dailyupdate.viewmodels.MeetupViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -53,9 +52,6 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 
@@ -79,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences sharedPref;
     GitHubViewModel gitHubViewModel;
     GitHubRepoAdapter gitHubRepoAdapter;
+    MeetupViewModel meetupViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,10 +84,12 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setActionBar();
         setRecyclerViews();
-
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         gitHubViewModel = ViewModelProviders.of(this).get(GitHubViewModel.class);
+        meetupViewModel = ViewModelProviders.of(this).get(MeetupViewModel.class);
+        subscribeGitHubObserver();
+        subscribeMeetupGroupObserver();
 
         // Check if the network is available first, display empty view if there is no connection
         boolean isConnected = NetworkUtilities.checkNetworkAvailability(this);
@@ -98,9 +97,10 @@ public class MainActivity extends AppCompatActivity {
             setEmptyViewNoNetworkAvailable();
         } else {
             mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+            // Check location permission before retrieving the Meetup groups
             checkLocationPermission();
-            subscribeGitHubObserver();
 
+            // Retrieve GitHub repositories
             gitHubViewModel.searchGitHubRepoList(Constants.GITHUB_DEFAULT_SEARCH_KEYWORD,
                     Constants.GITHUB_DEFAULT_SORT_ORDER);
         }
@@ -115,6 +115,27 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Confirm the location information before retrieving the Meetup groups nearby the user or
+     * near the default location (Tokyo)
+     **/
+    private void retrieveMeetupGroups() {
+        boolean locationSwitchValue = sharedPref.getBoolean(getString(R.string.pref_location_key)
+                , false);
+        if (locationSwitchValue) {
+            userLocation = sharedPref.getString(getString(R.string.pref_meetup_location_key), "");
+        } else {
+            Toast.makeText(this, R.string.location_not_retrieved, Toast.LENGTH_LONG).show();
+            userLocation = Constants.DEFAULT_LOCATION;
+        }
+        // Retrieve the Meetup groups based on the criterias above
+        meetupViewModel.searchMeetupGroups(userLocation, Constants.MEETUP_TECH_CATEGORY_NUMBER,
+                Constants.MEETUP_GROUP_RESPONSE_PAGE);
+    }
+
+    /**
+     * Set the empty views if there is no network available
+     **/
     private void setEmptyViewNoNetworkAvailable() {
         gitHubSpinner.setVisibility(View.GONE);
         meetupSpinner.setVisibility(View.GONE);
@@ -128,16 +149,37 @@ public class MainActivity extends AppCompatActivity {
         gitHubViewModel.getGitHubRepoList().observe(this, new Observer<List<GitHubRepo>>() {
             @Override
             public void onChanged(List<GitHubRepo> gitHubRepoList) {
-                if (gitHubRepoList != null){
+                if (gitHubRepoList != null) {
                     gitHubSpinner.setVisibility(View.GONE);
-                    gitHubRepoAdapter = new GitHubRepoAdapter(MainActivity.this,
-                            gitHubRepoList, 1);
+                    gitHubRepoAdapter = new GitHubRepoAdapter(MainActivity.this, gitHubRepoList, 1);
                     githubRecyclerView.setAdapter(gitHubRepoAdapter);
 
                     gitHubRepoAdapter.setOnItemClickListener((position, v) -> {
                         GitHubRepo gitHubRepo = gitHubRepoList.get(position);
                         String gitHubRepoUrl = gitHubRepo.getHtmlUrl();
                         NetworkUtilities.openCustomTabs(getApplicationContext(), gitHubRepoUrl);
+                    });
+                }
+            }
+        });
+    }
+
+    private void subscribeMeetupGroupObserver() {
+        meetupViewModel.getMeetupGroupList().observe(this, new Observer<List<MeetupGroup>>() {
+            @Override
+            public void onChanged(List<MeetupGroup> meetupGroupList) {
+                if (meetupGroupList != null) {
+                    meetupSpinner.setVisibility(View.GONE);
+                    MeetupGroupAdapter meetupGroupAdapter =
+                            new MeetupGroupAdapter(MainActivity.this, meetupGroupList);
+                    meetupRecyclerView.setAdapter(meetupGroupAdapter);
+
+                    // Use an intent to open a browser and display the group details
+                    meetupGroupAdapter.setOnItemClickListener((position, v) -> {
+                        MeetupGroup meetupGroup = meetupGroupList.get(position);
+                        String groupUrlString = meetupGroup.getGroupUrl();
+                        Uri groupUrl = Uri.parse(groupUrlString);
+                        startActivity(new Intent(Intent.ACTION_VIEW, groupUrl));
                     });
                 }
             }
@@ -157,58 +199,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /** Set up the spinners and recycler views **/
+    /**
+     * Set up the spinners and recycler views
+     **/
     private void setRecyclerViews() {
         gitHubSpinner.setVisibility(View.VISIBLE);
         meetupSpinner.setVisibility(View.VISIBLE);
         githubRecyclerView.setLayoutManager(new LinearLayoutManager(this,
                 LinearLayoutManager.HORIZONTAL, false));
         meetupRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-    }
-
-
-
-    private void retrieveMeetupGroups() {
-        boolean locationSwitchValue = sharedPref.getBoolean(getString(R.string.pref_location_key)
-                , false);
-        if (locationSwitchValue) {
-            userLocation = sharedPref.getString(getString(R.string.pref_meetup_location_key), "");
-        } else {
-            Toast.makeText(this, R.string.location_not_retrieved, Toast.LENGTH_LONG).show();
-            userLocation = Constants.DEFAULT_LOCATION;
-        }
-        MeetupService meetupService =
-                RetrofitInstance.getMeetupRetrofitInstance().create(MeetupService.class);
-        Call<List<MeetupGroup>> meetupGroupCall =
-                meetupService.getMeetupGroupList(Constants.MEETUP_API_KEY, userLocation,
-                        Constants.MEETUP_TECH_CATEGORY_NUMBER,
-                        Constants.MEETUP_GROUP_RESPONSE_PAGE);
-        meetupGroupCall.enqueue(new Callback<List<MeetupGroup>>() {
-            @Override
-            public void onResponse(Call<List<MeetupGroup>> call,
-                                   Response<List<MeetupGroup>> response) {
-                meetupSpinner.setVisibility(View.GONE);
-                List<MeetupGroup> meetupGroupList = response.body();
-                MeetupGroupAdapter meetupGroupAdapter = new MeetupGroupAdapter(MainActivity.this,
-                        meetupGroupList);
-                meetupRecyclerView.setAdapter(meetupGroupAdapter);
-
-                // Use an intent to open a browser and display the group details
-                meetupGroupAdapter.setOnItemClickListener((position, v) -> {
-                    MeetupGroup meetupGroup = meetupGroupList.get(position);
-                    String groupUrlString = meetupGroup.getGroupUrl();
-                    Uri groupUrl = Uri.parse(groupUrlString);
-                    startActivity(new Intent(Intent.ACTION_VIEW, groupUrl));
-                });
-            }
-
-            @Override
-            public void onFailure(Call<List<MeetupGroup>> call, Throwable t) {
-                meetupSpinner.setVisibility(View.GONE);
-                meetupEmptyView.setVisibility(View.VISIBLE);
-                meetupEmptyView.setText(getString(R.string.meetup_groups_error_message));
-            }
-        });
     }
 
 

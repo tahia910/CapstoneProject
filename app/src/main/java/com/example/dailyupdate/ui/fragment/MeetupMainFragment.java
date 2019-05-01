@@ -12,31 +12,26 @@ import android.widget.Toast;
 
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.dailyupdate.BuildConfig;
-import com.example.dailyupdate.viewmodels.BookmarksDatabaseViewModel;
 import com.example.dailyupdate.R;
 import com.example.dailyupdate.data.model.MeetupEvent;
 import com.example.dailyupdate.data.model.MeetupEventDetails;
-import com.example.dailyupdate.data.model.MeetupEventResponse;
-import com.example.dailyupdate.networking.MeetupService;
-import com.example.dailyupdate.networking.RetrofitInstance;
 import com.example.dailyupdate.ui.adapter.MeetupEventAdapter;
 import com.example.dailyupdate.utilities.Constants;
 import com.example.dailyupdate.utilities.notifications.JobUtilities;
+import com.example.dailyupdate.viewmodels.BookmarksDatabaseViewModel;
+import com.example.dailyupdate.viewmodels.MeetupViewModel;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MeetupMainFragment extends Fragment {
 
@@ -51,7 +46,8 @@ public class MeetupMainFragment extends Fragment {
     private SharedPreferences sharedPref;
     private MeetupMainFragmentListener listener;
     private MeetupEventAdapter meetupEventAdapter;
-    private BookmarksDatabaseViewModel viewModel;
+    private BookmarksDatabaseViewModel databaseViewModel;
+    private MeetupViewModel meetupViewModel;
 
     public interface MeetupMainFragmentListener {
         void currentEventInfo(String groupUrl, String eventId);
@@ -81,17 +77,58 @@ public class MeetupMainFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         spinner.setVisibility(View.VISIBLE);
 
+        databaseViewModel = ViewModelProviders.of(this).get(BookmarksDatabaseViewModel.class);
+        meetupViewModel = ViewModelProviders.of(this).get(MeetupViewModel.class);
+        subscribeMeetupEventObserver();
+
+        getSharedPreferences(context);
+        meetupViewModel.searchMeetupEvents(searchLocation, sortBy, Constants.MEETUP_TECH_CATEGORY_NUMBER, searchKeyword);
+        return rootView;
+    }
+
+    /**
+     * Get the search criterias stocked in the SharedPreferences
+     **/
+    private void getSharedPreferences(Context context) {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         searchKeyword = sharedPref.getString(getString(R.string.pref_meetup_edittext_key), "");
         sortBy = sharedPref.getString(getString(R.string.pref_meetup_sort_key),
                 getString(R.string.pref_meetup_sort_default));
         searchLocation = sharedPref.getString(getString(R.string.pref_meetup_location_key), "");
+    }
 
-        viewModel = ViewModelProviders.of(this).get(BookmarksDatabaseViewModel.class);
+    private void subscribeMeetupEventObserver() {
+        meetupViewModel.getMeetupEventList().observe(this, new Observer<List<MeetupEvent>>() {
+            @Override
+            public void onChanged(List<MeetupEvent> meetupEventList) {
+                if (meetupEventList != null) {
+                    spinner.setVisibility(View.GONE);
+                    meetupEventAdapter = new MeetupEventAdapter(getContext(), meetupEventList);
+                    recyclerView.setAdapter(meetupEventAdapter);
+                    setNotifications(getContext());
 
-        retrieveMeetupEvents();
-        setNotifications(context);
-        return rootView;
+                    // Open the details of the selected event
+                    meetupEventAdapter.setOnItemClickListener((position, v) -> {
+                        MeetupEvent meetupEvent = meetupEventList.get(position);
+                        String eventId = meetupEvent.getEventId();
+                        String groupUrl = meetupEvent.getGroupNameObject().getEventGroupUrl();
+                        listener.currentEventInfo(groupUrl, eventId);
+                    });
+
+                    // Add the selected event to the database
+                    meetupEventAdapter.setOnBookmarkIconClickListener(currentEvent -> {
+                        String currentEventId = currentEvent.getEventId();
+                        MeetupEventDetails bookmarkEvent = new MeetupEventDetails();
+                        bookmarkEvent.setEventId(currentEventId);
+                        bookmarkEvent.setEventName(currentEvent.getEventName());
+                        bookmarkEvent.setMeetupEventGroupName(currentEvent.getGroupNameObject());
+                        bookmarkEvent.setEventDate(currentEvent.getEventDate());
+                        bookmarkEvent.setEventTime(currentEvent.getEventTime());
+                        databaseViewModel.insertBookmarkedEvent(bookmarkEvent);
+                    });
+                }
+            }
+        });
     }
 
     /**
@@ -105,8 +142,7 @@ public class MeetupMainFragment extends Fragment {
         } else {
             // Display a Snackbar to ask if the user wants to get notifications for current search
             Snackbar snackbar = Snackbar.make(mainLayout,
-                    getString(R.string.notification_snackbar_label), Snackbar.LENGTH_LONG)
-                    .setAction(getString(R.string.notification_snackbar_action), new View.OnClickListener() {
+                    getString(R.string.notification_snackbar_label), Snackbar.LENGTH_LONG).setAction(getString(R.string.notification_snackbar_action), new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     JobUtilities.scheduleUpdateJob(context);
@@ -121,54 +157,5 @@ public class MeetupMainFragment extends Fragment {
         }
     }
 
-    private void retrieveMeetupEvents() {
-        MeetupService meetupService =
-                RetrofitInstance.getMeetupRetrofitInstance().create(MeetupService.class);
-
-        Call<MeetupEventResponse> meetupEventCall = meetupService.getMeetupEventList(Constants.MEETUP_API_KEY,
-                searchLocation, sortBy, Constants.MEETUP_TECH_CATEGORY_NUMBER, searchKeyword);
-        meetupEventCall.enqueue(new Callback<MeetupEventResponse>() {
-            @Override
-            public void onResponse(Call<MeetupEventResponse> call,
-                                   Response<MeetupEventResponse> response) {
-                spinner.setVisibility(View.GONE);
-                MeetupEventResponse meetupEventResponse = response.body();
-                List<MeetupEvent> meetupEventList = meetupEventResponse.getMeetupEventsList();
-
-                meetupEventAdapter = new MeetupEventAdapter(getContext(), meetupEventList);
-                recyclerView.setAdapter(meetupEventAdapter);
-
-                meetupEventAdapter.setOnItemClickListener((position, v) -> {
-                    MeetupEvent meetupEvent = meetupEventList.get(position);
-                    String eventId = meetupEvent.getEventId();
-                    String groupUrl = meetupEvent.getGroupNameObject().getEventGroupUrl();
-                    listener.currentEventInfo(groupUrl, eventId);
-                });
-
-                meetupEventAdapter.setOnBookmarkIconClickListener(new MeetupEventAdapter.BookmarkIconClickListener() {
-                    @Override
-                    public void onBookmarkIconClick(MeetupEvent currentEvent) {
-
-                        String currentEventId = currentEvent.getEventId();
-
-                        MeetupEventDetails bookmarkEvent = new MeetupEventDetails();
-                        bookmarkEvent.setEventId(currentEventId);
-                        bookmarkEvent.setEventName(currentEvent.getEventName());
-                        bookmarkEvent.setMeetupEventGroupName(currentEvent.getGroupNameObject());
-                        bookmarkEvent.setEventDate(currentEvent.getEventDate());
-                        bookmarkEvent.setEventTime(currentEvent.getEventTime());
-                        viewModel.insertBookmarkedEvent(bookmarkEvent);
-                    }
-                });
-            }
-
-            @Override
-            public void onFailure(Call<MeetupEventResponse> call, Throwable t) {
-                spinner.setVisibility(View.GONE);
-                emptyView.setVisibility(View.VISIBLE);
-                emptyView.setText(getString(R.string.meetup_events_error_message));
-            }
-        });
-    }
 
 }
