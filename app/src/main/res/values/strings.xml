@@ -65,6 +65,8 @@
     <string name="content_description_group_icon">Group icon</string>
     <string name="content_description_back_icon">Back icon</string>
 
+    <string name="no_internet_connection">No internet connection available.</string>
+
     <string name="repository_no_description">(No description available.)</string>
     <string name="repository_no_language">(Language unknown.)</string>
     <string name="repository_stars_label">\u0020stars</string>
@@ -146,5 +148,18 @@
         to be sure to have a place</string>
     <string name="notif_action_open">Check details now</string>
     <string name="notif_action_ignore">Later maybe</string>
+    <string name="toast_notification_set_confirmation">Notifications set for this search</string>
+    <string name="notification_snackbar_label">Set notifications for current search?</string>
+    <string name="notification_snackbar_action">YES</string>
+
+    <string name="github_error_message">An error occurred: repositories could not be retrieved
+        .</string>
+    <string name="meetup_groups_error_message">An error occurred: groups could not be retrieved
+        .</string>
+    <string name="meetup_events_error_message">An error occurred: events could not be
+        retrieved.</string>
+    <string name="meetup_details_error_message">An error occurred: the devent details could
+    not be retrieved.</string>
+    <string name="bookmarks_emptyview_message">You have not bookmarked any event yet.</string>
 
 </resources>

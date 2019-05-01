@@ -26,7 +26,6 @@ import com.example.dailyupdate.ui.fragment.GitHubMainFragment;
 import com.example.dailyupdate.ui.fragment.MeetupDetailsFragment;
 import com.example.dailyupdate.ui.fragment.MeetupDialogFragment;
 import com.example.dailyupdate.ui.fragment.MeetupMainFragment;
-import com.example.dailyupdate.utilities.JobUtilities;
 import com.google.android.material.navigation.NavigationView;
 
 import butterknife.BindView;

@@ -51,6 +51,26 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/emptyview_meetup_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_meetup_detail"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <ProgressBar
+        android:id="@+id/spinner_meetup_detail"
+        style="@style/Widget.AppCompat.ProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_meetup_detail"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
     <ScrollView
         android:id="@+id/scrollview_meetup_detail"
         android:layout_width="match_parent"
@@ -85,6 +105,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
+                android:visibility="invisible"
                 android:contentDescription="@string/content_description_group_icon"
                 android:src="@drawable/ic_group"
                 app:layout_constraintStart_toStartOf="parent"
@@ -112,6 +133,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
+                android:visibility="invisible"
                 android:src="@drawable/ic_check"
                 android:contentDescription="@string/content_description_status_icon"
                 app:layout_constraintStart_toStartOf="parent"
@@ -177,6 +199,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:src="@drawable/ic_time"
+                android:visibility="invisible"
                 android:contentDescription="@string/content_description_time_icon"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textview_attendees_meetup_detail" />
@@ -219,6 +242,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:src="@drawable/ic_place"
+                android:visibility="invisible"
                 android:contentDescription="@string/content_description_place_icon"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/imageview_time_icon_meetup_detail" />
@@ -249,6 +273,7 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="18sp"
                 android:textStyle="bold"
+                android:visibility="invisible"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textview_address_meetup_detail" />
 

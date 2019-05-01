@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,6 +27,7 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.dailyupdate.BuildConfig;
 import com.example.dailyupdate.R;
@@ -37,6 +39,7 @@ import com.example.dailyupdate.networking.MeetupService;
 import com.example.dailyupdate.networking.RetrofitInstance;
 import com.example.dailyupdate.ui.adapter.GitHubRepoAdapter;
 import com.example.dailyupdate.ui.adapter.MeetupGroupAdapter;
+import com.example.dailyupdate.utilities.NetworkUtilities;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -57,18 +60,18 @@ import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 
 public class MainActivity extends AppCompatActivity {
 
-    @BindView(R.id.drawer_layout)
-    DrawerLayout mDrawer;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-    @BindView(R.id.nav_view)
-    NavigationView navigationView;
-    @BindView(R.id.github_recycler_view)
-    RecyclerView githubRecyclerView;
-    @BindView(R.id.github_spinner)
-    ProgressBar gitHubSpinner;
-    @BindView(R.id.meetup_recycler_view)
-    RecyclerView meetupRecyclerView;
+    @BindView(R.id.drawer_layout) DrawerLayout mDrawer;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.nav_view) NavigationView navigationView;
+
+    @BindView(R.id.home_github_recycler_view) RecyclerView githubRecyclerView;
+    @BindView(R.id.home_meetup_recycler_view) RecyclerView meetupRecyclerView;
+    @BindView(R.id.home_github_spinner) ProgressBar gitHubSpinner;
+    @BindView(R.id.home_meetup_spinner) ProgressBar meetupSpinner;
+    @BindView(R.id.home_github_emptyview) TextView gitHubEmptyView;
+    @BindView(R.id.home_meetup_emptyview) TextView meetupEmptyView;
+    @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout meetupRefreshLayout;
+
 
     public static final String MAIN_KEY = "mainKey";
     public static final String MEETUP_MAIN_KEY = "meetupMainKey";
@@ -101,21 +104,38 @@ public class MainActivity extends AppCompatActivity {
             setupDrawerContent(navigationView);
         }
 
-        // Set up the recycler views.
+        // Set up the spinners and recycler views
         gitHubSpinner.setVisibility(View.VISIBLE);
+        meetupSpinner.setVisibility(View.VISIBLE);
         githubRecyclerView.setLayoutManager(new LinearLayoutManager(this,
                 LinearLayoutManager.HORIZONTAL, false));
         meetupRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
-        //TODO: Check if connected to internet
+        // Check if the network is available first, display empty view if there is no connection
+        boolean isConnected = NetworkUtilities.checkNetworkAvailability(this);
+        if (!isConnected) {
+            gitHubSpinner.setVisibility(View.GONE);
+            meetupSpinner.setVisibility(View.GONE);
+            gitHubEmptyView.setVisibility(View.VISIBLE);
+            gitHubEmptyView.setText(R.string.no_internet_connection);
+            meetupEmptyView.setVisibility(View.VISIBLE);
+            meetupEmptyView.setText(R.string.no_internet_connection);
+        } else{
+            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+            checkLocationPermission();
+            retrieveGithubRepo();
+        }
 
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-        checkPermission();
-
-        retrieveGithubRepo();
+        // Set the swipe action on Meetup events list to refresh the search
+        meetupRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                checkLocationPermission();
+                meetupRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     private void retrieveGithubRepo() {
@@ -136,7 +156,9 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<GitHubResponse> call, Throwable t) {
-                //TODO: handle failure
+                gitHubSpinner.setVisibility(View.GONE);
+                gitHubEmptyView.setVisibility(View.VISIBLE);
+                gitHubEmptyView.setText(getString(R.string.github_error_message));
             }
         });
     }
@@ -158,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<MeetupGroup>> call,
                                    Response<List<MeetupGroup>> response) {
+                meetupSpinner.setVisibility(View.GONE);
                 List<MeetupGroup> meetupGroupList = response.body();
                 MeetupGroupAdapter meetupGroupAdapter = new MeetupGroupAdapter(MainActivity.this,
                         meetupGroupList);
@@ -174,7 +197,9 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<MeetupGroup>> call, Throwable t) {
-                //TODO: handle failure
+                meetupSpinner.setVisibility(View.GONE);
+                meetupEmptyView.setVisibility(View.VISIBLE);
+                meetupEmptyView.setText(getString(R.string.meetup_groups_error_message));
             }
         });
     }
@@ -222,7 +247,7 @@ public class MainActivity extends AppCompatActivity {
      * groups near the user
      **/
     @TargetApi(Build.VERSION_CODES.M)
-    private void checkPermission() {
+    private void checkLocationPermission() {
         if (ActivityCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // Ask for permission
             ActivityCompat.requestPermissions(MainActivity.this,
@@ -265,7 +290,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

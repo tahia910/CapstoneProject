@@ -23,7 +23,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <TextView
-        android:id="@+id/main_github_title_textview"
+        android:id="@+id/home_github_title_textview"
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:background="@color/colorPrimary"
@@ -35,10 +35,10 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appbar" />
+        app:layout_constraintTop_toBottomOf="@id/appbar" />
 
     <ProgressBar
-        android:id="@+id/github_spinner"
+        android:id="@+id/home_github_spinner"
         style="@style/Widget.AppCompat.ProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -47,20 +47,31 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_github_title_textview" />
+        app:layout_constraintTop_toBottomOf="@id/home_github_title_textview" />
+
+    <TextView
+        android:id="@+id/home_github_emptyview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/home_github_title_textview"/>
+
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/github_recycler_view"
+        android:id="@+id/home_github_recycler_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:clipToPadding="false"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_github_title_textview" />
+        app:layout_constraintTop_toBottomOf="@id/home_github_title_textview" />
 
     <TextView
-        android:id="@+id/main_meetup_title_textview"
+        android:id="@+id/home_meetup_title_textview"
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:background="@color/colorPrimary"
@@ -72,9 +83,8 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline2" />
+        app:layout_constraintTop_toTopOf="@id/guideline2" />
 
-    <!-- TODO: fix refresh logic -->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="0dp"
@@ -84,15 +94,35 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_meetup_title_textview">
+        app:layout_constraintTop_toBottomOf="@id/home_meetup_title_textview">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/meetup_recycler_view"
+            android:id="@+id/home_meetup_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clipToPadding="false"
             android:scrollbarStyle="outsideOverlay" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <ProgressBar
+        android:id="@+id/home_meetup_spinner"
+        style="@style/Widget.AppCompat.ProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/home_meetup_title_textview" />
+
+    <TextView
+        android:id="@+id/home_meetup_emptyview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/home_meetup_title_textview"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"

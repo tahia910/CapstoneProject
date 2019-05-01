@@ -26,8 +26,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activity.MainViewActivity"
-            android:launchMode="singleTop"/>
+        <activity android:name=".ui.activity.MainViewActivity"/>
         <activity
             android:name=".ui.activity.PreferenceActivity"
             android:label="@string/preference_label" />

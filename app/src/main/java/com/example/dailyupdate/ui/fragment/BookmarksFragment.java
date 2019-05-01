@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -26,8 +27,8 @@ import butterknife.ButterKnife;
 
 public class BookmarksFragment extends Fragment {
 
-    @BindView(R.id.main_recycler_view)
-    RecyclerView recyclerView;
+    @BindView(R.id.main_recycler_view) RecyclerView recyclerView;
+    @BindView(R.id.main_emptyview) TextView emptyView;
 
     private MainViewModel viewModel;
     private BookmarksFragmentListener listener;
@@ -72,8 +73,14 @@ public class BookmarksFragment extends Fragment {
         viewModel.getAllBookmarkedEvents().observe(this, new Observer<List<MeetupEventDetails>>() {
             @Override
             public void onChanged(List<MeetupEventDetails> bookmarkedEventsList) {
-                bookmarksAdapter.submitList(bookmarkedEventsList);
-                setAdapterClickListeners(bookmarkedEventsList);
+                if (bookmarkedEventsList.size() < 1) {
+                    emptyView.setVisibility(View.VISIBLE);
+                    emptyView.setText(getString(R.string.bookmarks_emptyview_message));
+                } else {
+                    emptyView.setVisibility(View.GONE);
+                    bookmarksAdapter.submitList(bookmarkedEventsList);
+                    setAdapterClickListeners(bookmarkedEventsList);
+                }
             }
         });
     }

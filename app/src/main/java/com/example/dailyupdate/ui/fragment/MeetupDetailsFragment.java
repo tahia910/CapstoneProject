@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.fragment.app.DialogFragment;
@@ -36,6 +37,11 @@ import static com.example.dailyupdate.ui.activity.MainViewActivity.KEY_GROUP_URL
 
 public class MeetupDetailsFragment extends DialogFragment {
 
+    @BindView(R.id.spinner_meetup_detail)
+    ProgressBar spinner;
+    @BindView(R.id.emptyview_meetup_detail)
+    TextView emptyView;
+
     @BindView(R.id.textview_event_title_meetup_detail)
     TextView eventTitleTextView;
     @BindView(R.id.textview_group_title_meetup_detail)
@@ -54,8 +60,19 @@ public class MeetupDetailsFragment extends DialogFragment {
     TextView timeTextView;
     @BindView(R.id.textview_address_meetup_detail)
     TextView addressTextView;
+    @BindView(R.id.textview_description_label_meetup_detail)
+    TextView descriptionTitleTextView;
     @BindView(R.id.textview_description_meetup_detail)
-    TextView eventDescriptionTextView;
+    TextView descriptionTextView;
+
+    @BindView(R.id.imageview_group_icon_meetup_detail)
+    ImageView groupIcon;
+    @BindView(R.id.imageview_status_icon_meetup_detail)
+    ImageView statusIcon;
+    @BindView(R.id.imageview_time_icon_meetup_detail)
+    ImageView timeIcon;
+    @BindView(R.id.imageview_place_icon_meetup_detail)
+    ImageView placeIcon;
 
     //    @BindView(R.id.back_icon_meetup_detail)
     private ImageView backIcon;
@@ -86,6 +103,7 @@ public class MeetupDetailsFragment extends DialogFragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.meetup_detail, container, false);
         ButterKnife.bind(this, rootView);
+        spinner.setVisibility(View.VISIBLE);
         if (savedInstanceState != null) {
             groupId = savedInstanceState.getString(KEY_GROUP_URL);
             eventId = savedInstanceState.getString(KEY_EVENT_ID);
@@ -163,15 +181,19 @@ public class MeetupDetailsFragment extends DialogFragment {
             @Override
             public void onResponse(Call<MeetupEventDetails> call,
                                    Response<MeetupEventDetails> response) {
+                spinner.setVisibility(View.INVISIBLE);
                 if (response.body() != null) {
                     currentEvent = response.body();
+                    setEventInformation(currentEvent);
+                }else {
+                    emptyView.setText(getString(R.string.meetup_details_error_message));
                 }
-                setEventInformation(currentEvent);
             }
 
             @Override
             public void onFailure(Call<MeetupEventDetails> call, Throwable t) {
-                //TODO: handle failure
+                spinner.setVisibility(View.INVISIBLE);
+                emptyView.setText(getString(R.string.meetup_details_error_message));
             }
         });
     }
@@ -199,16 +221,27 @@ public class MeetupDetailsFragment extends DialogFragment {
         // TODO: format date and time
         String eventDate = meetupEventDetails.getEventDate();
         String eventTime = meetupEventDetails.getEventTime();
+
         eventTitleTextView.setText(eventName);
+
+        groupIcon.setVisibility(View.VISIBLE);
         groupTextView.setText(groupName);
+
+        statusIcon.setVisibility(View.VISIBLE);
         statusTextView.setText(status);
         placeLeftTextView.setText(placeLeftString);
         attendeesTextView.setText(attendeesCountString);
         waitlistCountTextView.setText(waitlistCountString);
+
+        timeIcon.setVisibility(View.VISIBLE);
         dateTextView.setText(eventDate);
         timeTextView.setText(eventTime);
+
+        placeIcon.setVisibility(View.VISIBLE);
         addressTextView.setText(addressString);
-        eventDescriptionTextView.setText(meetupEventDetails.getEventDescription());
+
+        descriptionTitleTextView.setVisibility(View.VISIBLE);
+        descriptionTextView.setText(meetupEventDetails.getEventDescription());
     }
 
     @Override
