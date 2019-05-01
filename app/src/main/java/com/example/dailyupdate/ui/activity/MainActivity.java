@@ -23,22 +23,23 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.dailyupdate.BuildConfig;
+import com.example.dailyupdate.viewmodels.GitHubViewModel;
 import com.example.dailyupdate.R;
 import com.example.dailyupdate.data.model.GitHubRepo;
-import com.example.dailyupdate.data.model.GitHubResponse;
 import com.example.dailyupdate.data.model.MeetupGroup;
-import com.example.dailyupdate.networking.GitHubService;
 import com.example.dailyupdate.networking.MeetupService;
 import com.example.dailyupdate.networking.RetrofitInstance;
 import com.example.dailyupdate.ui.adapter.GitHubRepoAdapter;
 import com.example.dailyupdate.ui.adapter.MeetupGroupAdapter;
+import com.example.dailyupdate.utilities.Constants;
 import com.example.dailyupdate.utilities.NetworkUtilities;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
@@ -73,59 +74,35 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout meetupRefreshLayout;
 
 
-    public static final String MAIN_KEY = "mainKey";
-    public static final String MEETUP_MAIN_KEY = "meetupMainKey";
-    public static final String GITHUB_MAIN_KEY = "gitHubMainKey";
-
-    private static final int PERMISSIONS_REQUEST_COARSE_LOCATION = 111;
-    private static final long LOCATION_UPDATE_INTERVAL = 24 * 60 * 60 * 1000; // 24 hours
     private FusedLocationProviderClient mFusedLocationClient;
-    private String gitHubDefaultSearchKeyword = "android";
-    private String gitHubDefaultSortOrder = "updated";
     private String userLocation;
-    private String defaultLocation = "tokyo";
-    private int meetupGroupCategoryNumber = 34; // Category "Tech"
-    private int meetupGroupResponsePageNumber = 20;
-    private String API_KEY = BuildConfig.MEETUP_API_KEY;
     private SharedPreferences sharedPref;
+    GitHubViewModel gitHubViewModel;
+    GitHubRepoAdapter gitHubRepoAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_drawer);
         ButterKnife.bind(this);
-
-        // Set up the toolbar and drawer
-        setSupportActionBar(toolbar);
-        final ActionBar ab = getSupportActionBar();
-        ab.setHomeAsUpIndicator(R.drawable.ic_menu);
-        ab.setDisplayHomeAsUpEnabled(true);
-        if (navigationView != null) {
-            setupDrawerContent(navigationView);
-        }
-
-        // Set up the spinners and recycler views
-        gitHubSpinner.setVisibility(View.VISIBLE);
-        meetupSpinner.setVisibility(View.VISIBLE);
-        githubRecyclerView.setLayoutManager(new LinearLayoutManager(this,
-                LinearLayoutManager.HORIZONTAL, false));
-        meetupRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        setActionBar();
+        setRecyclerViews();
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        gitHubViewModel = ViewModelProviders.of(this).get(GitHubViewModel.class);
 
         // Check if the network is available first, display empty view if there is no connection
         boolean isConnected = NetworkUtilities.checkNetworkAvailability(this);
         if (!isConnected) {
-            gitHubSpinner.setVisibility(View.GONE);
-            meetupSpinner.setVisibility(View.GONE);
-            gitHubEmptyView.setVisibility(View.VISIBLE);
-            gitHubEmptyView.setText(R.string.no_internet_connection);
-            meetupEmptyView.setVisibility(View.VISIBLE);
-            meetupEmptyView.setText(R.string.no_internet_connection);
-        } else{
+            setEmptyViewNoNetworkAvailable();
+        } else {
             mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
             checkLocationPermission();
-            retrieveGithubRepo();
+            subscribeGitHubObserver();
+
+            gitHubViewModel.searchGitHubRepoList(Constants.GITHUB_DEFAULT_SEARCH_KEYWORD,
+                    Constants.GITHUB_DEFAULT_SORT_ORDER);
         }
 
         // Set the swipe action on Meetup events list to refresh the search
@@ -138,30 +115,58 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void retrieveGithubRepo() {
-        GitHubService service =
-                RetrofitInstance.getGitHubRetrofitInstance().create(GitHubService.class);
-        Call<GitHubResponse> repoListCall = service.getGitHubRepoList(gitHubDefaultSearchKeyword,
-                gitHubDefaultSortOrder);
-        repoListCall.enqueue(new Callback<GitHubResponse>() {
-            @Override
-            public void onResponse(Call<GitHubResponse> call, Response<GitHubResponse> response) {
-                gitHubSpinner.setVisibility(View.GONE);
-                GitHubResponse gitHubResponse = response.body();
-                List<GitHubRepo> gitHubRepoList = gitHubResponse.getGitHubRepo();
-                GitHubRepoAdapter gitHubRepoAdapter = new GitHubRepoAdapter(MainActivity.this,
-                        gitHubRepoList, 1);
-                githubRecyclerView.setAdapter(gitHubRepoAdapter);
-            }
+    private void setEmptyViewNoNetworkAvailable() {
+        gitHubSpinner.setVisibility(View.GONE);
+        meetupSpinner.setVisibility(View.GONE);
+        gitHubEmptyView.setVisibility(View.VISIBLE);
+        gitHubEmptyView.setText(R.string.no_internet_connection);
+        meetupEmptyView.setVisibility(View.VISIBLE);
+        meetupEmptyView.setText(R.string.no_internet_connection);
+    }
 
+    private void subscribeGitHubObserver() {
+        gitHubViewModel.getGitHubRepoList().observe(this, new Observer<List<GitHubRepo>>() {
             @Override
-            public void onFailure(Call<GitHubResponse> call, Throwable t) {
-                gitHubSpinner.setVisibility(View.GONE);
-                gitHubEmptyView.setVisibility(View.VISIBLE);
-                gitHubEmptyView.setText(getString(R.string.github_error_message));
+            public void onChanged(List<GitHubRepo> gitHubRepoList) {
+                if (gitHubRepoList != null){
+                    gitHubSpinner.setVisibility(View.GONE);
+                    gitHubRepoAdapter = new GitHubRepoAdapter(MainActivity.this,
+                            gitHubRepoList, 1);
+                    githubRecyclerView.setAdapter(gitHubRepoAdapter);
+
+                    gitHubRepoAdapter.setOnItemClickListener((position, v) -> {
+                        GitHubRepo gitHubRepo = gitHubRepoList.get(position);
+                        String gitHubRepoUrl = gitHubRepo.getHtmlUrl();
+                        NetworkUtilities.openCustomTabs(getApplicationContext(), gitHubRepoUrl);
+                    });
+                }
             }
         });
     }
+
+    /**
+     * Set up the toolbar and drawer
+     **/
+    private void setActionBar() {
+        setSupportActionBar(toolbar);
+        final ActionBar ab = getSupportActionBar();
+        ab.setHomeAsUpIndicator(R.drawable.ic_menu);
+        ab.setDisplayHomeAsUpEnabled(true);
+        if (navigationView != null) {
+            setupDrawerContent(navigationView);
+        }
+    }
+
+    /** Set up the spinners and recycler views **/
+    private void setRecyclerViews() {
+        gitHubSpinner.setVisibility(View.VISIBLE);
+        meetupSpinner.setVisibility(View.VISIBLE);
+        githubRecyclerView.setLayoutManager(new LinearLayoutManager(this,
+                LinearLayoutManager.HORIZONTAL, false));
+        meetupRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+    }
+
+
 
     private void retrieveMeetupGroups() {
         boolean locationSwitchValue = sharedPref.getBoolean(getString(R.string.pref_location_key)
@@ -170,12 +175,14 @@ public class MainActivity extends AppCompatActivity {
             userLocation = sharedPref.getString(getString(R.string.pref_meetup_location_key), "");
         } else {
             Toast.makeText(this, R.string.location_not_retrieved, Toast.LENGTH_LONG).show();
-            userLocation = defaultLocation;
+            userLocation = Constants.DEFAULT_LOCATION;
         }
         MeetupService meetupService =
                 RetrofitInstance.getMeetupRetrofitInstance().create(MeetupService.class);
-        Call<List<MeetupGroup>> meetupGroupCall = meetupService.getMeetupGroupList(API_KEY,
-                userLocation, meetupGroupCategoryNumber, meetupGroupResponsePageNumber);
+        Call<List<MeetupGroup>> meetupGroupCall =
+                meetupService.getMeetupGroupList(Constants.MEETUP_API_KEY, userLocation,
+                        Constants.MEETUP_TECH_CATEGORY_NUMBER,
+                        Constants.MEETUP_GROUP_RESPONSE_PAGE);
         meetupGroupCall.enqueue(new Callback<List<MeetupGroup>>() {
             @Override
             public void onResponse(Call<List<MeetupGroup>> call,
@@ -211,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressWarnings("MissingPermission")
     private void getLocation() {
         LocationRequest locationRequest =
-                new LocationRequest().setInterval(LOCATION_UPDATE_INTERVAL).setPriority(LocationRequest.PRIORITY_LOW_POWER);
+                new LocationRequest().setInterval(Constants.LOCATION_UPDATE_INTERVAL).setPriority(LocationRequest.PRIORITY_LOW_POWER);
         LocationSettingsRequest.Builder builder =
                 new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
         builder.setAlwaysShow(true);
@@ -251,7 +258,8 @@ public class MainActivity extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // Ask for permission
             ActivityCompat.requestPermissions(MainActivity.this,
-                    new String[]{ACCESS_COARSE_LOCATION}, PERMISSIONS_REQUEST_COARSE_LOCATION);
+                    new String[]{ACCESS_COARSE_LOCATION},
+                    Constants.PERMISSIONS_REQUEST_COARSE_LOCATION);
         } else {
             // Permission is already granted
             getLocation();
@@ -267,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode == PERMISSIONS_REQUEST_COARSE_LOCATION) {
+        if (requestCode == Constants.PERMISSIONS_REQUEST_COARSE_LOCATION) {
             for (int i = 0; i < permissions.length; i++) {
                 String permission = permissions[i];
                 int grantResult = grantResults[i];
@@ -329,13 +337,13 @@ public class MainActivity extends AppCompatActivity {
             case R.id.nav_github:
                 Intent gitHubIntent = new Intent(MainActivity
                         .this, MainViewActivity.class);
-                gitHubIntent.putExtra(MAIN_KEY, GITHUB_MAIN_KEY);
+                gitHubIntent.putExtra(Constants.MAIN_KEY, Constants.GITHUB_MAIN_KEY);
                 startActivity(gitHubIntent);
                 break;
             case R.id.nav_meetup:
                 Intent meetupIntent = new Intent(MainActivity
                         .this, MainViewActivity.class);
-                meetupIntent.putExtra(MAIN_KEY, MEETUP_MAIN_KEY);
+                meetupIntent.putExtra(Constants.MAIN_KEY, Constants.MEETUP_MAIN_KEY);
                 startActivity(meetupIntent);
                 break;
             default:

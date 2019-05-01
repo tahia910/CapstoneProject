@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.dailyupdate.MainViewModel;
+import com.example.dailyupdate.viewmodels.BookmarksDatabaseViewModel;
 import com.example.dailyupdate.R;
 import com.example.dailyupdate.data.model.MeetupEventDetails;
 import com.example.dailyupdate.ui.adapter.BookmarksAdapter;
@@ -30,7 +30,7 @@ public class BookmarksFragment extends Fragment {
     @BindView(R.id.main_recycler_view) RecyclerView recyclerView;
     @BindView(R.id.main_emptyview) TextView emptyView;
 
-    private MainViewModel viewModel;
+    private BookmarksDatabaseViewModel viewModel;
     private BookmarksFragmentListener listener;
     private BookmarksAdapter bookmarksAdapter;
 
@@ -59,7 +59,7 @@ public class BookmarksFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.main_layout, container, false);
         ButterKnife.bind(this, rootView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(BookmarksDatabaseViewModel.class);
         bookmarksAdapter = new BookmarksAdapter();
         recyclerView.setAdapter(bookmarksAdapter);
 

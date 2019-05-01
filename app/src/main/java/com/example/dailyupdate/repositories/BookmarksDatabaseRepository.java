@@ -1,21 +1,23 @@
-package com.example.dailyupdate.data.db;
+package com.example.dailyupdate.repositories;
 
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
+import com.example.dailyupdate.data.db.BookmarksDao;
+import com.example.dailyupdate.data.db.BookmarksDatabase;
 import com.example.dailyupdate.networking.AppExecutors;
 import com.example.dailyupdate.data.model.MeetupEventDetails;
 
 import java.util.List;
 
-public class AppRepository {
+public class BookmarksDatabaseRepository {
 
     private BookmarksDao bookmarksDao;
     private BookmarksDatabase database;
     private LiveData<List<MeetupEventDetails>> bookmarkedEvents;
 
-    public AppRepository(Application application) {
+    public BookmarksDatabaseRepository(Application application) {
         database = BookmarksDatabase.getInstance(application);
         bookmarksDao = database.bookmarksDao();
         bookmarkedEvents = bookmarksDao.loadAllBookmarkedEvents();

@@ -1,19 +1,24 @@
 package com.example.dailyupdate.networking;
 
+import com.example.dailyupdate.utilities.Constants;
+
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitInstance {
     private static Retrofit gitHubRetrofit;
     private static Retrofit meetupRetrofit;
-    private static final String GITHUB_BASE_URL = "https://api.github.com/";
-    private static final String MEETUP_BASE_URL = "https://api.meetup.com";
+
+    private static GitHubService gitHubService = getGitHubRetrofitInstance().create(GitHubService.class);
+    public static GitHubService getGitHubService(){
+        return gitHubService;
+    }
 
     public static Retrofit getGitHubRetrofitInstance() {
         if (gitHubRetrofit == null) {
             gitHubRetrofit =
                     new retrofit2.Retrofit.Builder()
-                            .baseUrl(GITHUB_BASE_URL)
+                            .baseUrl(Constants.GITHUB_BASE_URL)
                             .addConverterFactory(GsonConverterFactory.create())
                             .build();
         }
@@ -24,7 +29,7 @@ public class RetrofitInstance {
         if (meetupRetrofit == null) {
             meetupRetrofit =
                     new retrofit2.Retrofit.Builder()
-                            .baseUrl(MEETUP_BASE_URL)
+                            .baseUrl(Constants.MEETUP_BASE_URL)
                             .addConverterFactory(GsonConverterFactory.create())
                             .build();
         }

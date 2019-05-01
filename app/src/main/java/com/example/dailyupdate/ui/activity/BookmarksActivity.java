@@ -15,11 +15,11 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.dailyupdate.MainViewModel;
+import com.example.dailyupdate.viewmodels.BookmarksDatabaseViewModel;
 import com.example.dailyupdate.R;
 import com.example.dailyupdate.ui.fragment.BookmarksFragment;
 import com.example.dailyupdate.ui.fragment.MeetupDetailsFragment;
-import com.example.dailyupdate.widget.BookmarksWidget;
+import com.example.dailyupdate.utilities.Constants;
 import com.google.android.material.navigation.NavigationView;
 
 import butterknife.BindView;
@@ -57,11 +57,11 @@ public class BookmarksActivity extends AppCompatActivity implements BookmarksFra
         // TODO: handle the case the user presses "back" when coming from widget
         // & Use broadcast/jobservice instead?
         Intent intent = getIntent();
-        if (intent.hasExtra(BookmarksWidget.EXTRA_GROUP_URL)) {
+        if (intent.hasExtra(Constants.EXTRA_GROUP_URL)) {
             // If the intent is not empty, it means that the activity was started from the widget to
             // display a specific bookmarked event's details.
-            String groupUrl = intent.getStringExtra(BookmarksWidget.EXTRA_GROUP_URL);
-            String eventId = intent.getStringExtra(BookmarksWidget.EXTRA_EVENT_ID);
+            String groupUrl = intent.getStringExtra(Constants.EXTRA_GROUP_URL);
+            String eventId = intent.getStringExtra(Constants.EXTRA_EVENT_ID);
             displayEventDetails(groupUrl, eventId);
         } else {
             fragmentManager = getSupportFragmentManager();
@@ -99,7 +99,7 @@ public class BookmarksActivity extends AppCompatActivity implements BookmarksFra
                 startActivity(preferenceIntent);
                 return true;
             case R.id.action_delete_all:
-                MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+                BookmarksDatabaseViewModel viewModel = ViewModelProviders.of(this).get(BookmarksDatabaseViewModel.class);
                 viewModel.deleteAllBookmarkedEvent();
                 return true;
         }
@@ -127,12 +127,12 @@ public class BookmarksActivity extends AppCompatActivity implements BookmarksFra
                 break;
             case R.id.nav_github:
                 Intent gitHubIntent = new Intent(this, MainViewActivity.class);
-                gitHubIntent.putExtra(MainActivity.MAIN_KEY, MainActivity.GITHUB_MAIN_KEY);
+                gitHubIntent.putExtra(Constants.MAIN_KEY, Constants.GITHUB_MAIN_KEY);
                 startActivity(gitHubIntent);
                 break;
             case R.id.nav_meetup:
                 Intent meetupIntent = new Intent(this, MainViewActivity.class);
-                meetupIntent.putExtra(MainActivity.MAIN_KEY, MainActivity.MEETUP_MAIN_KEY);
+                meetupIntent.putExtra(Constants.MAIN_KEY, Constants.MEETUP_MAIN_KEY);
                 startActivity(meetupIntent);
                 break;
             default:

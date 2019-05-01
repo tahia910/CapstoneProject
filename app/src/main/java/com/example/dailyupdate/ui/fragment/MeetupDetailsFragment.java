@@ -2,7 +2,6 @@ package com.example.dailyupdate.ui.fragment;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +14,13 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.dailyupdate.BuildConfig;
-import com.example.dailyupdate.MainViewModel;
+import com.example.dailyupdate.viewmodels.BookmarksDatabaseViewModel;
 import com.example.dailyupdate.R;
 import com.example.dailyupdate.data.model.MeetupEventDetails;
 import com.example.dailyupdate.data.model.MeetupEventLocation;
 import com.example.dailyupdate.networking.MeetupService;
 import com.example.dailyupdate.networking.RetrofitInstance;
+import com.example.dailyupdate.utilities.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,15 +31,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.example.dailyupdate.ui.activity.MainViewActivity.KEY_EVENT_ID;
-import static com.example.dailyupdate.ui.activity.MainViewActivity.KEY_GROUP_URL;
-
 public class MeetupDetailsFragment extends DialogFragment {
 
-    @BindView(R.id.spinner_meetup_detail)
-    ProgressBar spinner;
-    @BindView(R.id.emptyview_meetup_detail)
-    TextView emptyView;
+    @BindView(R.id.spinner_meetup_detail) ProgressBar spinner;
+    @BindView(R.id.emptyview_meetup_detail) TextView emptyView;
 
     @BindView(R.id.textview_event_title_meetup_detail)
     TextView eventTitleTextView;
@@ -65,14 +59,10 @@ public class MeetupDetailsFragment extends DialogFragment {
     @BindView(R.id.textview_description_meetup_detail)
     TextView descriptionTextView;
 
-    @BindView(R.id.imageview_group_icon_meetup_detail)
-    ImageView groupIcon;
-    @BindView(R.id.imageview_status_icon_meetup_detail)
-    ImageView statusIcon;
-    @BindView(R.id.imageview_time_icon_meetup_detail)
-    ImageView timeIcon;
-    @BindView(R.id.imageview_place_icon_meetup_detail)
-    ImageView placeIcon;
+    @BindView(R.id.imageview_group_icon_meetup_detail) ImageView groupIcon;
+    @BindView(R.id.imageview_status_icon_meetup_detail) ImageView statusIcon;
+    @BindView(R.id.imageview_time_icon_meetup_detail) ImageView timeIcon;
+    @BindView(R.id.imageview_place_icon_meetup_detail) ImageView placeIcon;
 
     //    @BindView(R.id.back_icon_meetup_detail)
     private ImageView backIcon;
@@ -80,10 +70,8 @@ public class MeetupDetailsFragment extends DialogFragment {
     private ImageView bookmarkIcon;
 
     private Dialog dialog;
-    private MainViewModel viewModel;
+    private BookmarksDatabaseViewModel viewModel;
 
-
-    private String API_KEY = BuildConfig.MEETUP_API_KEY;
     private String groupId;
     private String eventId;
     private MeetupEventDetails currentEvent;
@@ -92,8 +80,8 @@ public class MeetupDetailsFragment extends DialogFragment {
     public static MeetupDetailsFragment newInstance(String groupUrl, String eventId) {
         MeetupDetailsFragment meetupDetailsFragment = new MeetupDetailsFragment();
         Bundle args = new Bundle();
-        args.putString(KEY_GROUP_URL, groupUrl);
-        args.putString(KEY_EVENT_ID, eventId);
+        args.putString(Constants.KEY_GROUP_URL, groupUrl);
+        args.putString(Constants.KEY_EVENT_ID, eventId);
         meetupDetailsFragment.setArguments(args);
         return meetupDetailsFragment;
     }
@@ -105,13 +93,13 @@ public class MeetupDetailsFragment extends DialogFragment {
         ButterKnife.bind(this, rootView);
         spinner.setVisibility(View.VISIBLE);
         if (savedInstanceState != null) {
-            groupId = savedInstanceState.getString(KEY_GROUP_URL);
-            eventId = savedInstanceState.getString(KEY_EVENT_ID);
+            groupId = savedInstanceState.getString(Constants.KEY_GROUP_URL);
+            eventId = savedInstanceState.getString(Constants.KEY_EVENT_ID);
         } else {
-            groupId = getArguments().getString(KEY_GROUP_URL);
-            eventId = getArguments().getString(KEY_EVENT_ID);
+            groupId = getArguments().getString(Constants.KEY_GROUP_URL);
+            eventId = getArguments().getString(Constants.KEY_EVENT_ID);
         }
-        viewModel = ViewModelProviders.of(MeetupDetailsFragment.this).get(MainViewModel.class);
+        viewModel = ViewModelProviders.of(MeetupDetailsFragment.this).get(BookmarksDatabaseViewModel.class);
         retrieveEventDetails();
         return rootView;
     }
@@ -176,7 +164,7 @@ public class MeetupDetailsFragment extends DialogFragment {
                 RetrofitInstance.getMeetupRetrofitInstance().create(MeetupService.class);
 
         Call<MeetupEventDetails> meetupEventCall = meetupService.getMeetupEventDetails(groupId,
-                eventId, API_KEY);
+                eventId, Constants.MEETUP_API_KEY);
         meetupEventCall.enqueue(new Callback<MeetupEventDetails>() {
             @Override
             public void onResponse(Call<MeetupEventDetails> call,
@@ -246,8 +234,8 @@ public class MeetupDetailsFragment extends DialogFragment {
 
     @Override
     public void onSaveInstanceState(Bundle currentState) {
-        currentState.putString(KEY_GROUP_URL, groupId);
-        currentState.putString(KEY_EVENT_ID, eventId);
+        currentState.putString(Constants.KEY_GROUP_URL, groupId);
+        currentState.putString(Constants.KEY_EVENT_ID, eventId);
         super.onSaveInstanceState(currentState);
     }
 

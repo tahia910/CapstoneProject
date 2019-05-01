@@ -1,4 +1,4 @@
-package com.example.dailyupdate.utilities;
+package com.example.dailyupdate.utilities.notifications;
 
 import com.firebase.jobdispatcher.JobParameters;
 import com.firebase.jobdispatcher.JobService;

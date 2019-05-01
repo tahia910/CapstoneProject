@@ -8,11 +8,9 @@ import android.content.Intent;
 import androidx.annotation.Nullable;
 
 import com.example.dailyupdate.R;
+import com.example.dailyupdate.utilities.Constants;
 
 public class WidgetService extends IntentService {
-
-    public static final String ACTION_UPDATE_WIDGET = "com.example.dailyupdate.widget" +
-            ".action.action_update_widget";
 
     public WidgetService() {
         super("WidgetService");
@@ -22,7 +20,7 @@ public class WidgetService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         if (intent != null) {
             final String action = intent.getAction();
-            if (ACTION_UPDATE_WIDGET.equals(action)) {
+            if (Constants.ACTION_UPDATE_WIDGET.equals(action)) {
                 handleActionUpdateWidget();
             }
         }

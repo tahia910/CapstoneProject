@@ -8,6 +8,7 @@ import android.widget.RemoteViewsService;
 import com.example.dailyupdate.R;
 import com.example.dailyupdate.data.db.BookmarksDatabase;
 import com.example.dailyupdate.data.model.MeetupEventDetails;
+import com.example.dailyupdate.utilities.Constants;
 
 import java.util.List;
 
@@ -76,8 +77,8 @@ public class WidgetAdapterService extends RemoteViewsService {
             Intent fillIntent = new Intent();
             String groupUrl = bookmarkedEvent.getMeetupEventGroupName().getEventGroupUrl();
             String eventId = bookmarkedEvent.getEventId();
-            fillIntent.putExtra(BookmarksWidget.EXTRA_GROUP_URL, groupUrl);
-            fillIntent.putExtra(BookmarksWidget.EXTRA_EVENT_ID, eventId);
+            fillIntent.putExtra(Constants.EXTRA_GROUP_URL, groupUrl);
+            fillIntent.putExtra(Constants.EXTRA_EVENT_ID, eventId);
             views.setOnClickFillInIntent(R.id.bookmarked_event_widget_item, fillIntent);
 
             return views;

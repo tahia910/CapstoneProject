@@ -9,16 +9,12 @@ import android.widget.RemoteViews;
 
 import com.example.dailyupdate.R;
 import com.example.dailyupdate.ui.activity.BookmarksActivity;
+import com.example.dailyupdate.utilities.Constants;
 
 /**
  * Implementation of App Widget functionality.
  */
 public class BookmarksWidget extends AppWidgetProvider {
-
-    public static final String ACTION_ITEM_CLICK = "com.example.dailyupdate.widget.action_toast";
-    public static final String EXTRA_GROUP_URL = "com.example.dailyupdate.widget" +
-            ".extra_group_url";
-    public static final String EXTRA_EVENT_ID = "com.example.dailyupdate.widget.extra_event_id";
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -28,7 +24,7 @@ public class BookmarksWidget extends AppWidgetProvider {
 
             // Set ClickListener on each item in the adapter
             Intent broadcastIntent = new Intent(context, BookmarksWidget.class);
-            broadcastIntent.setAction(ACTION_ITEM_CLICK);
+            broadcastIntent.setAction(Constants.ACTION_ITEM_CLICK);
             PendingIntent broadcastPendingIntent = PendingIntent.getBroadcast(context, 0,
                     broadcastIntent, 0);
             views.setPendingIntentTemplate(R.id.appwidget_listview, broadcastPendingIntent);
@@ -46,13 +42,13 @@ public class BookmarksWidget extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (ACTION_ITEM_CLICK.equals(intent.getAction())) {
-            String groupUrl = intent.getStringExtra(EXTRA_GROUP_URL);
-            String eventId = intent.getStringExtra(EXTRA_EVENT_ID);
+        if (Constants.ACTION_ITEM_CLICK.equals(intent.getAction())) {
+            String groupUrl = intent.getStringExtra(Constants.EXTRA_GROUP_URL);
+            String eventId = intent.getStringExtra(Constants.EXTRA_EVENT_ID);
 
             Intent bookmarksActivityIntent = new Intent(context, BookmarksActivity.class);
-            bookmarksActivityIntent.putExtra(EXTRA_GROUP_URL, groupUrl);
-            bookmarksActivityIntent.putExtra(EXTRA_EVENT_ID, eventId);
+            bookmarksActivityIntent.putExtra(Constants.EXTRA_GROUP_URL, groupUrl);
+            bookmarksActivityIntent.putExtra(Constants.EXTRA_EVENT_ID, eventId);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, bookmarksActivityIntent,
                     PendingIntent.FLAG_UPDATE_CURRENT);
             try {

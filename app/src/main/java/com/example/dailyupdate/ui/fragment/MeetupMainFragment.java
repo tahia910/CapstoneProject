@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dailyupdate.BuildConfig;
-import com.example.dailyupdate.MainViewModel;
+import com.example.dailyupdate.viewmodels.BookmarksDatabaseViewModel;
 import com.example.dailyupdate.R;
 import com.example.dailyupdate.data.model.MeetupEvent;
 import com.example.dailyupdate.data.model.MeetupEventDetails;
@@ -26,7 +26,8 @@ import com.example.dailyupdate.data.model.MeetupEventResponse;
 import com.example.dailyupdate.networking.MeetupService;
 import com.example.dailyupdate.networking.RetrofitInstance;
 import com.example.dailyupdate.ui.adapter.MeetupEventAdapter;
-import com.example.dailyupdate.utilities.JobUtilities;
+import com.example.dailyupdate.utilities.Constants;
+import com.example.dailyupdate.utilities.notifications.JobUtilities;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
@@ -44,15 +45,13 @@ public class MeetupMainFragment extends Fragment {
     @BindView(R.id.main_emptyview) TextView emptyView;
     @BindView(R.id.main_spinner) ProgressBar spinner;
 
-    private int searchCategoryNumber = 34; // Category "Tech"
-    private String API_KEY = BuildConfig.MEETUP_API_KEY;
     private String searchKeyword;
     private String sortBy;
     private String searchLocation;
     private SharedPreferences sharedPref;
     private MeetupMainFragmentListener listener;
     private MeetupEventAdapter meetupEventAdapter;
-    private MainViewModel viewModel;
+    private BookmarksDatabaseViewModel viewModel;
 
     public interface MeetupMainFragmentListener {
         void currentEventInfo(String groupUrl, String eventId);
@@ -88,7 +87,7 @@ public class MeetupMainFragment extends Fragment {
                 getString(R.string.pref_meetup_sort_default));
         searchLocation = sharedPref.getString(getString(R.string.pref_meetup_location_key), "");
 
-        viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(BookmarksDatabaseViewModel.class);
 
         retrieveMeetupEvents();
         setNotifications(context);
@@ -126,8 +125,8 @@ public class MeetupMainFragment extends Fragment {
         MeetupService meetupService =
                 RetrofitInstance.getMeetupRetrofitInstance().create(MeetupService.class);
 
-        Call<MeetupEventResponse> meetupEventCall = meetupService.getMeetupEventList(API_KEY,
-                searchLocation, sortBy, searchCategoryNumber, searchKeyword);
+        Call<MeetupEventResponse> meetupEventCall = meetupService.getMeetupEventList(Constants.MEETUP_API_KEY,
+                searchLocation, sortBy, Constants.MEETUP_TECH_CATEGORY_NUMBER, searchKeyword);
         meetupEventCall.enqueue(new Callback<MeetupEventResponse>() {
             @Override
             public void onResponse(Call<MeetupEventResponse> call,
