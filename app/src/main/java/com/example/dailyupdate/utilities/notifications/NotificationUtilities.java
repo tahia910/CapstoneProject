@@ -11,7 +11,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.dailyupdate.R;
-import com.example.dailyupdate.ui.activity.MainViewActivity;
+import com.example.dailyupdate.ui.activities.MainViewActivity;
 import com.example.dailyupdate.utilities.AppService;
 import com.example.dailyupdate.utilities.Constants;
 

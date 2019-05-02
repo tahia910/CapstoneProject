@@ -1,4 +1,4 @@
-package com.example.dailyupdate.ui.fragment;
+package com.example.dailyupdate.ui.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -19,10 +19,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dailyupdate.R;
-import com.example.dailyupdate.data.model.MeetupEvent;
-import com.example.dailyupdate.data.model.MeetupEventDetails;
-import com.example.dailyupdate.ui.adapter.MeetupEventAdapter;
+import com.example.dailyupdate.data.models.MeetupEvent;
+import com.example.dailyupdate.data.models.MeetupEventDetails;
+import com.example.dailyupdate.ui.adapters.MeetupEventAdapter;
 import com.example.dailyupdate.utilities.Constants;
+import com.example.dailyupdate.utilities.NetworkUtilities;
 import com.example.dailyupdate.utilities.notifications.JobUtilities;
 import com.example.dailyupdate.viewmodels.BookmarksDatabaseViewModel;
 import com.example.dailyupdate.viewmodels.MeetupViewModel;
@@ -82,7 +83,17 @@ public class MeetupMainFragment extends Fragment {
         subscribeMeetupEventObserver();
 
         getSharedPreferences(context);
-        meetupViewModel.searchMeetupEvents(searchLocation, sortBy, Constants.MEETUP_TECH_CATEGORY_NUMBER, searchKeyword);
+        // Check if the network is available first, display empty view if there is no connection
+        boolean isConnected = NetworkUtilities.checkNetworkAvailability(context);
+        if (!isConnected) {
+            spinner.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.INVISIBLE);
+            emptyView.setVisibility(View.VISIBLE);
+            emptyView.setText(R.string.no_internet_connection);
+        } else {
+            meetupViewModel.searchMeetupEvents(searchLocation, sortBy,
+                    Constants.MEETUP_TECH_CATEGORY_NUMBER, searchKeyword);
+        }
         return rootView;
     }
 
@@ -101,8 +112,8 @@ public class MeetupMainFragment extends Fragment {
         meetupViewModel.getMeetupEventList().observe(this, new Observer<List<MeetupEvent>>() {
             @Override
             public void onChanged(List<MeetupEvent> meetupEventList) {
+                spinner.setVisibility(View.GONE);
                 if (meetupEventList != null) {
-                    spinner.setVisibility(View.GONE);
                     meetupEventAdapter = new MeetupEventAdapter(getContext(), meetupEventList);
                     recyclerView.setAdapter(meetupEventAdapter);
                     setNotifications(getContext());
@@ -126,6 +137,10 @@ public class MeetupMainFragment extends Fragment {
                         bookmarkEvent.setEventTime(currentEvent.getEventTime());
                         databaseViewModel.insertBookmarkedEvent(bookmarkEvent);
                     });
+                }else {
+                    recyclerView.setVisibility(View.INVISIBLE);
+                    emptyView.setVisibility(View.VISIBLE);
+                    emptyView.setText(R.string.meetup_events_error_message);
                 }
             }
         });

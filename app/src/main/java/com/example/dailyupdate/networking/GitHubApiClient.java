@@ -3,8 +3,8 @@ package com.example.dailyupdate.networking;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.dailyupdate.data.model.GitHubRepo;
-import com.example.dailyupdate.data.model.GitHubResponse;
+import com.example.dailyupdate.data.models.GitHubRepo;
+import com.example.dailyupdate.data.models.GitHubResponse;
 
 import java.util.List;
 

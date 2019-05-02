@@ -1,4 +1,4 @@
-package com.example.dailyupdate.ui.activity;
+package com.example.dailyupdate.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,8 +16,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.dailyupdate.R;
-import com.example.dailyupdate.ui.fragment.BookmarksFragment;
-import com.example.dailyupdate.ui.fragment.MeetupDetailsFragment;
+import com.example.dailyupdate.ui.fragments.BookmarksFragment;
+import com.example.dailyupdate.ui.fragments.MeetupDetailsFragment;
 import com.example.dailyupdate.utilities.Constants;
 import com.example.dailyupdate.viewmodels.BookmarksDatabaseViewModel;
 import com.google.android.material.navigation.NavigationView;

@@ -1,4 +1,4 @@
-package com.example.dailyupdate.ui.fragment;
+package com.example.dailyupdate.ui.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -18,8 +18,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dailyupdate.R;
-import com.example.dailyupdate.data.model.GitHubRepo;
-import com.example.dailyupdate.ui.adapter.GitHubRepoAdapter;
+import com.example.dailyupdate.data.models.GitHubRepo;
+import com.example.dailyupdate.ui.adapters.GitHubRepoAdapter;
+import com.example.dailyupdate.utilities.NetworkUtilities;
 import com.example.dailyupdate.viewmodels.GitHubViewModel;
 
 import java.util.List;
@@ -81,7 +82,16 @@ public class GitHubMainFragment extends Fragment {
             Toast.makeText(getContext(), getString(R.string.mainview_toast_empty_search),
                     Toast.LENGTH_LONG).show();
         } else {
-            gitHubViewModel.searchGitHubRepoListWithOrder(searchKeyword, sortBy, searchOrder);
+            // Check if the network is available first, display empty view if there is no connection
+            boolean isConnected = NetworkUtilities.checkNetworkAvailability(getContext());
+            if (!isConnected) {
+                recyclerView.setVisibility(View.INVISIBLE);
+                spinner.setVisibility(View.GONE);
+                emptyView.setVisibility(View.VISIBLE);
+                emptyView.setText(R.string.no_internet_connection);
+            } else {
+                gitHubViewModel.searchGitHubRepoListWithOrder(searchKeyword, sortBy, searchOrder);
+            }
         }
         return rootView;
     }
@@ -102,8 +112,8 @@ public class GitHubMainFragment extends Fragment {
         gitHubViewModel.getGitHubRepoList().observe(this, new Observer<List<GitHubRepo>>() {
             @Override
             public void onChanged(List<GitHubRepo> gitHubRepoList) {
+                spinner.setVisibility(View.GONE);
                 if (gitHubRepoList != null) {
-                    spinner.setVisibility(View.GONE);
                     gitHubRepoAdapter = new GitHubRepoAdapter(getContext(), gitHubRepoList, 2);
                     recyclerView.setAdapter(gitHubRepoAdapter);
 
@@ -112,6 +122,10 @@ public class GitHubMainFragment extends Fragment {
                         String gitHubRepoUrl = gitHubRepo.getHtmlUrl();
                         listener.currentGitHubRepoUrl(gitHubRepoUrl);
                     });
+                } else {
+                    recyclerView.setVisibility(View.INVISIBLE);
+                    emptyView.setVisibility(View.VISIBLE);
+                    emptyView.setText(getString(R.string.github_error_message));
                 }
             }
         });

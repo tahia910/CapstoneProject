@@ -7,8 +7,9 @@ import android.widget.RemoteViewsService;
 
 import com.example.dailyupdate.R;
 import com.example.dailyupdate.data.db.BookmarksDatabase;
-import com.example.dailyupdate.data.model.MeetupEventDetails;
+import com.example.dailyupdate.data.models.MeetupEventDetails;
 import com.example.dailyupdate.utilities.Constants;
+import com.example.dailyupdate.utilities.DateUtilities;
 
 import java.util.List;
 
@@ -63,15 +64,14 @@ public class WidgetAdapterService extends RemoteViewsService {
             RemoteViews views = new RemoteViews(context.getPackageName(),
                     R.layout.widget_list_item);
             MeetupEventDetails bookmarkedEvent = eventsList.get(position);
+            String dateWithDay = DateUtilities.getDateWithDay(bookmarkedEvent.getEventDate());
+            String formattedTime = DateUtilities.getFormattedTime(bookmarkedEvent.getEventTime());
 
-            // TODO: change date & time format
-            String eventDate = bookmarkedEvent.getEventDate();
-            String eventTime = bookmarkedEvent.getEventTime();
             views.setTextViewText(R.id.textview_event_title_widget, bookmarkedEvent.getEventName());
             views.setTextViewText(R.id.textview_group_title_widget,
                     bookmarkedEvent.getMeetupEventGroupName().getEventGroupName());
-            views.setTextViewText(R.id.textview_event_date_widget, eventDate);
-            views.setTextViewText(R.id.textview_event_time_widget, eventTime);
+            views.setTextViewText(R.id.textview_event_date_widget, dateWithDay);
+            views.setTextViewText(R.id.textview_event_time_widget, formattedTime);
 
             // Customize what kind of data we want to receive
             Intent fillIntent = new Intent();

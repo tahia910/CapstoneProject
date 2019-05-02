@@ -3,7 +3,7 @@ package com.example.dailyupdate.viewmodels;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.dailyupdate.data.model.GitHubRepo;
+import com.example.dailyupdate.data.models.GitHubRepo;
 import com.example.dailyupdate.repositories.GitHubRepository;
 
 import java.util.List;

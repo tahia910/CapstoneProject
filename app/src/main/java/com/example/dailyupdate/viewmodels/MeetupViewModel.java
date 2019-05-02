@@ -3,9 +3,9 @@ package com.example.dailyupdate.viewmodels;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.dailyupdate.data.model.MeetupEvent;
-import com.example.dailyupdate.data.model.MeetupEventDetails;
-import com.example.dailyupdate.data.model.MeetupGroup;
+import com.example.dailyupdate.data.models.MeetupEvent;
+import com.example.dailyupdate.data.models.MeetupEventDetails;
+import com.example.dailyupdate.data.models.MeetupGroup;
 import com.example.dailyupdate.repositories.MeetupRepository;
 
 import java.util.List;

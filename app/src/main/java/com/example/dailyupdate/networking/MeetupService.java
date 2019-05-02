@@ -1,8 +1,8 @@
 package com.example.dailyupdate.networking;
 
-import com.example.dailyupdate.data.model.MeetupEventDetails;
-import com.example.dailyupdate.data.model.MeetupEventResponse;
-import com.example.dailyupdate.data.model.MeetupGroup;
+import com.example.dailyupdate.data.models.MeetupEventDetails;
+import com.example.dailyupdate.data.models.MeetupEventResponse;
+import com.example.dailyupdate.data.models.MeetupGroup;
 
 import java.util.List;
 

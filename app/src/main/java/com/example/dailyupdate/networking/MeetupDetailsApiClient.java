@@ -3,7 +3,7 @@ package com.example.dailyupdate.networking;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.dailyupdate.data.model.MeetupEventDetails;
+import com.example.dailyupdate.data.models.MeetupEventDetails;
 import com.example.dailyupdate.utilities.Constants;
 
 import retrofit2.Call;

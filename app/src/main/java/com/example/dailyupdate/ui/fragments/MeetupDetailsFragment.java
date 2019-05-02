@@ -1,4 +1,4 @@
-package com.example.dailyupdate.ui.fragment;
+package com.example.dailyupdate.ui.fragments;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -15,9 +15,10 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.dailyupdate.R;
-import com.example.dailyupdate.data.model.MeetupEventDetails;
-import com.example.dailyupdate.data.model.MeetupEventLocation;
+import com.example.dailyupdate.data.models.MeetupEventDetails;
+import com.example.dailyupdate.data.models.MeetupEventLocation;
 import com.example.dailyupdate.utilities.Constants;
+import com.example.dailyupdate.utilities.DateUtilities;
 import com.example.dailyupdate.viewmodels.BookmarksDatabaseViewModel;
 import com.example.dailyupdate.viewmodels.MeetupViewModel;
 
@@ -195,9 +196,8 @@ public class MeetupDetailsFragment extends DialogFragment {
         String country = locationObject.getCountry();
         String addressString = placeName + ", " + address + ", " + city + ", " + country;
 
-        // TODO: format date and time
-        String eventDate = meetupEventDetails.getEventDate();
-        String eventTime = meetupEventDetails.getEventTime();
+        String dateWithDay = DateUtilities.getDateWithDay(meetupEventDetails.getEventDate());
+        String formattedTime = DateUtilities.getFormattedTime(meetupEventDetails.getEventTime());
 
         eventTitleTextView.setText(eventName);
 
@@ -211,8 +211,8 @@ public class MeetupDetailsFragment extends DialogFragment {
         waitlistCountTextView.setText(waitlistCountString);
 
         timeIcon.setVisibility(View.VISIBLE);
-        dateTextView.setText(eventDate);
-        timeTextView.setText(eventTime);
+        dateTextView.setText(dateWithDay);
+        timeTextView.setText(formattedTime);
 
         placeIcon.setVisibility(View.VISIBLE);
         addressTextView.setText(addressString);

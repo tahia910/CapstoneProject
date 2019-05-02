@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData;
 import com.example.dailyupdate.data.db.BookmarksDao;
 import com.example.dailyupdate.data.db.BookmarksDatabase;
 import com.example.dailyupdate.networking.AppExecutors;
-import com.example.dailyupdate.data.model.MeetupEventDetails;
+import com.example.dailyupdate.data.models.MeetupEventDetails;
 
 import java.util.List;
 

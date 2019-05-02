@@ -1,6 +1,6 @@
 package com.example.dailyupdate.networking;
 
-import com.example.dailyupdate.data.model.GitHubResponse;
+import com.example.dailyupdate.data.models.GitHubResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

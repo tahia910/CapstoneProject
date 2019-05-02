@@ -161,6 +161,6 @@
     <string name="meetup_details_error_message">An error occurred: the devent details could
     not be retrieved.</string>
     <string name="bookmarks_emptyview_message">You have not bookmarked any event yet.</string>
-    <string name="mainview_emptyview_message">Set up a search first</string>
+    <string name="no_search_set_emptyview_message">Set up a search first</string>
 
 </resources>

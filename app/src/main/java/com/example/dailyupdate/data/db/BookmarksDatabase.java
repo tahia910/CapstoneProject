@@ -6,7 +6,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-import com.example.dailyupdate.data.model.MeetupEventDetails;
+import com.example.dailyupdate.data.models.MeetupEventDetails;
 
 @Database(entities = {MeetupEventDetails.class}, version = 1, exportSchema = false)
 public abstract class BookmarksDatabase extends RoomDatabase {

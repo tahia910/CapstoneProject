@@ -1,4 +1,4 @@
-package com.example.dailyupdate.ui.adapter;
+package com.example.dailyupdate.ui.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.dailyupdate.R;
-import com.example.dailyupdate.data.model.GitHubRepo;
+import com.example.dailyupdate.data.models.GitHubRepo;
 
 import java.util.List;
 

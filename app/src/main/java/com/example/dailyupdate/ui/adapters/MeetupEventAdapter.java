@@ -1,4 +1,4 @@
-package com.example.dailyupdate.ui.adapter;
+package com.example.dailyupdate.ui.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,7 +10,8 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dailyupdate.R;
-import com.example.dailyupdate.data.model.MeetupEvent;
+import com.example.dailyupdate.data.models.MeetupEvent;
+import com.example.dailyupdate.utilities.DateUtilities;
 
 import java.util.List;
 
@@ -72,16 +73,15 @@ public class MeetupEventAdapter extends RecyclerView.Adapter<MeetupEventAdapter.
     @Override
     public void onBindViewHolder(MeetupEventAdapterViewHolder viewHolder, int i) {
         MeetupEvent meetupEvent = meetupEventList.get(i);
-        // TODO: change date & time format
-        String eventDate = meetupEvent.getEventDate();
-        String eventTime = meetupEvent.getEventTime();
+        String dateWithDay = DateUtilities.getDateWithDay(meetupEvent.getEventDate());
+        String formattedTime = DateUtilities.getFormattedTime(meetupEvent.getEventTime());
         String attendeesCountString =
                 meetupEvent.getAttendeesCount() + context.getString(R.string.meetupevent_attendees_label);
 
         eventNameTextView.setText(meetupEvent.getEventName());
         eventStatusTextView.setText(meetupEvent.getEventStatus());
-        eventDateTextView.setText(eventDate);
-        eventTimeTextView.setText(eventTime);
+        eventDateTextView.setText(dateWithDay);
+        eventTimeTextView.setText(formattedTime);
         groupNameTextView.setText(meetupEvent.getGroupNameObject().getEventGroupName());
         attendeesCountTextView.setText(attendeesCountString);
     }

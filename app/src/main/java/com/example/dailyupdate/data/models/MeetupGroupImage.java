@@ -1,4 +1,4 @@
-package com.example.dailyupdate.data.model;
+package com.example.dailyupdate.data.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;

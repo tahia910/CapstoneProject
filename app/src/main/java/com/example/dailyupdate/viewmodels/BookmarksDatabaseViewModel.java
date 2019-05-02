@@ -8,7 +8,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.example.dailyupdate.repositories.BookmarksDatabaseRepository;
-import com.example.dailyupdate.data.model.MeetupEventDetails;
+import com.example.dailyupdate.data.models.MeetupEventDetails;
 import com.example.dailyupdate.utilities.Constants;
 import com.example.dailyupdate.widget.WidgetService;
 

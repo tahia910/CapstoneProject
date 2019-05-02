@@ -1,4 +1,4 @@
-package com.example.dailyupdate.ui.fragment;
+package com.example.dailyupdate.ui.fragments;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;

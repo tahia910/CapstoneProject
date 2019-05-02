@@ -1,6 +1,5 @@
-package com.example.dailyupdate.ui.adapter;
+package com.example.dailyupdate.ui.adapters;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,8 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dailyupdate.R;
-import com.example.dailyupdate.data.model.MeetupEventDetails;
+import com.example.dailyupdate.data.models.MeetupEventDetails;
+import com.example.dailyupdate.utilities.DateUtilities;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -89,14 +89,13 @@ public class BookmarksAdapter extends ListAdapter<MeetupEventDetails,
     @Override
     public void onBindViewHolder(BookmarksAdapterViewHolder viewHolder, int i) {
         MeetupEventDetails bookmarkedEvent = getItem(i);
-        // TODO: change date & time format
-        String eventDate = bookmarkedEvent.getEventDate();
-        String eventTime = bookmarkedEvent.getEventTime();
+        String dateWithDay = DateUtilities.getDateWithDay(bookmarkedEvent.getEventDate());
+        String formattedTime = DateUtilities.getFormattedTime(bookmarkedEvent.getEventTime());
         String eventGroupName = bookmarkedEvent.getMeetupEventGroupName().getEventGroupName();
 
         eventNameTextView.setText(bookmarkedEvent.getEventName());
-        eventDateTextView.setText(eventDate);
-        eventTimeTextView.setText(eventTime);
+        eventDateTextView.setText(dateWithDay);
+        eventTimeTextView.setText(formattedTime);
         eventGroupTextView.setText(eventGroupName);
     }
 

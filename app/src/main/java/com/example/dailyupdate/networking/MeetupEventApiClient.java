@@ -3,8 +3,8 @@ package com.example.dailyupdate.networking;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.dailyupdate.data.model.MeetupEvent;
-import com.example.dailyupdate.data.model.MeetupEventResponse;
+import com.example.dailyupdate.data.models.MeetupEvent;
+import com.example.dailyupdate.data.models.MeetupEventResponse;
 import com.example.dailyupdate.utilities.Constants;
 
 import java.util.List;

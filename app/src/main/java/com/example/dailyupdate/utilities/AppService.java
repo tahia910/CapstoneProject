@@ -7,8 +7,8 @@ import android.content.Intent;
 
 import androidx.annotation.Nullable;
 
-import com.example.dailyupdate.ui.activity.BookmarksActivity;
-import com.example.dailyupdate.ui.activity.MainViewActivity;
+import com.example.dailyupdate.ui.activities.BookmarksActivity;
+import com.example.dailyupdate.ui.activities.MainViewActivity;
 import com.example.dailyupdate.utilities.notifications.NotificationUtilities;
 
 public class AppService extends IntentService {

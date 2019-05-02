@@ -3,7 +3,7 @@ package com.example.dailyupdate.networking;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.dailyupdate.data.model.MeetupGroup;
+import com.example.dailyupdate.data.models.MeetupGroup;
 import com.example.dailyupdate.utilities.Constants;
 
 import java.util.List;

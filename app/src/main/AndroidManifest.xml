@@ -19,19 +19,19 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="BuildConfig.GEO_API_KEY" />
 
-        <activity android:name=".ui.activity.MainActivity">
+        <activity android:name=".ui.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activity.MainViewActivity"/>
+        <activity android:name=".ui.activities.MainViewActivity"/>
         <activity
-            android:name=".ui.activity.PreferenceActivity"
+            android:name=".ui.activities.PreferenceActivity"
             android:label="@string/preference_label" />
         <activity
-            android:name=".ui.activity.BookmarksActivity"
+            android:name=".ui.activities.BookmarksActivity"
             android:label="@string/bookmarks_label"
             android:launchMode="singleTop">
         </activity>

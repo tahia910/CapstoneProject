@@ -1,4 +1,4 @@
-package com.example.dailyupdate.ui.fragment;
+package com.example.dailyupdate.ui.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dailyupdate.viewmodels.BookmarksDatabaseViewModel;
 import com.example.dailyupdate.R;
-import com.example.dailyupdate.data.model.MeetupEventDetails;
-import com.example.dailyupdate.ui.adapter.BookmarksAdapter;
+import com.example.dailyupdate.data.models.MeetupEventDetails;
+import com.example.dailyupdate.ui.adapters.BookmarksAdapter;
 
 import java.util.List;
 

@@ -2,9 +2,9 @@ package com.example.dailyupdate.repositories;
 
 import androidx.lifecycle.LiveData;
 
-import com.example.dailyupdate.data.model.MeetupEvent;
-import com.example.dailyupdate.data.model.MeetupEventDetails;
-import com.example.dailyupdate.data.model.MeetupGroup;
+import com.example.dailyupdate.data.models.MeetupEvent;
+import com.example.dailyupdate.data.models.MeetupEventDetails;
+import com.example.dailyupdate.data.models.MeetupGroup;
 import com.example.dailyupdate.networking.MeetupDetailsApiClient;
 import com.example.dailyupdate.networking.MeetupEventApiClient;
 import com.example.dailyupdate.networking.MeetupGroupApiClient;

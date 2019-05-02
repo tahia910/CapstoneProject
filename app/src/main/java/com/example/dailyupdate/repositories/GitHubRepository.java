@@ -2,7 +2,7 @@ package com.example.dailyupdate.repositories;
 
 import androidx.lifecycle.LiveData;
 
-import com.example.dailyupdate.data.model.GitHubRepo;
+import com.example.dailyupdate.data.models.GitHubRepo;
 import com.example.dailyupdate.networking.GitHubApiClient;
 
 import java.util.List;
