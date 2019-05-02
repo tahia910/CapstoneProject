@@ -29,6 +29,9 @@ public class Constants {
     public static final String KEY_GROUP_URL = "keyGroupUrl";
     public static final String KEY_EVENT_ID = "keyEventId";
 
+    // Fragment tags
+    public static final String TAG_EVENT_DETAILS_FRAGMENT = "meetupEventDetailsFragment";
+
     // Keys for the dialogs onSavedInstance()
     public static final String KEY_GITHUB_DIALOG_SEARCH_KEYWORD = "gitHubDialogSearchKeyword";
     public static final String KEY_GITHUB_DIALOG_SORT = "gitHubDialogSortKeyword";

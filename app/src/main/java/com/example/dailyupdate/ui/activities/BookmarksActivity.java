@@ -9,6 +9,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NavUtils;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.DialogFragment;
@@ -17,7 +18,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.dailyupdate.R;
 import com.example.dailyupdate.ui.fragments.BookmarksFragment;
-import com.example.dailyupdate.ui.fragments.MeetupDetailsFragment;
+import com.example.dailyupdate.ui.fragments.dialogs.MeetupDetailsFragment;
 import com.example.dailyupdate.utilities.Constants;
 import com.example.dailyupdate.viewmodels.BookmarksDatabaseViewModel;
 import com.google.android.material.navigation.NavigationView;
@@ -25,18 +26,16 @@ import com.google.android.material.navigation.NavigationView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class BookmarksActivity extends AppCompatActivity implements BookmarksFragment.BookmarksFragmentListener {
+public class BookmarksActivity extends AppCompatActivity implements BookmarksFragment.BookmarksFragmentListener, MeetupDetailsFragment.MeetupDetailsFragmentListener {
 
-    @BindView(R.id.drawer_layout)
-    DrawerLayout mDrawer;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-    @BindView(R.id.nav_view)
-    NavigationView navigationView;
+    @BindView(R.id.drawer_layout) DrawerLayout mDrawer;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.nav_view) NavigationView navigationView;
 
     private ActionBarDrawerToggle mDrawerToggle;
     private FragmentManager fragmentManager;
     private BookmarksFragment bookmarksFragment;
+    private MeetupDetailsFragment meetupDetailsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,20 +53,6 @@ public class BookmarksActivity extends AppCompatActivity implements BookmarksFra
             setupDrawerContent(navigationView);
         }
         fragmentManager = getSupportFragmentManager();
-        // TODO: handle the case the user presses "back" when coming from widget
-        Intent intent = getIntent();
-        if (intent.hasExtra(Constants.EXTRA_GROUP_URL)) {
-            // If the intent is not empty, it means that the activity was started from the widget to
-            // display a specific bookmarked event's details.
-            String groupUrl = intent.getStringExtra(Constants.EXTRA_GROUP_URL);
-            String eventId = intent.getStringExtra(Constants.EXTRA_EVENT_ID);
-            displayEventDetails(groupUrl, eventId);
-        } else {
-
-            bookmarksFragment = BookmarksFragment.newInstance();
-            fragmentManager.beginTransaction().replace(R.id.fragment_container,
-                    bookmarksFragment).commit();
-        }
     }
 
     @Override
@@ -78,6 +63,10 @@ public class BookmarksActivity extends AppCompatActivity implements BookmarksFra
             String groupUrl = intent.getStringExtra(Constants.EXTRA_GROUP_URL);
             String eventId = intent.getStringExtra(Constants.EXTRA_EVENT_ID);
             displayEventDetails(groupUrl, eventId);
+        } else {
+            bookmarksFragment = BookmarksFragment.newInstance();
+            fragmentManager.beginTransaction().replace(R.id.fragment_container,
+                    bookmarksFragment).commit();
         }
     }
 
@@ -91,16 +80,43 @@ public class BookmarksActivity extends AppCompatActivity implements BookmarksFra
         this.setIntent(intent);
     }
 
+    /**
+     * Check if the AlertDialog displaying the event details is already being used,
+     * before creating a new one for the selected event
+     **/
     @Override
     public void displayEventDetails(String groupUrl, String eventId) {
-        MeetupDetailsFragment meetupDetailsFragment = MeetupDetailsFragment.newInstance(groupUrl,
-                eventId);
+        if (fragmentManager.findFragmentByTag(Constants.TAG_EVENT_DETAILS_FRAGMENT) != null) {
+            meetupDetailsFragment.dismiss();
+        }
+        meetupDetailsFragment = MeetupDetailsFragment.newInstance(groupUrl, eventId);
         meetupDetailsFragment.setHasOptionsMenu(true);
         meetupDetailsFragment.setMenuVisibility(true);
         meetupDetailsFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.Dialog_FullScreen);
-        meetupDetailsFragment.show(fragmentManager, "meetup_details");
+        meetupDetailsFragment.show(fragmentManager, Constants.TAG_EVENT_DETAILS_FRAGMENT);
     }
 
+    /**
+     * Callback from the MeetupDetailsFragment to inform that the fragment was closed.
+     * If the bookmarked events were not being displayed already, update the UI accordingly
+     **/
+    @Override
+    public void closedFragmentCallback() {
+        // Remove the extra "group url" that was added by the widget
+        Intent intent = getIntent();
+        intent.removeExtra(Constants.EXTRA_GROUP_URL);
+        // If the bookmarked event fragment was not displayed, create it
+        if (fragmentManager.findFragmentById(R.id.fragment_container) == null) {
+            bookmarksFragment = BookmarksFragment.newInstance();
+            fragmentManager.beginTransaction().replace(R.id.fragment_container,
+                    bookmarksFragment).commit();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        NavUtils.navigateUpFromSameTask(this);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -142,7 +158,7 @@ public class BookmarksActivity extends AppCompatActivity implements BookmarksFra
     public void selectDrawerItem(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.nav_home:
-                startActivity(new Intent(this, MainActivity.class));
+                NavUtils.navigateUpFromSameTask(this);
                 break;
             case R.id.nav_bookmarks:
                 break;

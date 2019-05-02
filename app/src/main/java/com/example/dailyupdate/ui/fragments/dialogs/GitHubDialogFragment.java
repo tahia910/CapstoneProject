@@ -3,6 +3,7 @@ package com.example.dailyupdate.ui.fragments.dialogs;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -59,6 +60,12 @@ public class GitHubDialogFragment extends DialogFragment {
     public void onResume() {
         super.onResume();
         setSavedInstanceStateValues(searchKeyword, sortBy, searchOrder);
+    }
+
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        listener.onGitHubDialogNegativeClick(GitHubDialogFragment.this);
+        dialog.dismiss();
     }
 
     @NonNull

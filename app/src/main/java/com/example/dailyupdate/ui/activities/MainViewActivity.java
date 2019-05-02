@@ -13,6 +13,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NavUtils;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.DialogFragment;
@@ -21,7 +22,7 @@ import androidx.preference.PreferenceManager;
 
 import com.example.dailyupdate.R;
 import com.example.dailyupdate.ui.fragments.GitHubMainFragment;
-import com.example.dailyupdate.ui.fragments.MeetupDetailsFragment;
+import com.example.dailyupdate.ui.fragments.dialogs.MeetupDetailsFragment;
 import com.example.dailyupdate.ui.fragments.MeetupMainFragment;
 import com.example.dailyupdate.ui.fragments.dialogs.GitHubDialogFragment;
 import com.example.dailyupdate.ui.fragments.dialogs.MeetupDialogFragment;
@@ -32,7 +33,7 @@ import com.google.android.material.navigation.NavigationView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainViewActivity extends AppCompatActivity implements MeetupDialogFragment.MeetupDialogListener, GitHubDialogFragment.GitHubDialogListener, MeetupMainFragment.MeetupMainFragmentListener, GitHubMainFragment.GitHubMainFragmentListener {
+public class MainViewActivity extends AppCompatActivity implements MeetupDialogFragment.MeetupDialogListener, GitHubDialogFragment.GitHubDialogListener, MeetupMainFragment.MeetupMainFragmentListener, GitHubMainFragment.GitHubMainFragmentListener, MeetupDetailsFragment.MeetupDetailsFragmentListener {
 
     @BindView(R.id.drawer_layout) DrawerLayout mDrawer;
     @BindView(R.id.toolbar) Toolbar toolbar;
@@ -40,18 +41,19 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
     @BindView(R.id.appbar_layout_emptyview) TextView emptyView;
 
     private FragmentManager fragmentManager;
+    private MeetupDetailsFragment meetupDetailsFragment;
     private String mainViewOption;
     private ActionBarDrawerToggle mDrawerToggle;
     private SharedPreferences sharedPref;
     private String sharedPrefMeetupSearchKeyword;
     private String sharedPrefGitHubSearchKeyword;
     private ActionBar ab;
-    String gitHubDialogLatestSearchKeyword;
-    String gitHubDialogLatestSortBy;
-    String gitHubDialogLatestSearchOrder;
-    String meetupDialogLatestSearchKeyword;
-    String meetupDialogLatestSortBy;
-    String meetupDialogLatestLocation;
+    private String gitHubDialogLatestSearchKeyword;
+    private String gitHubDialogLatestSortBy;
+    private String gitHubDialogLatestSearchOrder;
+    private String meetupDialogLatestSearchKeyword;
+    private String meetupDialogLatestSortBy;
+    private String meetupDialogLatestLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,13 +73,15 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
             if (mainViewOption.equals(Constants.MEETUP_MAIN_KEY)) {
                 meetupDialogLatestSearchKeyword =
                         savedInstanceState.getString(Constants.KEY_MEETUP_DIALOG_SEARCH_KEYWORD);
-                meetupDialogLatestSortBy = savedInstanceState.getString(Constants.KEY_MEETUP_DIALOG_SORT);
+                meetupDialogLatestSortBy =
+                        savedInstanceState.getString(Constants.KEY_MEETUP_DIALOG_SORT);
                 meetupDialogLatestLocation =
                         savedInstanceState.getString(Constants.KEY_MEETUP_DIALOG_LOCATION);
             } else if (mainViewOption.equals(Constants.GITHUB_MAIN_KEY)) {
                 gitHubDialogLatestSearchKeyword =
                         savedInstanceState.getString(Constants.KEY_GITHUB_DIALOG_SEARCH_KEYWORD);
-                gitHubDialogLatestSortBy = savedInstanceState.getString(Constants.KEY_GITHUB_DIALOG_SORT);
+                gitHubDialogLatestSortBy =
+                        savedInstanceState.getString(Constants.KEY_GITHUB_DIALOG_SORT);
                 gitHubDialogLatestSearchOrder =
                         savedInstanceState.getString(Constants.KEY_GITHUB_DIALOG_ORDER);
             }
@@ -86,7 +90,7 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
     }
 
     /**
-     * Decide which fragment or dialog to display from this activity
+     * Decide which fragment or dialog to display from this activity.
      **/
     private void openDialogOrFragment() {
         if (mainViewOption.equals(Constants.MEETUP_MAIN_KEY)) {
@@ -111,7 +115,7 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
     }
 
     /**
-     * Set up the toolbar and drawer
+     * Set up the toolbar and drawer.
      **/
     private void setActionBar() {
         setSupportActionBar(toolbar);
@@ -130,18 +134,25 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
     }
 
     @Override
+    public void onBackPressed() {
+        NavUtils.navigateUpFromSameTask(this);
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         // If there is any data from a dialog's onSaveInstanceState(), save them here (in the
         // parent activity) to retrieve them when the activity is restored and launches the
         // dialog again
         if (gitHubDialogLatestSearchKeyword != null || gitHubDialogLatestSortBy != null || gitHubDialogLatestSearchOrder != null) {
-            outState.putString(Constants.KEY_GITHUB_DIALOG_SEARCH_KEYWORD, gitHubDialogLatestSearchKeyword);
+            outState.putString(Constants.KEY_GITHUB_DIALOG_SEARCH_KEYWORD,
+                    gitHubDialogLatestSearchKeyword);
             outState.putString(Constants.KEY_GITHUB_DIALOG_SORT, gitHubDialogLatestSortBy);
             outState.putString(Constants.KEY_GITHUB_DIALOG_ORDER, gitHubDialogLatestSearchOrder);
         }
         if (meetupDialogLatestSearchKeyword != null || meetupDialogLatestSortBy != null || meetupDialogLatestLocation != null) {
-            outState.putString(Constants.KEY_MEETUP_DIALOG_SEARCH_KEYWORD, meetupDialogLatestSearchKeyword);
+            outState.putString(Constants.KEY_MEETUP_DIALOG_SEARCH_KEYWORD,
+                    meetupDialogLatestSearchKeyword);
             outState.putString(Constants.KEY_MEETUP_DIALOG_SORT, meetupDialogLatestSortBy);
             outState.putString(Constants.KEY_MEETUP_DIALOG_LOCATION, meetupDialogLatestLocation);
         }
@@ -149,15 +160,16 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
 
     /**
      * Get the search dialog for either Meetup events or GitHub repositories, set as arguments
-     * the values previously inputted and saved in the dialog's onSaveInstanceState()
+     * the values previously inputted and saved in the dialog's onSaveInstanceState().
      * (The null check for each values will be done before setting them back in the dialog's
-     * setSavedInstanceStateValues() method)
+     * setSavedInstanceStateValues() method.)
      **/
     private void getSearchDialog() {
         if (mainViewOption.equals(Constants.MEETUP_MAIN_KEY)) {
             DialogFragment meetupDialogFragment = new MeetupDialogFragment();
             Bundle args = new Bundle();
-            args.putString(Constants.KEY_MEETUP_DIALOG_SEARCH_KEYWORD, meetupDialogLatestSearchKeyword);
+            args.putString(Constants.KEY_MEETUP_DIALOG_SEARCH_KEYWORD,
+                    meetupDialogLatestSearchKeyword);
             args.putString(Constants.KEY_MEETUP_DIALOG_SORT, meetupDialogLatestSortBy);
             args.putString(Constants.KEY_MEETUP_DIALOG_LOCATION, meetupDialogLatestLocation);
             meetupDialogFragment.setArguments(args);
@@ -165,7 +177,8 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
         } else if (mainViewOption.equals(Constants.GITHUB_MAIN_KEY)) {
             DialogFragment gitHubDialogFragment = new GitHubDialogFragment();
             Bundle args = new Bundle();
-            args.putString(Constants.KEY_GITHUB_DIALOG_SEARCH_KEYWORD, gitHubDialogLatestSearchKeyword);
+            args.putString(Constants.KEY_GITHUB_DIALOG_SEARCH_KEYWORD,
+                    gitHubDialogLatestSearchKeyword);
             args.putString(Constants.KEY_GITHUB_DIALOG_SORT, gitHubDialogLatestSortBy);
             args.putString(Constants.KEY_GITHUB_DIALOG_ORDER, gitHubDialogLatestSearchOrder);
             gitHubDialogFragment.setArguments(args);
@@ -185,12 +198,12 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
 
     /**
      * Callback from MeetupDialogFragment (Meetup events search dialog) to display the result of the
-     * inputted search after the user clicked on the "Search" button
+     * inputted search after the user clicked on the "Search" button.
      **/
     @Override
     public void onMeetupDialogPositiveClick(DialogFragment dialog) {
-        sharedPrefMeetupSearchKeyword = sharedPref.getString(getString(R.string.pref_meetup_edittext_key),
-                "");
+        sharedPrefMeetupSearchKeyword =
+                sharedPref.getString(getString(R.string.pref_meetup_edittext_key), "");
         if (!sharedPrefMeetupSearchKeyword.isEmpty()) {
             getMeetupFragment();
         } else {
@@ -207,23 +220,24 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
 
     /**
      * Callback from the Meetup event search dialog, sending the user latest input before
-     * the dialog was destroyed
+     * the dialog was destroyed.
      **/
     @Override
     public void restoreMeetupDialogState(Bundle bundle) {
-        meetupDialogLatestSearchKeyword = bundle.getString(Constants.KEY_MEETUP_DIALOG_SEARCH_KEYWORD);
+        meetupDialogLatestSearchKeyword =
+                bundle.getString(Constants.KEY_MEETUP_DIALOG_SEARCH_KEYWORD);
         meetupDialogLatestSortBy = bundle.getString(Constants.KEY_MEETUP_DIALOG_SORT);
         meetupDialogLatestLocation = bundle.getString(Constants.KEY_MEETUP_DIALOG_LOCATION);
     }
 
     /**
      * Callback from GitHubDialogFragment (GitHub search dialog) to display the result of the
-     * inputted search after the user clicked on the "Search" button
+     * inputted search after the user clicked on the "Search" button.
      **/
     @Override
     public void onGitHubDialogPositiveClick(DialogFragment dialog) {
-        sharedPrefGitHubSearchKeyword = sharedPref.getString(getString(R.string.pref_github_edittext_key),
-                "");
+        sharedPrefGitHubSearchKeyword =
+                sharedPref.getString(getString(R.string.pref_github_edittext_key), "");
         if (!sharedPrefGitHubSearchKeyword.isEmpty()) {
             getGitHubFragment();
         } else {
@@ -236,43 +250,53 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
     @Override
     public void onGitHubDialogNegativeClick(DialogFragment dialog) {
         setEmptyView();
-
     }
 
     /**
      * Callback from the GitHub repository search dialog, sending the user latest input before
-     * the dialog was destroyed
+     * the dialog was destroyed.
      **/
     @Override
     public void restoreGitHubDialogState(Bundle bundle) {
-        gitHubDialogLatestSearchKeyword = bundle.getString(Constants.KEY_GITHUB_DIALOG_SEARCH_KEYWORD);
+        gitHubDialogLatestSearchKeyword =
+                bundle.getString(Constants.KEY_GITHUB_DIALOG_SEARCH_KEYWORD);
         gitHubDialogLatestSortBy = bundle.getString(Constants.KEY_GITHUB_DIALOG_SORT);
         gitHubDialogLatestSearchOrder = bundle.getString(Constants.KEY_GITHUB_DIALOG_ORDER);
     }
 
     /**
      * Callback from MeetupMainFragment (fragment displaying the result of a Meetup event search)
-     * to open the details of a selected event in a dialog
+     * to open the details of a selected event in a dialog.
+     * Check if the fragment is already displayed just in case.
      **/
     @Override
     public void currentEventInfo(String groupUrl, String eventId) {
-        MeetupDetailsFragment meetupDetailsFragment = MeetupDetailsFragment.newInstance(groupUrl,
-                eventId);
+        if (fragmentManager.findFragmentByTag(Constants.TAG_EVENT_DETAILS_FRAGMENT) != null) {
+            meetupDetailsFragment.dismiss();
+        }
+        meetupDetailsFragment = MeetupDetailsFragment.newInstance(groupUrl, eventId);
         meetupDetailsFragment.setHasOptionsMenu(true);
         meetupDetailsFragment.setMenuVisibility(true);
         meetupDetailsFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.Dialog_FullScreen);
-        meetupDetailsFragment.show(getSupportFragmentManager(), "meetup_details");
+        meetupDetailsFragment.show(fragmentManager, Constants.TAG_EVENT_DETAILS_FRAGMENT);
     }
 
     /**
      * Callback from GitHubMainFragment (fragment displaying the result of a GitHub
      * repositories search) to open the selected GitHub repository details using WebView
-     * (Custom Tabs)
+     * (Custom Tabs).
      **/
     @Override
     public void currentGitHubRepoUrl(String gitHubRepoUrl) {
         NetworkUtilities.openCustomTabs(getApplicationContext(), gitHubRepoUrl);
     }
+
+    /**
+     * MeetupDetailsFragment callback used for the BookmarksActivity, where there is a
+     * possibility that the fragment gets displayed twice due to the widget.
+     **/
+    @Override
+    public void closedFragmentCallback() { }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -313,7 +337,7 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
     public void selectDrawerItem(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.nav_home:
-                startActivity(new Intent(this, MainActivity.class));
+                NavUtils.navigateUpFromSameTask(this);
                 break;
             case R.id.nav_bookmarks:
                 startActivity(new Intent(this, BookmarksActivity.class));
@@ -337,4 +361,5 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
         }
         mDrawer.closeDrawers();
     }
+
 }

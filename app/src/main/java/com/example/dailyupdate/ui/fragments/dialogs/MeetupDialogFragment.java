@@ -61,6 +61,13 @@ public class MeetupDialogFragment extends DialogFragment {
         setSavedInstanceStateValues(searchKeyword, sortBy, searchLocation);
     }
 
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        listener.onMeetupDialogNegativeClick(MeetupDialogFragment.this);
+        dialog.dismiss();
+    }
+
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {

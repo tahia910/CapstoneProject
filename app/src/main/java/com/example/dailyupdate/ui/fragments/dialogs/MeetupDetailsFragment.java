@@ -1,6 +1,8 @@
-package com.example.dailyupdate.ui.fragments;
+package com.example.dailyupdate.ui.fragments.dialogs;
 
 import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -74,6 +77,25 @@ public class MeetupDetailsFragment extends DialogFragment {
     private String eventId;
     private MeetupEventDetails currentEvent;
     private Boolean alreadyBookmarked;
+    private MeetupDetailsFragmentListener listener;
+
+    public interface MeetupDetailsFragmentListener {
+        void closedFragmentCallback();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        // Verify that the host activity implements the callback interface
+        try {
+            // Instantiate the GitHubDialogListener so we can send events to the host
+            listener = (MeetupDetailsFragmentListener) context;
+        } catch (ClassCastException e) {
+            // The activity doesn't implement the interface, throw exception
+            throw new ClassCastException(getActivity().toString() + " must implement " +
+                    "MeetupDetailsFragmentListener");
+        }
+    }
 
     public static MeetupDetailsFragment newInstance(String groupUrl, String eventId) {
         MeetupDetailsFragment meetupDetailsFragment = new MeetupDetailsFragment();
@@ -82,6 +104,17 @@ public class MeetupDetailsFragment extends DialogFragment {
         args.putString(Constants.KEY_EVENT_ID, eventId);
         meetupDetailsFragment.setArguments(args);
         return meetupDetailsFragment;
+    }
+
+    /**
+     * When the user taps on the phone back button (not the action bar), dismiss the dialog and send
+     * callback to parent activity to inform that the fragment is being dismissed.
+     **/
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        listener.closedFragmentCallback();
+        dialog.dismiss();
+        super.onCancel(dialog);
     }
 
     @Override
@@ -115,7 +148,12 @@ public class MeetupDetailsFragment extends DialogFragment {
     private void setCustomActionBar() {
         dialog = MeetupDetailsFragment.this.getDialog();
         backIcon = dialog.findViewById(R.id.back_icon_meetup_detail);
-        backIcon.setOnClickListener(v -> dialog.dismiss());
+        backIcon.setOnClickListener((View v) -> {
+            // When the action bar's back button is clicked, dismiss the dialog and send a
+            //  callback to parent activity to inform that the fragment is being dismissed
+            listener.closedFragmentCallback();
+            dialog.dismiss();
+        });
         checkAlreadyBookmarked();
     }
 
@@ -222,7 +260,7 @@ public class MeetupDetailsFragment extends DialogFragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle currentState) {
+    public void onSaveInstanceState(@NonNull Bundle currentState) {
         currentState.putString(Constants.KEY_GROUP_URL, groupId);
         currentState.putString(Constants.KEY_EVENT_ID, eventId);
         super.onSaveInstanceState(currentState);

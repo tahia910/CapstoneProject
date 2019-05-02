@@ -26,7 +26,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activities.MainViewActivity"/>
+        <activity android:name=".ui.activities.MainViewActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.MainActivity"/>
+        </activity>
         <activity
             android:name=".ui.activities.PreferenceActivity"
             android:label="@string/preference_label" />
@@ -34,6 +38,9 @@
             android:name=".ui.activities.BookmarksActivity"
             android:label="@string/bookmarks_label"
             android:launchMode="singleTop">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.MainActivity"/>
         </activity>
 
         <receiver android:name=".widget.BookmarksWidget">
