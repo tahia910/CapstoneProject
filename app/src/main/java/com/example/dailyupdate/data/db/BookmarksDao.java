@@ -21,11 +21,11 @@ public interface BookmarksDao {
     @Query("SELECT * FROM bookmarked_event ORDER BY event_id DESC")
     List<MeetupEventDetails> loadAllBookmarkedEventsForWidget();
 
-    @Insert
-    void insertBookmarkedEvent(MeetupEventDetails bookmarkedEvent);
+    @Query("SELECT event_id FROM bookmarked_event ORDER BY event_id DESC")
+    LiveData<List<String>> getAllBookmarkedEventsIds();
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    void updateBookmarkedEvent(MeetupEventDetails bookmarkedEvent);
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertBookmarkedEvent(MeetupEventDetails bookmarkedEvent);
 
     @Delete
     void deleteBookmarkedEvent(MeetupEventDetails bookmarkedEvent);

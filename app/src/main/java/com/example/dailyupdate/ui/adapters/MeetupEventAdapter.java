@@ -20,25 +20,19 @@ import butterknife.ButterKnife;
 
 public class MeetupEventAdapter extends RecyclerView.Adapter<MeetupEventAdapter.MeetupEventAdapterViewHolder> {
 
-    @BindView(R.id.textview_event_title)
-    TextView eventNameTextView;
-    @BindView(R.id.textview_event_status)
-    TextView eventStatusTextView;
-    @BindView(R.id.textview_event_date)
-    TextView eventDateTextView;
-    @BindView(R.id.textview_event_time)
-    TextView eventTimeTextView;
-    @BindView(R.id.textview_group_title)
-    TextView groupNameTextView;
-    @BindView(R.id.textview_event_attendees)
-    TextView attendeesCountTextView;
-    @BindView(R.id.bookmark_icon_meetup_main)
-    ImageView bookmarkIcon;
+    @BindView(R.id.textview_event_title) TextView eventNameTextView;
+    @BindView(R.id.textview_event_status) TextView eventStatusTextView;
+    @BindView(R.id.textview_event_date) TextView eventDateTextView;
+    @BindView(R.id.textview_event_time) TextView eventTimeTextView;
+    @BindView(R.id.textview_group_title) TextView groupNameTextView;
+    @BindView(R.id.textview_event_attendees) TextView attendeesCountTextView;
+    @BindView(R.id.bookmark_icon_meetup_main) ImageView bookmarkIcon;
 
     private Context context;
     private static ClickListener clickListener;
     private static BookmarkIconClickListener bookmarkIconListener;
     private final List<MeetupEvent> meetupEventList;
+    private final List<String> bookmarkedEventsIds;
 
     public interface ClickListener {
         void onItemClick(int position, View v);
@@ -49,16 +43,18 @@ public class MeetupEventAdapter extends RecyclerView.Adapter<MeetupEventAdapter.
     }
 
     public interface BookmarkIconClickListener {
-        void onBookmarkIconClick(MeetupEvent meetupEvent);
+        void onBookmarkIconClick(MeetupEvent meetupEvent, int position);
     }
 
     public void setOnBookmarkIconClickListener(BookmarkIconClickListener bookmarkIconListener) {
         MeetupEventAdapter.bookmarkIconListener = bookmarkIconListener;
     }
 
-    public MeetupEventAdapter(Context context, List<MeetupEvent> meetupEventList) {
+    public MeetupEventAdapter(Context context, List<MeetupEvent> meetupEventList,
+                              List<String> bookmarkedEventsIds) {
         this.context = context;
         this.meetupEventList = meetupEventList;
+        this.bookmarkedEventsIds = bookmarkedEventsIds;
     }
 
     @Override
@@ -84,6 +80,12 @@ public class MeetupEventAdapter extends RecyclerView.Adapter<MeetupEventAdapter.
         eventTimeTextView.setText(formattedTime);
         groupNameTextView.setText(meetupEvent.getGroupNameObject().getEventGroupName());
         attendeesCountTextView.setText(attendeesCountString);
+        if(bookmarkedEventsIds !=null){
+        if (bookmarkedEventsIds.contains(meetupEvent.getEventId())){
+            bookmarkIcon.setImageResource(R.drawable.ic_bookmarked);
+        } else {
+            bookmarkIcon.setImageResource(R.drawable.ic_bookmark);
+        }}
     }
 
     @Override
@@ -106,7 +108,8 @@ public class MeetupEventAdapter extends RecyclerView.Adapter<MeetupEventAdapter.
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     if (bookmarkIconListener != null && position != RecyclerView.NO_POSITION) {
-                        bookmarkIconListener.onBookmarkIconClick(meetupEventList.get(position));
+                        bookmarkIconListener.onBookmarkIconClick(meetupEventList.get(position),
+                                position);
                     }
                 }
             });
@@ -118,9 +121,8 @@ public class MeetupEventAdapter extends RecyclerView.Adapter<MeetupEventAdapter.
         }
 
         @Override
-        public void onBookmarkIconClick(MeetupEvent meetupEvent) {
-            bookmarkIconListener.onBookmarkIconClick(getCurrentEvent(getAdapterPosition()));
+        public void onBookmarkIconClick(MeetupEvent meetupEvent, int position) {
+            bookmarkIconListener.onBookmarkIconClick(getCurrentEvent(getAdapterPosition()), getAdapterPosition());
         }
     }
 }
-

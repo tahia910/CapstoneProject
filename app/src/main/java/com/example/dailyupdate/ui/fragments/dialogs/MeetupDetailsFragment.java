@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -131,11 +132,12 @@ public class MeetupDetailsFragment extends DialogFragment {
             eventId = getArguments().getString(Constants.KEY_EVENT_ID);
         }
         databaseViewModel =
-                ViewModelProviders.of(MeetupDetailsFragment.this).get(BookmarksDatabaseViewModel.class);
+                ViewModelProviders.of(getActivity()).get(BookmarksDatabaseViewModel.class);
         meetupViewModel =
                 ViewModelProviders.of(MeetupDetailsFragment.this).get(MeetupViewModel.class);
         subscribeMeetupEventDetailsObserver();
         meetupViewModel.searchMeetupEventDetails(groupId, eventId);
+        databaseViewModel.getAllBookmarkedEventsIds();
         return rootView;
     }
 
@@ -157,27 +159,21 @@ public class MeetupDetailsFragment extends DialogFragment {
         checkAlreadyBookmarked();
     }
 
-    // TODO: change "alreadyBookmarked" logic
     private void checkAlreadyBookmarked() {
         bookmarkIcon = dialog.findViewById(R.id.bookmark_icon_meetup_detail);
-        databaseViewModel.getAllBookmarkedEvents().observe(MeetupDetailsFragment.this,
-                new Observer<List<MeetupEventDetails>>() {
+        databaseViewModel.getAllBookmarkedEventsIds().observe(this, new Observer<List<String>>() {
             @Override
-            public void onChanged(List<MeetupEventDetails> meetupEventDetails) {
-                ArrayList<String> array = new ArrayList<>();
-                for (int i = 0; i < meetupEventDetails.size(); i++) {
-                    final MeetupEventDetails bookmarkItem = meetupEventDetails.get(i);
-                    String currentEventId = bookmarkItem.getEventId();
-                    array.add(currentEventId);
+            public void onChanged(List<String> strings) {
+                if (strings != null){
+                    if(strings.contains(eventId)){
+                        alreadyBookmarked = true;
+                        bookmarkIcon.setImageResource(R.drawable.ic_bookmarked_white);
+                    } else {
+                        alreadyBookmarked = false;
+                        bookmarkIcon.setImageResource(R.drawable.ic_bookmark_white);
+                    }
+                    setBookmarkIconClickListener();
                 }
-                if (!array.contains(eventId)) {
-                    alreadyBookmarked = false;
-                    bookmarkIcon.setImageResource(R.drawable.ic_bookmark_white);
-                } else {
-                    alreadyBookmarked = true;
-                    bookmarkIcon.setImageResource(R.drawable.ic_bookmarked_white);
-                }
-                setBookmarkIconClickListener();
             }
         });
     }

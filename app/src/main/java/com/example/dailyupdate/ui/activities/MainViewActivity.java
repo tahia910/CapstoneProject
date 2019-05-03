@@ -18,16 +18,18 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceManager;
 
 import com.example.dailyupdate.R;
 import com.example.dailyupdate.ui.fragments.GitHubMainFragment;
-import com.example.dailyupdate.ui.fragments.dialogs.MeetupDetailsFragment;
 import com.example.dailyupdate.ui.fragments.MeetupMainFragment;
 import com.example.dailyupdate.ui.fragments.dialogs.GitHubDialogFragment;
+import com.example.dailyupdate.ui.fragments.dialogs.MeetupDetailsFragment;
 import com.example.dailyupdate.ui.fragments.dialogs.MeetupDialogFragment;
 import com.example.dailyupdate.utilities.Constants;
 import com.example.dailyupdate.utilities.NetworkUtilities;
+import com.example.dailyupdate.viewmodels.BookmarksDatabaseViewModel;
 import com.google.android.material.navigation.NavigationView;
 
 import butterknife.BindView;
@@ -95,6 +97,9 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
     private void openDialogOrFragment() {
         if (mainViewOption.equals(Constants.MEETUP_MAIN_KEY)) {
             ab.setTitle(getApplicationContext().getString(R.string.meetup_search_title));
+            BookmarksDatabaseViewModel viewModel =
+                    ViewModelProviders.of(MainViewActivity.this).get(BookmarksDatabaseViewModel.class);
+            viewModel.getAllBookmarkedEventsIds();
             sharedPrefMeetupSearchKeyword =
                     sharedPref.getString(getString(R.string.pref_meetup_edittext_key), "");
             if (!sharedPrefMeetupSearchKeyword.isEmpty()) {
@@ -296,7 +301,8 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
      * possibility that the fragment gets displayed twice due to the widget.
      **/
     @Override
-    public void closedFragmentCallback() { }
+    public void closedFragmentCallback() {
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

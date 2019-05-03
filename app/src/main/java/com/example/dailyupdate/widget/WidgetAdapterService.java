@@ -6,8 +6,8 @@ import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.example.dailyupdate.R;
-import com.example.dailyupdate.data.db.BookmarksDatabase;
 import com.example.dailyupdate.data.models.MeetupEventDetails;
+import com.example.dailyupdate.repositories.BookmarksDatabaseRepository;
 import com.example.dailyupdate.utilities.Constants;
 import com.example.dailyupdate.utilities.DateUtilities;
 
@@ -45,8 +45,9 @@ public class WidgetAdapterService extends RemoteViewsService {
          **/
         @Override
         public void onDataSetChanged() {
-            BookmarksDatabase db = BookmarksDatabase.getInstance(getApplicationContext());
-            eventsList = db.bookmarksDao().loadAllBookmarkedEventsForWidget();
+            BookmarksDatabaseRepository databaseRepository =
+                    new BookmarksDatabaseRepository(getApplication());
+            eventsList = databaseRepository.getAllEventsForWidget();
         }
 
         @Override

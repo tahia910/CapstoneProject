@@ -49,12 +49,12 @@ public class Constants {
     public static final int ACTION_IGNORE_PENDING_INTENT_ID = 64;
 
     // JobDispatcher related
-    // TODO: change this variable depending on the user's preference
-    public static final int UPDATE_INTERVAL_HOURS = 3;
+    private static final int UPDATE_INTERVAL_HOURS = 12;
     public static final int UPDATE_INTERVAL_SECONDS =
             (int) (TimeUnit.HOURS.toSeconds(UPDATE_INTERVAL_HOURS));
     public static final int SYNC_FLEXTIME_SECONDS = UPDATE_INTERVAL_SECONDS;
     public static final String UPDATE_JOB_TAG = "search_update_tag";
+    public static final int ACTION_GET_NOTIFICATION_PENDING_INTENT_ID = 777;
 
     // Widget related
     public static final int ACTION_ITEM_CLICK_PENDING_INTENT_ID = 888;
@@ -73,6 +73,6 @@ public class Constants {
             ".action_open_search";
     public static final String ACTION_DISMISS_NOTIFICATION = "com.example.dailyupdate." +
             ".utilities.action_dismiss_notification";
-    public static final String ACTION_GET_UPDATE_NOTIFICATION = "com.example.dailyupdate" +
-            ".utilities.action_get_update_notification";
+    public static final String ACTION_GET_NOTIFICATION = "com.example.dailyupdate" +
+            ".utilities.action_get_notification";
 }

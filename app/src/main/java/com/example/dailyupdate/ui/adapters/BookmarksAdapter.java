@@ -26,6 +26,7 @@ import butterknife.ButterKnife;
  * https://developer.android.com/reference/kotlin/androidx/recyclerview/widget/ListAdapter
  * https://developer.android.com/reference/kotlin/androidx/recyclerview/widget/DiffUtil.html
  * https://developer.android.com/reference/kotlin/androidx/recyclerview/widget/AsyncListDiffer.html
+ * https://www.youtube.com/watch?v=xPPMygGxiEo
  **/
 public class BookmarksAdapter extends ListAdapter<MeetupEventDetails,
         BookmarksAdapter.BookmarksAdapterViewHolder> {
@@ -43,6 +44,10 @@ public class BookmarksAdapter extends ListAdapter<MeetupEventDetails,
         super(DIFF_CALLBACK);
     }
 
+    // Make the variable static so it can be passed to the super class constructor before
+    // the adapter constructor is finished.
+    // (If non-static, can't be accessed before the adapter instance is created, so
+    // wouldn't be available in constructor.)
     private static final DiffUtil.ItemCallback<MeetupEventDetails> DIFF_CALLBACK =
             new DiffUtil.ItemCallback<MeetupEventDetails>() {
         @Override
@@ -54,6 +59,8 @@ public class BookmarksAdapter extends ListAdapter<MeetupEventDetails,
         @Override
         public boolean areContentsTheSame(@NonNull MeetupEventDetails oldItem,
                                           @NonNull MeetupEventDetails newItem) {
+            // Must check if all values are the same in order to make sure it is the same item
+            // Can't use oldItem.equals(newItem) as it will always be false (different Java object)
             return oldItem.getEventName().equals(newItem.getEventName())
                     && oldItem.getMeetupEventGroupName().getEventGroupUrl()
                     .equals(newItem.getMeetupEventGroupName().getEventGroupUrl())

@@ -18,20 +18,18 @@ public class BookmarksDatabaseViewModel extends AndroidViewModel {
 
     private BookmarksDatabaseRepository repository;
     private LiveData<List<MeetupEventDetails>> bookmarkedEvents;
+    private LiveData<List<String>> bookmarkedEventsIds;
 
     public BookmarksDatabaseViewModel(@NonNull Application application) {
         super(application);
         repository = new BookmarksDatabaseRepository(application);
         bookmarkedEvents = repository.getAllEvents();
+        bookmarkedEventsIds = repository.getAllEventsIds();
     }
 
     public void insertBookmarkedEvent(MeetupEventDetails bookmarkedEvent) {
         repository.insertEvent(bookmarkedEvent);
         updateWidget();
-    }
-
-    public void updateBookmarkedEvent(MeetupEventDetails bookmarkedEvent) {
-        repository.updateEvent(bookmarkedEvent);
     }
 
     public void deleteBookmarkedEvent(MeetupEventDetails bookmarkedEvent) {
@@ -53,4 +51,9 @@ public class BookmarksDatabaseViewModel extends AndroidViewModel {
         intent.setAction(Constants.ACTION_UPDATE_WIDGET);
         getApplication().startService(intent);
     }
+
+    public LiveData<List<String>> getAllBookmarkedEventsIds(){
+        return bookmarkedEventsIds;
+    }
+
 }

@@ -38,7 +38,7 @@ public class AppService extends IntentService {
             } else if (Constants.ACTION_DISMISS_NOTIFICATION.equals(action)) {
                 // Dismiss the notification
                 NotificationUtilities.clearAllNotifications(context);
-            } else if (Constants.ACTION_GET_UPDATE_NOTIFICATION.equals(action)) {
+            } else if (Constants.ACTION_GET_NOTIFICATION.equals(action)) {
                 // Display the notification
                 NotificationUtilities.createNotification(context);
             } else if (Constants.ACTION_OPEN_DETAILS.equals(action)){
