@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:elevation="8dp">
 
@@ -16,8 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             android:paddingStart="4dp"
-            android:paddingEnd="4dp"
-            android:layout_gravity="center">
+            android:paddingEnd="4dp">
 
             <TextView
                 android:id="@+id/textview_title"

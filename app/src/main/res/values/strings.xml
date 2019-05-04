@@ -36,6 +36,12 @@
     <string name="dialog_location_hint">Input location</string>
     <string name="dialog_location_explanation">(If empty, current location will be used.)</string>
 
+    <!-- String for the Meetup Details Dialog -->
+    <string name="meetupevent_status_label">Status:\u0020</string>
+    <string name="meetupgroup_members_label">\u0020members</string>
+    <string name="meetupevent_attendees_label">\u0020member(s) going</string>
+    <string name="meetupevent_waitlist_label">\u0020members on waitlist</string>
+    <string name="meetupevent_places_left_label">\u0020places left</string>
 
     <string name="tools_repository_title">Repository Title</string>
     <string name="tools_repository_description">Description for the repository that might take two lines</string>
@@ -70,9 +76,6 @@
     <string name="repository_no_description">(No description available.)</string>
     <string name="repository_no_language">(Language unknown.)</string>
     <string name="repository_stars_label">\u0020stars</string>
-    <string name="meetupgroup_members_label">\u0020members</string>
-    <!-- TODO: Pluralization -->
-    <string name="meetupevent_attendees_label">\u0020members going</string>
 
     <string name="location_not_retrieved">The location could not be retrieved. The default location will be Tokyo.</string>
     <string name="message_default_location">The default location will be Tokyo.</string>

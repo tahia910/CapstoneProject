@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ProgressBar
+        android:id="@+id/main_spinner"
+        style="@style/Widget.AppCompat.ProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/main_emptyview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:gravity="center"/>
+
+    <View
+        android:layout_width="@dimen/tablet_main_sideview_width"
+        android:layout_height="match_parent"
+        android:background="@color/color_light_grey"
+        android:layout_gravity="start"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/main_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/tablet_main_recyclerview_margin"
+        android:paddingEnd="@dimen/tablet_main_recyclerview_margin"/>
+
+    <View
+        android:layout_width="@dimen/tablet_main_sideview_width"
+        android:layout_height="match_parent"
+        android:background="@color/color_light_grey"
+        android:layout_gravity="end"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

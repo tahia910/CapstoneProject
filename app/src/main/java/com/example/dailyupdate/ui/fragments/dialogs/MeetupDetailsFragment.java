@@ -3,6 +3,8 @@ package com.example.dailyupdate.ui.fragments.dialogs;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,7 +28,6 @@ import com.example.dailyupdate.utilities.DateUtilities;
 import com.example.dailyupdate.viewmodels.BookmarksDatabaseViewModel;
 import com.example.dailyupdate.viewmodels.MeetupViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -34,6 +35,7 @@ import butterknife.ButterKnife;
 
 public class MeetupDetailsFragment extends DialogFragment {
 
+    private static final String TAG = MeetupDetailsFragment.class.getSimpleName();
     @BindView(R.id.spinner_meetup_detail) ProgressBar spinner;
     @BindView(R.id.emptyview_meetup_detail) TextView emptyView;
 
@@ -65,15 +67,12 @@ public class MeetupDetailsFragment extends DialogFragment {
     @BindView(R.id.imageview_time_icon_meetup_detail) ImageView timeIcon;
     @BindView(R.id.imageview_place_icon_meetup_detail) ImageView placeIcon;
 
-    //    @BindView(R.id.back_icon_meetup_detail)
     private ImageView backIcon;
-    //    @BindView(R.id.bookmark_icon_meetup_detail)
     private ImageView bookmarkIcon;
 
     private Dialog dialog;
     private BookmarksDatabaseViewModel databaseViewModel;
     private MeetupViewModel meetupViewModel;
-
     private String groupId;
     private String eventId;
     private MeetupEventDetails currentEvent;
@@ -164,8 +163,8 @@ public class MeetupDetailsFragment extends DialogFragment {
         databaseViewModel.getAllBookmarkedEventsIds().observe(this, new Observer<List<String>>() {
             @Override
             public void onChanged(List<String> strings) {
-                if (strings != null){
-                    if(strings.contains(eventId)){
+                if (strings != null) {
+                    if (strings.contains(eventId)) {
                         alreadyBookmarked = true;
                         bookmarkIcon.setImageResource(R.drawable.ic_bookmarked_white);
                     } else {
@@ -212,23 +211,21 @@ public class MeetupDetailsFragment extends DialogFragment {
     private void setEventInformation(MeetupEventDetails meetupEventDetails) {
         String eventName = meetupEventDetails.getEventName();
         String groupName = meetupEventDetails.getMeetupEventGroupName().getEventGroupName();
-        String status = "Status: " + meetupEventDetails.getEventStatus();
+        String status =
+                getString(R.string.meetupevent_status_label) + meetupEventDetails.getEventStatus();
 
         int attendeesCount = meetupEventDetails.getEventAttendees();
         String attendeesCountString =
                 attendeesCount + getString(R.string.meetupevent_attendees_label);
 
-        String waitlistCountString = meetupEventDetails.getWaitlistCount() + " members on waitlist";
+        String waitlistCountString =
+                meetupEventDetails.getWaitlistCount() + getString(R.string.meetupevent_waitlist_label);
 
         int maximumAttendees = meetupEventDetails.getMaximumAttendees();
-        String placeLeftString = (maximumAttendees - attendeesCount) + " places left";
+        String placeLeftString = (maximumAttendees - attendeesCount) + getString(R.string.
+                meetupevent_places_left_label);
 
-        MeetupEventLocation locationObject = meetupEventDetails.getLocationObject();
-        String placeName = locationObject.getPlaceName();
-        String address = locationObject.getAddress();
-        String city = locationObject.getCity();
-        String country = locationObject.getCountry();
-        String addressString = placeName + ", " + address + ", " + city + ", " + country;
+        setAddressTextView(meetupEventDetails);
 
         String dateWithDay = DateUtilities.getDateWithDay(meetupEventDetails.getEventDate());
         String formattedTime = DateUtilities.getFormattedTime(meetupEventDetails.getEventTime());
@@ -248,11 +245,36 @@ public class MeetupDetailsFragment extends DialogFragment {
         dateTextView.setText(dateWithDay);
         timeTextView.setText(formattedTime);
 
+        descriptionTitleTextView.setVisibility(View.VISIBLE);
+        descriptionTextView.setText(meetupEventDetails.getEventDescription());
+    }
+
+    private void setAddressTextView(MeetupEventDetails meetupEventDetails) {
+        MeetupEventLocation locationObject = meetupEventDetails.getLocationObject();
+        String placeName = locationObject.getPlaceName();
+        String address = locationObject.getAddress();
+        String city = locationObject.getCity();
+        String country = locationObject.getCountry();
+        String addressString = placeName + ", " + address + ", " + city + ", " + country;
+
         placeIcon.setVisibility(View.VISIBLE);
         addressTextView.setText(addressString);
 
-        descriptionTitleTextView.setVisibility(View.VISIBLE);
-        descriptionTextView.setText(meetupEventDetails.getEventDescription());
+        addressTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri geoLocation = Uri.parse("geo:0,0?q=" + addressString);
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(geoLocation);
+                if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                    startActivity(intent);
+                } else {
+                    Log.d(TAG,
+                            "Couldn't call " + geoLocation.toString() + ", no receiving apps " +
+                                    "installed");
+                }
+            }
+        });
     }
 
     @Override
@@ -265,26 +287,15 @@ public class MeetupDetailsFragment extends DialogFragment {
     @Override
     public void onResume() {
         ViewGroup.LayoutParams params = getDialog().getWindow().getAttributes();
-//        getActivity().requestWindowFeature(Window.FEATURE_ACTION_BAR);
-        params.width = WindowManager.LayoutParams.MATCH_PARENT;
+        if (getResources().getConfiguration().smallestScreenWidthDp <= 600){
+            // If the user is using a mobile, the dialog will take the full screen
+            params.width = WindowManager.LayoutParams.MATCH_PARENT;
+        }
+        // Else, the dialog will be displayed on top of the previous fragment (bookmarked events
+        // list or search result)
         params.height = WindowManager.LayoutParams.MATCH_PARENT;
         getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
         super.onResume();
     }
-
 }
-
-//    private void openLocationInMap() {
-//        String addressString = "1600 Ampitheatre Parkway, CA";
-//        Uri geoLocation = Uri.parse("geo:0,0?q=" + addressString);
-//
-//        Intent intent = new Intent(Intent.ACTION_VIEW);
-//        intent.setData(geoLocation);
-//
-//        if (intent.resolveActivity(getPackageManager()) != null) {
-//            startActivity(intent);
-//        } else {
-//            Log.d(TAG, "Couldn't call " + geoLocation.toString()
-//                    + ", no receiving apps installed!");
-//        }
 

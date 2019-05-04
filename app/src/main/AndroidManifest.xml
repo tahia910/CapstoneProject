@@ -19,14 +19,16 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="BuildConfig.GEO_API_KEY" />
 
-        <activity android:name=".ui.activities.MainActivity">
+        <activity android:name=".ui.activities.MainActivity"
+            android:theme="@style/AppTheme.Home">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activities.MainViewActivity">
+        <activity android:name=".ui.activities.MainViewActivity"
+            android:theme="@style/AppTheme.Search">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.MainActivity"/>
@@ -37,7 +39,8 @@
         <activity
             android:name=".ui.activities.BookmarksActivity"
             android:label="@string/bookmarks_label"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.Bookmark">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.MainActivity"/>

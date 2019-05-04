@@ -85,7 +85,7 @@ public class MeetupMainFragment extends Fragment {
 
         databaseViewModel =
                 ViewModelProviders.of(getActivity()).get(BookmarksDatabaseViewModel.class);
-        meetupViewModel = ViewModelProviders.of(this).get(MeetupViewModel.class);
+        meetupViewModel = ViewModelProviders.of(getActivity()).get(MeetupViewModel.class);
         searchCacheViewModel = ViewModelProviders.of(this).get(LatestSearchDatabaseViewModel.class);
         subscribeAllObservers();
         getSharedPreferences(context);

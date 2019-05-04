@@ -1,6 +1,8 @@
 package com.example.dailyupdate.ui.activities;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -165,12 +167,22 @@ public class BookmarksActivity extends AppCompatActivity implements BookmarksFra
             case R.id.nav_github:
                 Intent gitHubIntent = new Intent(this, MainViewActivity.class);
                 gitHubIntent.putExtra(Constants.MAIN_KEY, Constants.GITHUB_MAIN_KEY);
-                startActivity(gitHubIntent);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(this).toBundle();
+                    startActivity(gitHubIntent, bundle);
+                } else {
+                    startActivity(gitHubIntent);
+                }
                 break;
             case R.id.nav_meetup:
                 Intent meetupIntent = new Intent(this, MainViewActivity.class);
                 meetupIntent.putExtra(Constants.MAIN_KEY, Constants.MEETUP_MAIN_KEY);
-                startActivity(meetupIntent);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(this).toBundle();
+                    startActivity(meetupIntent, bundle);
+                } else {
+                    startActivity(meetupIntent);
+                }
                 break;
             default:
                 break;

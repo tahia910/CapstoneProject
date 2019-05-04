@@ -1,7 +1,9 @@
 package com.example.dailyupdate.ui.activities;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +20,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceManager;
 
@@ -99,7 +102,6 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
             ab.setTitle(getApplicationContext().getString(R.string.meetup_search_title));
             BookmarksDatabaseViewModel viewModel =
                     ViewModelProviders.of(MainViewActivity.this).get(BookmarksDatabaseViewModel.class);
-            viewModel.getAllBookmarkedEventsIds();
             sharedPrefMeetupSearchKeyword =
                     sharedPref.getString(getString(R.string.pref_meetup_edittext_key), "");
             if (!sharedPrefMeetupSearchKeyword.isEmpty()) {
@@ -178,6 +180,8 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
             args.putString(Constants.KEY_MEETUP_DIALOG_SORT, meetupDialogLatestSortBy);
             args.putString(Constants.KEY_MEETUP_DIALOG_LOCATION, meetupDialogLatestLocation);
             meetupDialogFragment.setArguments(args);
+            meetupDialogFragment.setEnterTransition(R.anim.fade_in);
+            meetupDialogFragment.setExitTransition(R.anim.fade_out);
             meetupDialogFragment.show(fragmentManager, "meetup_search");
         } else if (mainViewOption.equals(Constants.GITHUB_MAIN_KEY)) {
             DialogFragment gitHubDialogFragment = new GitHubDialogFragment();
@@ -187,18 +191,24 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
             args.putString(Constants.KEY_GITHUB_DIALOG_SORT, gitHubDialogLatestSortBy);
             args.putString(Constants.KEY_GITHUB_DIALOG_ORDER, gitHubDialogLatestSearchOrder);
             gitHubDialogFragment.setArguments(args);
+            gitHubDialogFragment.setEnterTransition(R.anim.fade_in);
+            gitHubDialogFragment.setExitTransition(R.anim.fade_out);
             gitHubDialogFragment.show(fragmentManager, "github_search");
         }
     }
 
     private void getMeetupFragment() {
         MeetupMainFragment meetupFragment = MeetupMainFragment.newInstance();
-        fragmentManager.beginTransaction().replace(R.id.fragment_container, meetupFragment).commit();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+        fragmentTransaction.replace(R.id.fragment_container, meetupFragment).commit();
     }
 
     private void getGitHubFragment() {
         GitHubMainFragment gitHubFragment = GitHubMainFragment.newInstance();
-        fragmentManager.beginTransaction().replace(R.id.fragment_container, gitHubFragment).commit();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out);
+        fragmentTransaction.replace(R.id.fragment_container, gitHubFragment).commit();
     }
 
     /**
@@ -221,6 +231,8 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
     @Override
     public void onMeetupDialogNegativeClick(DialogFragment dialog) {
         setEmptyView();
+        Toast.makeText(this, getString(R.string.mainview_toast_empty_search),
+                Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -255,6 +267,8 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
     @Override
     public void onGitHubDialogNegativeClick(DialogFragment dialog) {
         setEmptyView();
+        Toast.makeText(this, getString(R.string.mainview_toast_empty_search),
+                Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -293,7 +307,7 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
      **/
     @Override
     public void currentGitHubRepoUrl(String gitHubRepoUrl) {
-        NetworkUtilities.openCustomTabs(getApplicationContext(), gitHubRepoUrl);
+        NetworkUtilities.openCustomTabs(MainViewActivity.this, gitHubRepoUrl);
     }
 
     /**
@@ -346,20 +360,36 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
                 NavUtils.navigateUpFromSameTask(this);
                 break;
             case R.id.nav_bookmarks:
-                startActivity(new Intent(this, BookmarksActivity.class));
+                Intent bookmarkIntent = new Intent(this, BookmarksActivity.class);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(this).toBundle();
+                    startActivity(bookmarkIntent, bundle);
+                } else {
+                    startActivity(bookmarkIntent);
+                }
                 break;
             case R.id.nav_github:
                 if (!mainViewOption.equals(Constants.GITHUB_MAIN_KEY)) {
                     Intent gitHubIntent = new Intent(this, MainViewActivity.class);
                     gitHubIntent.putExtra(Constants.MAIN_KEY, Constants.GITHUB_MAIN_KEY);
-                    startActivity(gitHubIntent);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(this).toBundle();
+                        startActivity(gitHubIntent, bundle);
+                    } else {
+                        startActivity(gitHubIntent);
+                    }
                 }
                 break;
             case R.id.nav_meetup:
                 if (!mainViewOption.equals(Constants.MEETUP_MAIN_KEY)) {
                     Intent meetupIntent = new Intent(this, MainViewActivity.class);
                     meetupIntent.putExtra(Constants.MAIN_KEY, Constants.MEETUP_MAIN_KEY);
-                    startActivity(meetupIntent);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(this).toBundle();
+                        startActivity(meetupIntent, bundle);
+                    } else {
+                        startActivity(meetupIntent);
+                    }
                 }
                 break;
             default:

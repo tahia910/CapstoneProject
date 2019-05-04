@@ -1,17 +1,30 @@
 package com.example.dailyupdate.ui.activities;
 
 import android.annotation.TargetApi;
+import android.app.ActivityOptions;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.transition.Scene;
+import android.transition.Slide;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
+import android.transition.TransitionManager;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +44,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.bumptech.glide.load.resource.bitmap.Rotate;
 import com.example.dailyupdate.R;
 import com.example.dailyupdate.data.models.GitHubRepo;
 import com.example.dailyupdate.data.models.MeetupGroup;
@@ -85,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
         setActionBar();
         setRecyclerViews();
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-
         gitHubViewModel = ViewModelProviders.of(this).get(GitHubViewModel.class);
         meetupViewModel = ViewModelProviders.of(this).get(MeetupViewModel.class);
         subscribeGitHubObserver();
@@ -157,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
                     gitHubRepoAdapter.setOnItemClickListener((position, v) -> {
                         GitHubRepo gitHubRepo = gitHubRepoList.get(position);
                         String gitHubRepoUrl = gitHubRepo.getHtmlUrl();
-                        NetworkUtilities.openCustomTabs(getApplicationContext(), gitHubRepoUrl);
+                        NetworkUtilities.openCustomTabs(MainActivity.this, gitHubRepoUrl);
                     });
                 }
             }
@@ -205,8 +218,23 @@ public class MainActivity extends AppCompatActivity {
     private void setRecyclerViews() {
         gitHubSpinner.setVisibility(View.VISIBLE);
         meetupSpinner.setVisibility(View.VISIBLE);
-        githubRecyclerView.setLayoutManager(new LinearLayoutManager(this,
-                LinearLayoutManager.HORIZONTAL, false));
+
+        if (getResources().getConfiguration().smallestScreenWidthDp <= 600
+                && getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            // If the user is using a mobile and the orientation is portrait mode, then the
+            // GitHubRecyclerView will use a LinearLayout scrolling horizontally (one item will
+            // take the whole width)
+            githubRecyclerView.setLayoutManager(new LinearLayoutManager(this,
+                    LinearLayoutManager.HORIZONTAL, false));
+        } else if (getResources().getConfiguration().smallestScreenWidthDp <= 600
+                && getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            // If the user is using a mobile and the orientation is landscape mode, then the
+            // GitHubRecyclerView will use a LinearLayout that will scroll vertically.
+            githubRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        } else {
+            // Else (when using a tablet), a GridLayout will be used to display 3 items per line
+            githubRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        }
         meetupRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
     }
 
@@ -331,19 +359,38 @@ public class MainActivity extends AppCompatActivity {
             case R.id.nav_home:
                 break;
             case R.id.nav_bookmarks:
-                startActivity(new Intent(this, BookmarksActivity.class));
+                Intent bookmarkIntent = new Intent(this, BookmarksActivity.class);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(this).toBundle();
+                    startActivity(bookmarkIntent, bundle);
+                } else {
+                    startActivity(bookmarkIntent);
+                }
                 break;
             case R.id.nav_github:
                 Intent gitHubIntent = new Intent(MainActivity
                         .this, MainViewActivity.class);
                 gitHubIntent.putExtra(Constants.MAIN_KEY, Constants.GITHUB_MAIN_KEY);
-                startActivity(gitHubIntent);
+                // Check the API compatibility
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    // Apply activity transition
+                    Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(this).toBundle();
+                    startActivity(gitHubIntent, bundle);
+                } else {
+                    // Swap without transition
+                    startActivity(gitHubIntent);
+                }
                 break;
             case R.id.nav_meetup:
                 Intent meetupIntent = new Intent(MainActivity
                         .this, MainViewActivity.class);
                 meetupIntent.putExtra(Constants.MAIN_KEY, Constants.MEETUP_MAIN_KEY);
-                startActivity(meetupIntent);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(this).toBundle();
+                    startActivity(meetupIntent, bundle);
+                } else {
+                    startActivity(meetupIntent);
+                }
                 break;
             default:
                 break;

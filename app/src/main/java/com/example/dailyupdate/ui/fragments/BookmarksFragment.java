@@ -74,9 +74,11 @@ public class BookmarksFragment extends Fragment {
             @Override
             public void onChanged(List<MeetupEventDetails> bookmarkedEventsList) {
                 if (bookmarkedEventsList.size() < 1) {
+                    recyclerView.setVisibility(View.GONE);
                     emptyView.setVisibility(View.VISIBLE);
                     emptyView.setText(getString(R.string.bookmarks_emptyview_message));
                 } else {
+                    recyclerView.setVisibility(View.VISIBLE);
                     emptyView.setVisibility(View.GONE);
                     bookmarksAdapter.submitList(bookmarkedEventsList);
                     setAdapterClickListeners(bookmarkedEventsList);

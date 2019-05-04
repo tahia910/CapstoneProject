@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+    </style>
+
+    <style name="AppTheme.Home" parent="AppTheme">
+        <item name="android:windowExitTransition">@transition/fade_transition</item>
+    </style>
+
+    <style name="AppTheme.Search" parent="AppTheme">
+        <item name="android:windowEnterAnimation">@transition/fade_transition</item>
+        <item name="android:windowExitTransition">@transition/slide_right_transition</item>
+        <item name="android:windowReenterTransition">@transition/slide_left_transition</item>
+    </style>
+
+    <style name="AppTheme.Bookmark" parent="AppTheme">
+        <item name="android:windowEnterTransition">@transition/fade_transition</item>
+        <item name="android:windowExitTransition">@transition/slide_left_transition</item>
+    </style>
+
+
+    <style name="TitleStyle">
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:elevation">4dp</item>
+        <item name="android:textColor">@color/color_white</item>
+        <item name="android:textSize">@dimen/big_title_size</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+</resources>

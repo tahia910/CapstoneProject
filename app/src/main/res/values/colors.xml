@@ -7,4 +7,5 @@
     <color name="color_white">#FFFFFF</color>
     <color name="color_meetup">#EF1B43</color>
     <color name="color_github">#1e2327</color>
+    <color name="color_light_grey">#eeeeee</color>
 </resources>

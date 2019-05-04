@@ -58,8 +58,6 @@ public class MeetupGroupAdapter extends RecyclerView.Adapter<MeetupGroupAdapter.
             String groupImageUrl = meetupGroup.getGroupPhoto().getGroupPhotoUrl();
             Glide.with(groupImageView.getContext()).load(groupImageUrl).centerCrop().into(groupImageView);
         }
-        // TODO: handle empty image case
-
         groupTitleTextView.setText(meetupGroup.getGroupName());
         groupMembersTextView.setText(groupMembersString);
     }
