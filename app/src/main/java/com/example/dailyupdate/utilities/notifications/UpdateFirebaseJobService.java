@@ -1,5 +1,6 @@
 package com.example.dailyupdate.utilities.notifications;
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 
 import com.example.dailyupdate.repositories.LatestSearchDatabaseRepository;
@@ -12,8 +13,9 @@ import java.util.List;
 public class UpdateFirebaseJobService extends JobService {
 
     private AsyncTask mBackgroundTask;
-    List<String> events;
+    private List<String> events;
 
+    @SuppressLint("StaticFieldLeak")
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
 
@@ -32,10 +34,7 @@ public class UpdateFirebaseJobService extends JobService {
             protected void onPostExecute(Object o) {
                 // Make an ArrayList of the event IDs from the previous search
                 ArrayList<String> latestSearchIds = new ArrayList<>();
-                for (int i = 0; i < events.size(); i++) {
-                    String eventId = events.get(i);
-                    latestSearchIds.add(eventId);
-                }
+                latestSearchIds.addAll(events);
                 // Retrieve the current events available by querying the Meetup API on another
                 // thread
                 // Compare both events lists IDs and send a notification if there is any new event

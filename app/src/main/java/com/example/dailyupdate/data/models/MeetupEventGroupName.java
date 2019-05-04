@@ -11,10 +11,6 @@ import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
-@Entity(foreignKeys = @ForeignKey(
-        entity = MeetupEventDetails.class,
-        parentColumns = "event_id",
-        childColumns = "group_name"))
 public class MeetupEventGroupName implements Parcelable {
 
     @PrimaryKey

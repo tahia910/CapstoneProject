@@ -19,7 +19,6 @@ public class NetworkUtilities {
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
-    // TODO: Add enter/exit animation
     @SuppressLint("NewApi")
     public static void openCustomTabs(Context context, String url){
             CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();

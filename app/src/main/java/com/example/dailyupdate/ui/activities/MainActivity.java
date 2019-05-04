@@ -2,7 +2,6 @@ package com.example.dailyupdate.ui.activities;
 
 import android.annotation.TargetApi;
 import android.app.ActivityOptions;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -12,19 +11,9 @@ import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.transition.Scene;
-import android.transition.Slide;
-import android.transition.Transition;
-import android.transition.TransitionInflater;
-import android.transition.TransitionManager;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,7 +33,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.bumptech.glide.load.resource.bitmap.Rotate;
 import com.example.dailyupdate.R;
 import com.example.dailyupdate.data.models.GitHubRepo;
 import com.example.dailyupdate.data.models.MeetupGroup;
@@ -87,9 +75,9 @@ public class MainActivity extends AppCompatActivity {
     private FusedLocationProviderClient mFusedLocationClient;
     private String userLocation;
     private SharedPreferences sharedPref;
-    GitHubViewModel gitHubViewModel;
-    GitHubRepoAdapter gitHubRepoAdapter;
-    MeetupViewModel meetupViewModel;
+    private GitHubViewModel gitHubViewModel;
+    private GitHubRepoAdapter gitHubRepoAdapter;
+    private MeetupViewModel meetupViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

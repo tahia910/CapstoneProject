@@ -16,7 +16,7 @@ public class RetrofitInstance {
         return gitHubService;
     }
 
-    public static Retrofit getGitHubRetrofitInstance() {
+    private static Retrofit getGitHubRetrofitInstance() {
         if (gitHubRetrofit == null) {
             gitHubRetrofit = new retrofit2.Retrofit.Builder()
                     .baseUrl(Constants.GITHUB_BASE_URL)
@@ -34,7 +34,7 @@ public class RetrofitInstance {
         return meetupService;
     }
 
-    public static Retrofit getMeetupRetrofitInstance() {
+    private static Retrofit getMeetupRetrofitInstance() {
         if (meetupRetrofit == null) {
             meetupRetrofit = new retrofit2.Retrofit.Builder()
                     .baseUrl(Constants.MEETUP_BASE_URL)

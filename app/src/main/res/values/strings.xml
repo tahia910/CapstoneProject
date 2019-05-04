@@ -63,7 +63,6 @@
     <string name="content_description_open_drawer">Drawer opened</string>
     <string name="content_description_close_drawer">Drawer closed</string>
     <string name="content_description_group_image">Group image</string>
-    <string name="content_description_event_image">Event image</string>
     <string name="content_description_bookmark_icon">Bookmark icon</string>
     <string name="content_description_status_icon">Status icon</string>
     <string name="content_description_time_icon">Time icon</string>
@@ -139,7 +138,6 @@
     <string name="pref_meetup_location_summary">Manually update the location for events or
         groups</string>
     <string name="pref_location_hint">Please enter a city name</string>
-    <string name="add_widget">Add widget</string>
     <string name="no_bookmarked_events_label">No bookmarked events</string>
 
 
