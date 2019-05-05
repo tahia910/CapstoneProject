@@ -8,7 +8,7 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="4dp"
+        android:layout_margin="@dimen/margin_small"
         android:elevation="8dp">
 
         <FrameLayout
@@ -20,41 +20,42 @@
                 android:id="@+id/imageview_group_image"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/meetup_group_image_height"
-                android:src="@drawable/ic_bookmark"
-                android:contentDescription="@string/content_description_group_image" />
+                android:contentDescription="@string/content_description_group_image"
+                android:src="@drawable/ic_bookmark" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/meetup_group_text_background"/>
+                android:background="@drawable/meetup_group_text_background" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_gravity="bottom|start">
-            <TextView
-                android:id="@+id/textview_group_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:textColor="@color/colorPrimary"
-                android:textSize="18sp"
-                android:textStyle="bold"
                 android:layout_gravity="bottom|start"
-                tools:text="@string/tools_group_title" />
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textview_group_members"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:textColor="@color/colorPrimary"
-                tools:text="@string/tools_group_members"/>
+                <TextView
+                    android:id="@+id/textview_group_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|start"
+                    android:layout_marginTop="@dimen/margin_medium"
+                    android:paddingLeft="@dimen/margin_medium"
+                    android:paddingRight="@dimen/margin_medium"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_size_big"
+                    android:textStyle="bold"
+                    tools:text="@string/tools_group_title" />
+
+                <TextView
+                    android:id="@+id/textview_group_members"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_medium"
+                    android:paddingLeft="@dimen/margin_medium"
+                    android:paddingRight="@dimen/margin_medium"
+                    android:textColor="@color/colorPrimary"
+                    tools:text="@string/tools_group_members" />
             </LinearLayout>
         </FrameLayout>
     </com.google.android.material.card.MaterialCardView>

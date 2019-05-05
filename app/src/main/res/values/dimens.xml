@@ -7,7 +7,16 @@ http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
     -->
     <dimen name="widget_margin">0dp</dimen>
 
-    <dimen name="big_title_size">18sp</dimen>
+    <dimen name="margin_small">4dp</dimen>
+    <dimen name="margin_medium">8dp</dimen>
+    <dimen name="margin_large">12dp</dimen>
+    <dimen name="margin_very_large">16dp</dimen>
+    <dimen name="margin_extra_large">24dp</dimen>
+
+    <dimen name="text_size_small">12dp</dimen>
+    <dimen name="text_size_medium">16sp</dimen>
+    <dimen name="text_size_big">18sp</dimen>
+    <dimen name="text_size_very_big">20sp</dimen>
 
     <dimen name="meetup_group_image_height">100dp</dimen>
     <dimen name="tablet_main_sideview_width">140dp</dimen>

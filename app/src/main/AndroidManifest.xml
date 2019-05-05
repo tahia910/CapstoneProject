@@ -20,6 +20,11 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="BuildConfig.GEO_API_KEY" />
 
+        <!-- Using the sample AdMob App ID to display test ads-->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="@string/admob_app_sample_id"/>
+
         <activity android:name=".ui.activities.MainActivity"
             android:theme="@style/AppTheme.Home">
             <intent-filter>

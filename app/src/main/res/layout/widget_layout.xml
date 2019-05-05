@@ -10,30 +10,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        android:gravity="center_horizontal"
-        android:padding="8dp"
         android:elevation="4dp"
+        android:gravity="center_horizontal"
+        android:padding="@dimen/margin_medium"
         android:text="@string/bookmarks_label"
         android:textColor="@color/color_white"
-        android:textSize="20sp"
+        android:textSize="@dimen/text_size_very_big"
         android:textStyle="bold" />
 
     <ListView
         android:id="@+id/appwidget_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:dividerHeight="1dp"/>
+        android:dividerHeight="1dp" />
 
     <TextView
         android:id="@+id/appwidget_empty_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/color_white"
         android:gravity="center_horizontal"
-        android:padding="8dp"
+        android:padding="@dimen/margin_medium"
+        android:text="@string/no_bookmarked_events_label"
         android:textColor="@color/colorPrimary"
         android:textStyle="bold"
-        android:background="@color/color_white"
-        android:text="@string/no_bookmarked_events_label"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </LinearLayout>

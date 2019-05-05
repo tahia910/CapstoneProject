@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/bookmarked_event_widget_item"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bookmarked_event_widget_item"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="4dp"
-    android:padding="8dp"
-    android:background="@color/color_white">
+    android:layout_margin="@dimen/margin_small"
+    android:background="@color/color_white"
+    android:padding="@dimen/margin_medium">
 
     <TextView
         android:id="@+id/textview_event_date_widget"
@@ -24,10 +24,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:gravity="end"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginBottom="@dimen/margin_medium"
         android:layout_toEndOf="@id/textview_event_date_widget"
+        android:gravity="end"
         android:textColor="@color/colorPrimary"
         android:textStyle="bold"
         tools:text="@string/tools_event_time" />
@@ -38,12 +38,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/textview_event_date_widget"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_medium"
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="@color/colorPrimary"
-        android:textSize="16sp"
+        android:textSize="@dimen/text_size_medium"
         android:textStyle="bold"
         tools:text="@string/tools_event_title" />
 
@@ -53,8 +53,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/textview_event_title_widget"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_medium"
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="@color/colorPrimary"

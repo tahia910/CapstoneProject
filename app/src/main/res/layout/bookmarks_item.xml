@@ -9,20 +9,20 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="4dp">
+        android:layout_margin="@dimen/margin_small">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="8dp">
+            android:layout_margin="@dimen/margin_medium">
 
             <ImageView
                 android:id="@+id/bookmarks_icon_bookmarks_item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:paddingStart="4dp"
                 android:contentDescription="@string/content_description_bookmark_icon"
+                android:padding="@dimen/margin_medium"
+                android:paddingStart="@dimen/margin_small"
                 android:src="@drawable/ic_bookmarked"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -42,13 +42,13 @@
                 android:id="@+id/textview_event_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:textColor="@color/colorPrimary"
-                android:textStyle="bold"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_medium"
                 android:ellipsize="end"
                 android:maxLines="1"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/bookmarks_icon_bookmarks_item"
                 app:layout_constraintTop_toBottomOf="@id/textview_event_date"
@@ -58,8 +58,8 @@
                 android:id="@+id/textview_group_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_medium"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textColor="@color/colorPrimary"
@@ -72,7 +72,7 @@
                 android:id="@+id/textview_event_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="@dimen/margin_medium"
                 android:textColor="@color/colorPrimary"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"

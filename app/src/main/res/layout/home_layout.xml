@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="8dp">
+    android:paddingBottom="@dimen/margin_medium">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
@@ -24,10 +24,10 @@
 
     <TextView
         android:id="@+id/home_github_title_textview"
+        style="@style/TitleStyle"
         android:layout_width="0dp"
         android:gravity="center"
         android:text="@string/home_github_recyclerview_title"
-        style="@style/TitleStyle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appbar" />
@@ -37,7 +37,7 @@
         style="@style/Widget.AppCompat.ProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="16dp"
+        android:paddingTop="@dimen/margin_very_large"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"
@@ -52,7 +52,7 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/home_github_title_textview"/>
+        app:layout_constraintTop_toBottomOf="@id/home_github_title_textview" />
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -67,10 +67,10 @@
 
     <TextView
         android:id="@+id/home_meetup_title_textview"
+        style="@style/TitleStyle"
         android:layout_width="0dp"
         android:gravity="center"
         android:text="@string/home_meetup_recyclerview_title"
-        style="@style/TitleStyle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/guideline2" />
@@ -79,7 +79,7 @@
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="4dp"
+        android:layout_margin="@dimen/margin_small"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -112,7 +112,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/home_meetup_title_textview"/>
+        app:layout_constraintTop_toBottomOf="@id/home_meetup_title_textview" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"

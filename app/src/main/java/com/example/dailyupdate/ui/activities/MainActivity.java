@@ -42,6 +42,7 @@ import com.example.dailyupdate.utilities.Constants;
 import com.example.dailyupdate.utilities.NetworkUtilities;
 import com.example.dailyupdate.viewmodels.GitHubViewModel;
 import com.example.dailyupdate.viewmodels.MeetupViewModel;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -109,6 +110,9 @@ public class MainActivity extends AppCompatActivity {
             // Retrieve GitHub repositories
             gitHubViewModel.searchGitHubRepoList(Constants.GITHUB_DEFAULT_SEARCH_KEYWORD,
                     Constants.GITHUB_DEFAULT_SORT_ORDER);
+
+            //Initialize the Mobile Ads SDK with AdMob App ID (sample ID for test ads)
+            MobileAds.initialize(this, getString(R.string.admob_app_sample_id));
         }
     }
 

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +22,9 @@ import com.example.dailyupdate.data.models.MeetupEventDetails;
 import com.example.dailyupdate.ui.adapters.BookmarksAdapter;
 import com.example.dailyupdate.utilities.Constants;
 import com.example.dailyupdate.viewmodels.BookmarksDatabaseViewModel;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import java.util.List;
 
@@ -29,8 +33,9 @@ import butterknife.ButterKnife;
 
 public class BookmarksFragment extends Fragment {
 
-    @BindView(R.id.main_recycler_view) RecyclerView recyclerView;
-    @BindView(R.id.main_emptyview) TextView emptyView;
+    @BindView(R.id.bookmarks_recycler_view) RecyclerView recyclerView;
+    @BindView(R.id.bookmarks_emptyview) TextView emptyView;
+    @BindView(R.id.bookmarks_adview) AdView adView;
 
     private BookmarksDatabaseViewModel viewModel;
     private BookmarksFragmentListener listener;
@@ -59,7 +64,7 @@ public class BookmarksFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.main_layout, container, false);
+        View rootView = inflater.inflate(R.layout.bookmarks_layout, container, false);
         ButterKnife.bind(this, rootView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         viewModel = ViewModelProviders.of(this).get(BookmarksDatabaseViewModel.class);
@@ -70,11 +75,28 @@ public class BookmarksFragment extends Fragment {
         if (recyclerViewLastPosition != 0) {
             ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPosition(recyclerViewLastPosition);
         }
-
+        setAdsBanner();
         setBookmarkedEventsList();
         setDeleteSwipe();
 
         return rootView;
+    }
+
+    /**
+     * Load the test ad to display into the ApView banner
+     **/
+    private void setAdsBanner() {
+        AdRequest adRequest =
+                new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
+        adView.loadAd(adRequest);
+        adView.setAdListener(new AdListener() {
+            @Override
+            public void onAdClicked() {
+                Toast.makeText(getContext(),
+                        getString(R.string.bookmarks_ad_banner_onclick_message),
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

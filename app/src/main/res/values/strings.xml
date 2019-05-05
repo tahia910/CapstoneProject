@@ -164,4 +164,8 @@
     <string name="bookmarks_emptyview_message">You have not bookmarked any event yet.</string>
     <string name="no_search_set_emptyview_message">Set up a search first</string>
 
+    <string name="admob_app_sample_id">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="banner_ads_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="bookmarks_ad_banner_onclick_message">Thank you for clicking on the ad!</string>
+
 </resources>

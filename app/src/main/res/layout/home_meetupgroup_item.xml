@@ -8,7 +8,7 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="4dp"
+        android:layout_margin="@dimen/margin_small"
         android:elevation="8dp">
 
         <LinearLayout
@@ -26,11 +26,11 @@
                 android:id="@+id/textview_group_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:paddingLeft="@dimen/margin_medium"
+                android:paddingRight="@dimen/margin_medium"
                 android:textColor="@color/colorPrimary"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_size_big"
                 android:textStyle="bold"
                 tools:text="@string/tools_group_title" />
 
@@ -38,9 +38,9 @@
                 android:id="@+id/textview_group_members"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:paddingLeft="@dimen/margin_medium"
+                android:paddingRight="@dimen/margin_medium"
                 android:textColor="@color/colorPrimary"
                 tools:text="@string/tools_group_members" />
         </LinearLayout>
