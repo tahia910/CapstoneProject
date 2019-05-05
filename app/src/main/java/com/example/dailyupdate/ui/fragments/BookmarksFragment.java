@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -15,10 +16,11 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.dailyupdate.viewmodels.BookmarksDatabaseViewModel;
 import com.example.dailyupdate.R;
 import com.example.dailyupdate.data.models.MeetupEventDetails;
 import com.example.dailyupdate.ui.adapters.BookmarksAdapter;
+import com.example.dailyupdate.utilities.Constants;
+import com.example.dailyupdate.viewmodels.BookmarksDatabaseViewModel;
 
 import java.util.List;
 
@@ -33,6 +35,7 @@ public class BookmarksFragment extends Fragment {
     private BookmarksDatabaseViewModel viewModel;
     private BookmarksFragmentListener listener;
     private BookmarksAdapter bookmarksAdapter;
+    private int recyclerViewLastPosition;
 
     public interface BookmarksFragmentListener {
         void displayEventDetails(String groupUrl, String eventId);
@@ -63,11 +66,34 @@ public class BookmarksFragment extends Fragment {
         bookmarksAdapter = new BookmarksAdapter();
         recyclerView.setAdapter(bookmarksAdapter);
 
+        // If there was a screen rotation, restore the previous position
+        if (recyclerViewLastPosition != 0) {
+            ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPosition(recyclerViewLastPosition);
+        }
+
         setBookmarkedEventsList();
         setDeleteSwipe();
 
         return rootView;
     }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null) {
+            recyclerViewLastPosition =
+                    savedInstanceState.getInt(Constants.KEY_BOOKMARK_RECYCLERVIEW_POSITION);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        recyclerViewLastPosition =
+                ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+        outState.putInt(Constants.KEY_BOOKMARK_RECYCLERVIEW_POSITION, recyclerViewLastPosition);
+    }
+
 
     private void setBookmarkedEventsList() {
         viewModel.getAllBookmarkedEvents().observe(this, new Observer<List<MeetupEventDetails>>() {
@@ -81,6 +107,12 @@ public class BookmarksFragment extends Fragment {
                     recyclerView.setVisibility(View.VISIBLE);
                     emptyView.setVisibility(View.GONE);
                     bookmarksAdapter.submitList(bookmarkedEventsList);
+
+                    // If there was a screen rotation, restore the previous position
+                    if (recyclerViewLastPosition != 0) {
+                        ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPosition(recyclerViewLastPosition);
+                    }
+
                     setAdapterClickListeners(bookmarkedEventsList);
                 }
             }

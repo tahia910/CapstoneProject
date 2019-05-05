@@ -40,6 +40,13 @@ public class Constants {
     public static final String KEY_MEETUP_DIALOG_SORT = "meetupDialogSortKeyword";
     public static final String KEY_MEETUP_DIALOG_LOCATION = "meetupDialogOrderKeyword";
 
+    // Keys for the RecyclerViews position value saved in onSavedInstance()
+    public static final String KEY_MEETUP_RECYCLERVIEW_POSITION = "meetupRecyclerViewKeyword";
+    public static final String KEY_GITHUB_RECYCLERVIEW_POSITION = "gitHubRecyclerViewKeyword";
+    public static final String KEY_GITHUB_RECYCLERVIEW_OPTION = "gitHubRecyclerViewOption";
+    public static final String KEY_BOOKMARK_RECYCLERVIEW_POSITION = "bookmarkRecyclerViewKeyword";
+    public static final String KEY_BOOKMARK_SAVED_INSTANCE = "bookmarkSavedInstanceBooleanKey";
+
     // Notifications related
     public static final int UPDATE_REMINDER_NOTIFICATION_ID = 16;
     public static final int UPDATE_REMINDER_PENDING_INTENT_ID = 34;

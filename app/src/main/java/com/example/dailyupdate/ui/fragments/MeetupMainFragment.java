@@ -10,6 +10,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -54,6 +56,7 @@ public class MeetupMainFragment extends Fragment {
     private MeetupViewModel meetupViewModel;
     private LatestSearchDatabaseViewModel searchCacheViewModel;
     private List<String> bookmarkedEventsListIds;
+    private int recyclerViewLastPosition;
 
     public interface MeetupMainFragmentListener {
         void currentEventInfo(String groupUrl, String eventId);
@@ -104,6 +107,24 @@ public class MeetupMainFragment extends Fragment {
         return rootView;
     }
 
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null) {
+            recyclerViewLastPosition =
+                    savedInstanceState.getInt(Constants.KEY_MEETUP_RECYCLERVIEW_POSITION);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        recyclerViewLastPosition =
+                ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+        outState.putInt(Constants.KEY_MEETUP_RECYCLERVIEW_POSITION, recyclerViewLastPosition);
+    }
+
     /**
      * Observe the MeetupViewModel within the bookmarked events database ViewModel in order to
      * allow the user to insert new events in the database by clicking on the bookmark icon.
@@ -116,7 +137,21 @@ public class MeetupMainFragment extends Fragment {
             public void onChanged(List<String> strings) {
                 if (strings != null) {
                     bookmarkedEventsListIds = strings;
-                    if (meetupEventAdapter != null) meetupEventAdapter.notifyDataSetChanged();
+                    // If there is any change to the database (ex: the user bookmarked/deleted an
+                    // event from the bookmark database), verify that the adapter has been set up
+                    // first, then notify the adapter to update the UI
+                    if (meetupEventAdapter != null) {
+                        // Before notifying the adapter of the change(s), save the current position
+                        // in the RecyclerView
+                        recyclerViewLastPosition =
+                                ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+                        meetupEventAdapter.notifyDataSetChanged();
+                        // If the latest position in the RecyclerView was not at the top, scroll
+                        // back to the previous position (restore state)
+                        if (recyclerViewLastPosition != 0) {
+                            ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPosition(recyclerViewLastPosition);
+                        }
+                    }
                 }
 
                 meetupViewModel.getMeetupEventList().observe(MeetupMainFragment.this,
@@ -128,6 +163,11 @@ public class MeetupMainFragment extends Fragment {
                             meetupEventAdapter = new MeetupEventAdapter(getContext(),
                                     meetupEventList, bookmarkedEventsListIds);
                             recyclerView.setAdapter(meetupEventAdapter);
+                            // If there was a screen rotation, restore the previous position
+                            if (recyclerViewLastPosition != 0) {
+                                    ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPosition(recyclerViewLastPosition);
+                            }
+
                             setNotifications(getContext());
                             setClickListeners(meetupEventList);
                             // Save the search to cache database

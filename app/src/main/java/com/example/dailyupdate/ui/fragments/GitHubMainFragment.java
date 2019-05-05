@@ -10,6 +10,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -20,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.dailyupdate.R;
 import com.example.dailyupdate.data.models.GitHubRepo;
 import com.example.dailyupdate.ui.adapters.GitHubRepoAdapter;
+import com.example.dailyupdate.utilities.Constants;
 import com.example.dailyupdate.utilities.NetworkUtilities;
 import com.example.dailyupdate.viewmodels.GitHubViewModel;
 
@@ -41,6 +44,7 @@ public class GitHubMainFragment extends Fragment {
     private GitHubMainFragmentListener listener;
     private GitHubViewModel gitHubViewModel;
     private GitHubRepoAdapter gitHubRepoAdapter;
+    private int recyclerViewLastPosition;
 
     public interface GitHubMainFragmentListener {
         void currentGitHubRepoUrl(String gitHubRepoUrl);
@@ -96,6 +100,23 @@ public class GitHubMainFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null) {
+            recyclerViewLastPosition =
+                    savedInstanceState.getInt(Constants.KEY_GITHUB_RECYCLERVIEW_POSITION);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        recyclerViewLastPosition =
+                ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+        outState.putInt(Constants.KEY_GITHUB_RECYCLERVIEW_POSITION, recyclerViewLastPosition);
+    }
+
     /**
      * Get the search criterias stocked in the SharedPreferences
      **/
@@ -116,6 +137,11 @@ public class GitHubMainFragment extends Fragment {
                 if (gitHubRepoList != null) {
                     gitHubRepoAdapter = new GitHubRepoAdapter(getContext(), gitHubRepoList, 2);
                     recyclerView.setAdapter(gitHubRepoAdapter);
+
+                    // If there was a screen rotation, restore the previous position
+                    if (recyclerViewLastPosition != 0) {
+                        ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPosition(recyclerViewLastPosition);
+                    }
 
                     gitHubRepoAdapter.setOnItemClickListener((position, v) -> {
                         GitHubRepo gitHubRepo = gitHubRepoList.get(position);

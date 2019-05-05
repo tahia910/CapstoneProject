@@ -91,21 +91,25 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
                         savedInstanceState.getString(Constants.KEY_GITHUB_DIALOG_ORDER);
             }
         }
-        openDialogOrFragment();
+        openDialogOrFragment(savedInstanceState);
     }
 
     /**
      * Decide which fragment or dialog to display from this activity.
      **/
-    private void openDialogOrFragment() {
+    private void openDialogOrFragment(Bundle savedInstanceState) {
         if (mainViewOption.equals(Constants.MEETUP_MAIN_KEY)) {
             ab.setTitle(getApplicationContext().getString(R.string.meetup_search_title));
-            BookmarksDatabaseViewModel viewModel =
-                    ViewModelProviders.of(MainViewActivity.this).get(BookmarksDatabaseViewModel.class);
+            ViewModelProviders.of(MainViewActivity.this).get(BookmarksDatabaseViewModel.class);
             sharedPrefMeetupSearchKeyword =
                     sharedPref.getString(getString(R.string.pref_meetup_edittext_key), "");
+            // If the search keyword is empty, display the search dialog
             if (!sharedPrefMeetupSearchKeyword.isEmpty()) {
-                getMeetupFragment();
+                // If the savedInstanceState is not null, the previous fragment will restore
+                // itself automatically, so do not add another one on top
+                if (savedInstanceState == null){
+                    getMeetupFragment();
+                }
             } else {
                 getSearchDialog();
             }
@@ -114,7 +118,9 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
             sharedPrefGitHubSearchKeyword =
                     sharedPref.getString(getString(R.string.pref_github_edittext_key), "");
             if (!sharedPrefGitHubSearchKeyword.isEmpty()) {
-                getGitHubFragment();
+                if (savedInstanceState == null) {
+                    getGitHubFragment();
+                }
             } else {
                 getSearchDialog();
             }
@@ -183,6 +189,7 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
             meetupDialogFragment.setEnterTransition(R.anim.fade_in);
             meetupDialogFragment.setExitTransition(R.anim.fade_out);
             meetupDialogFragment.show(fragmentManager, "meetup_search");
+
         } else if (mainViewOption.equals(Constants.GITHUB_MAIN_KEY)) {
             DialogFragment gitHubDialogFragment = new GitHubDialogFragment();
             Bundle args = new Bundle();

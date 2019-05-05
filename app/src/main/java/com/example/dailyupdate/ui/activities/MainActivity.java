@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.nav_view) NavigationView navigationView;
 
-    @BindView(R.id.home_github_recycler_view) RecyclerView githubRecyclerView;
+    @BindView(R.id.home_github_recycler_view) RecyclerView gitHubRecyclerView;
     @BindView(R.id.home_meetup_recycler_view) RecyclerView meetupRecyclerView;
     @BindView(R.id.home_github_spinner) ProgressBar gitHubSpinner;
     @BindView(R.id.home_meetup_spinner) ProgressBar meetupSpinner;
@@ -78,6 +78,9 @@ public class MainActivity extends AppCompatActivity {
     private GitHubViewModel gitHubViewModel;
     private GitHubRepoAdapter gitHubRepoAdapter;
     private MeetupViewModel meetupViewModel;
+    private int gitHubRecyclerViewLastPosition;
+    private int gitHubRecyclerViewOption;
+    private int meetupRecyclerViewLastPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +88,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.home_drawer);
         ButterKnife.bind(this);
         setActionBar();
-        setRecyclerViews();
+        // Check if there was a screen rotation and set up the RecyclerViews
+        setRecyclerViews(savedInstanceState);
+
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         gitHubViewModel = ViewModelProviders.of(this).get(GitHubViewModel.class);
         meetupViewModel = ViewModelProviders.of(this).get(MeetupViewModel.class);
@@ -105,15 +110,6 @@ public class MainActivity extends AppCompatActivity {
             gitHubViewModel.searchGitHubRepoList(Constants.GITHUB_DEFAULT_SEARCH_KEYWORD,
                     Constants.GITHUB_DEFAULT_SORT_ORDER);
         }
-
-        // Set the swipe action on Meetup events list to refresh the search
-        meetupRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                checkLocationPermission();
-                meetupRefreshLayout.setRefreshing(false);
-            }
-        });
     }
 
     /**
@@ -146,6 +142,19 @@ public class MainActivity extends AppCompatActivity {
         meetupEmptyView.setText(R.string.no_internet_connection);
     }
 
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        gitHubRecyclerViewLastPosition =
+                ((LinearLayoutManager) gitHubRecyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+        outState.putInt(Constants.KEY_GITHUB_RECYCLERVIEW_POSITION, gitHubRecyclerViewLastPosition);
+        outState.putInt(Constants.KEY_GITHUB_RECYCLERVIEW_OPTION, gitHubRecyclerViewOption);
+        meetupRecyclerViewLastPosition =
+                ((GridLayoutManager) meetupRecyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+        outState.putInt(Constants.KEY_MEETUP_RECYCLERVIEW_POSITION, meetupRecyclerViewLastPosition);
+    }
+
     private void subscribeGitHubObserver() {
         gitHubViewModel.getGitHubRepoList().observe(this, new Observer<List<GitHubRepo>>() {
             @Override
@@ -153,7 +162,16 @@ public class MainActivity extends AppCompatActivity {
                 if (gitHubRepoList != null) {
                     gitHubSpinner.setVisibility(View.GONE);
                     gitHubRepoAdapter = new GitHubRepoAdapter(MainActivity.this, gitHubRepoList, 1);
-                    githubRecyclerView.setAdapter(gitHubRepoAdapter);
+                    gitHubRecyclerView.setAdapter(gitHubRepoAdapter);
+
+                    // If there was a screen rotation, restore the previous position
+                    if (gitHubRecyclerViewLastPosition != 0) {
+                        if (gitHubRecyclerViewOption == 1) {
+                            ((LinearLayoutManager) gitHubRecyclerView.getLayoutManager()).scrollToPosition(gitHubRecyclerViewLastPosition);
+                        } else {
+                            ((GridLayoutManager) gitHubRecyclerView.getLayoutManager()).scrollToPosition(gitHubRecyclerViewLastPosition);
+                        }
+                    }
 
                     gitHubRepoAdapter.setOnItemClickListener((position, v) -> {
                         GitHubRepo gitHubRepo = gitHubRepoList.get(position);
@@ -175,12 +193,26 @@ public class MainActivity extends AppCompatActivity {
                             new MeetupGroupAdapter(MainActivity.this, meetupGroupList);
                     meetupRecyclerView.setAdapter(meetupGroupAdapter);
 
+                    // If there was a screen rotation, restore the previous position
+                    if (meetupRecyclerViewLastPosition != 0) {
+                        ((GridLayoutManager) meetupRecyclerView.getLayoutManager()).scrollToPosition(meetupRecyclerViewLastPosition);
+                    }
+
                     // Use an intent to open a browser and display the group details
                     meetupGroupAdapter.setOnItemClickListener((position, v) -> {
                         MeetupGroup meetupGroup = meetupGroupList.get(position);
                         String groupUrlString = meetupGroup.getGroupUrl();
                         Uri groupUrl = Uri.parse(groupUrlString);
                         startActivity(new Intent(Intent.ACTION_VIEW, groupUrl));
+                    });
+
+                    // Set the swipe action on Meetup events list to refresh the search
+                    meetupRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                        @Override
+                        public void onRefresh() {
+                            checkLocationPermission();
+                            meetupRefreshLayout.setRefreshing(false);
+                        }
                     });
                 }
             }
@@ -203,25 +235,35 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Set up the spinners and recycler views
      **/
-    private void setRecyclerViews() {
+    private void setRecyclerViews(Bundle savedInstanceState) {
         gitHubSpinner.setVisibility(View.VISIBLE);
         meetupSpinner.setVisibility(View.VISIBLE);
 
-        if (getResources().getConfiguration().smallestScreenWidthDp <= 600
-                && getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+        if (savedInstanceState != null) {
+            gitHubRecyclerViewLastPosition =
+                    savedInstanceState.getInt(Constants.KEY_GITHUB_RECYCLERVIEW_POSITION);
+            gitHubRecyclerViewOption =
+                    savedInstanceState.getInt(Constants.KEY_GITHUB_RECYCLERVIEW_OPTION);
+            meetupRecyclerViewLastPosition =
+                    savedInstanceState.getInt(Constants.KEY_MEETUP_RECYCLERVIEW_POSITION);
+        }
+
+        if (getResources().getConfiguration().smallestScreenWidthDp <= 600 && getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             // If the user is using a mobile and the orientation is portrait mode, then the
             // GitHubRecyclerView will use a LinearLayout scrolling horizontally (one item will
             // take the whole width)
-            githubRecyclerView.setLayoutManager(new LinearLayoutManager(this,
+            gitHubRecyclerView.setLayoutManager(new LinearLayoutManager(this,
                     LinearLayoutManager.HORIZONTAL, false));
-        } else if (getResources().getConfiguration().smallestScreenWidthDp <= 600
-                && getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            gitHubRecyclerViewOption = 1;
+        } else if (getResources().getConfiguration().smallestScreenWidthDp <= 600 && getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             // If the user is using a mobile and the orientation is landscape mode, then the
             // GitHubRecyclerView will use a LinearLayout that will scroll vertically.
-            githubRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+            gitHubRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+            gitHubRecyclerViewOption = 1;
         } else {
             // Else (when using a tablet), a GridLayout will be used to display 3 items per line
-            githubRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+            gitHubRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+            gitHubRecyclerViewOption = 2;
         }
         meetupRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
     }

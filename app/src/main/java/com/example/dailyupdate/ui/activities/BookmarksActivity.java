@@ -38,6 +38,7 @@ public class BookmarksActivity extends AppCompatActivity implements BookmarksFra
     private FragmentManager fragmentManager;
     private BookmarksFragment bookmarksFragment;
     private MeetupDetailsFragment meetupDetailsFragment;
+    private boolean savedInstanceAvailable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +55,10 @@ public class BookmarksActivity extends AppCompatActivity implements BookmarksFra
         if (navigationView != null) {
             setupDrawerContent(navigationView);
         }
+        if (savedInstanceState != null) {
+            savedInstanceAvailable =
+                    savedInstanceState.getBoolean(Constants.KEY_BOOKMARK_SAVED_INSTANCE);
+        }
         fragmentManager = getSupportFragmentManager();
     }
 
@@ -66,10 +71,20 @@ public class BookmarksActivity extends AppCompatActivity implements BookmarksFra
             String eventId = intent.getStringExtra(Constants.EXTRA_EVENT_ID);
             displayEventDetails(groupUrl, eventId);
         } else {
-            bookmarksFragment = BookmarksFragment.newInstance();
-            fragmentManager.beginTransaction().replace(R.id.fragment_container,
-                    bookmarksFragment).commit();
+            // Only display the fragment is there is no saved instance
+            if (!savedInstanceAvailable) {
+                bookmarksFragment = BookmarksFragment.newInstance();
+                fragmentManager.beginTransaction().replace(R.id.fragment_container,
+                        bookmarksFragment).commit();
+            }
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        savedInstanceAvailable = true;
+        outState.putBoolean(Constants.KEY_BOOKMARK_SAVED_INSTANCE, savedInstanceAvailable);
     }
 
     /**

@@ -18,10 +18,10 @@ git clone https://github.com/ootahiaoo/CapstoneProject.git
 ```
 
 ### Step 2
-The app fetches information from the [Guardian API](http://open-platform.theguardian
-.com/documentation/) and uses GooglePlayServices.
+The app fetches information from the [Meetup API](https://www.meetup.com/meetup_api/), and retrieves
+ the user's location with GooglePlayServices .
 You need to register for both and get your own API keys in order to use this app.
-Once you have a key, open the `gradle.properties` file and replace the `your-api-key` fields
+Once you have them, open the `gradle.properties` file and replace the `your-api-key` fields
 with your own keys.
 ```
 meetupApiKey="your-api-key"
