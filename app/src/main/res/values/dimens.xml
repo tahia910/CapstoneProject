@@ -20,5 +20,5 @@ http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
 
     <dimen name="meetup_group_image_height">100dp</dimen>
     <dimen name="tablet_main_sideview_width">140dp</dimen>
-    <dimen name="tablet_main_recyclerview_margin">150dp</dimen>
+    <dimen name="tablet_main_recyclerview_margin">148dp</dimen>
 </resources>

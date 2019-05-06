@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.dailyupdate.R;
 import com.example.dailyupdate.data.models.LatestSearch;
@@ -45,6 +46,7 @@ public class MeetupMainFragment extends Fragment {
     @BindView(R.id.main_layout) CoordinatorLayout mainLayout;
     @BindView(R.id.main_emptyview) TextView emptyView;
     @BindView(R.id.main_spinner) ProgressBar spinner;
+    @BindView(R.id.main_swipe_refresh_layout) SwipeRefreshLayout refreshLayout;
 
     private String searchKeyword;
     private String sortBy;
@@ -250,6 +252,16 @@ public class MeetupMainFragment extends Fragment {
                 bookmarkEvent.setEventTime(currentEvent.getEventTime());
                 databaseViewModel.insertBookmarkedEvent(bookmarkEvent);
                 meetupEventAdapter.notifyItemChanged(currentPosition);
+            }
+        });
+
+        // Set the swipe action to refresh the search
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                meetupViewModel.searchMeetupEvents(searchLocation, sortBy,
+                        Constants.MEETUP_TECH_CATEGORY_NUMBER, searchKeyword);
+                refreshLayout.setRefreshing(false);
             }
         });
     }

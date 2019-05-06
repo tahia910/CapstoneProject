@@ -26,12 +26,20 @@
         android:layout_gravity="start"
         android:background="@color/color_light_grey" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/main_recycler_view"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/main_swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="@dimen/tablet_main_recyclerview_margin"
-        android:paddingEnd="@dimen/tablet_main_recyclerview_margin" />
+        android:paddingEnd="@dimen/tablet_main_recyclerview_margin">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/main_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:scrollbarStyle="outsideOverlay" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <View
         android:layout_width="@dimen/tablet_main_sideview_width"

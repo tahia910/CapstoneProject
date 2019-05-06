@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.dailyupdate.R;
 import com.example.dailyupdate.data.models.GitHubRepo;
@@ -36,6 +37,7 @@ public class GitHubMainFragment extends Fragment {
     @BindView(R.id.main_recycler_view) RecyclerView recyclerView;
     @BindView(R.id.main_emptyview) TextView emptyView;
     @BindView(R.id.main_spinner) ProgressBar spinner;
+    @BindView(R.id.main_swipe_refresh_layout) SwipeRefreshLayout refreshLayout;
 
     private String searchKeyword;
     private String sortBy;
@@ -147,6 +149,15 @@ public class GitHubMainFragment extends Fragment {
                         GitHubRepo gitHubRepo = gitHubRepoList.get(position);
                         String gitHubRepoUrl = gitHubRepo.getHtmlUrl();
                         listener.currentGitHubRepoUrl(gitHubRepoUrl);
+                    });
+
+                    // Set the swipe action to refresh the search
+                    refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                        @Override
+                        public void onRefresh() {
+                            gitHubViewModel.searchGitHubRepoListWithOrder(searchKeyword, sortBy, searchOrder);
+                            refreshLayout.setRefreshing(false);
+                        }
                     });
                 } else {
                     recyclerView.setVisibility(View.INVISIBLE);
