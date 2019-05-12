@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -230,6 +231,8 @@ public class MeetupDetailsFragment extends DialogFragment {
         String dateWithDay = DateUtilities.getDateWithDay(meetupEventDetails.getEventDate());
         String formattedTime = DateUtilities.getFormattedTime(meetupEventDetails.getEventTime());
 
+        String eventDetails = meetupEventDetails.getEventDescription();
+
         eventTitleTextView.setText(eventName);
 
         groupIcon.setVisibility(View.VISIBLE);
@@ -246,7 +249,7 @@ public class MeetupDetailsFragment extends DialogFragment {
         timeTextView.setText(formattedTime);
 
         descriptionTitleTextView.setVisibility(View.VISIBLE);
-        descriptionTextView.setText(meetupEventDetails.getEventDescription());
+        descriptionTextView.setText(Html.fromHtml(eventDetails).toString());
     }
 
     private void setAddressTextView(MeetupEventDetails meetupEventDetails) {

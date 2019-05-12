@@ -202,12 +202,11 @@ public class MainActivity extends AppCompatActivity {
                         ((GridLayoutManager) meetupRecyclerView.getLayoutManager()).scrollToPosition(meetupRecyclerViewLastPosition);
                     }
 
-                    // Use an intent to open a browser and display the group details
+                    // Display the group details using WebView(Custom Tabs)
                     meetupGroupAdapter.setOnItemClickListener((position, v) -> {
                         MeetupGroup meetupGroup = meetupGroupList.get(position);
                         String groupUrlString = meetupGroup.getGroupUrl();
-                        Uri groupUrl = Uri.parse(groupUrlString);
-                        startActivity(new Intent(Intent.ACTION_VIEW, groupUrl));
+                        NetworkUtilities.openCustomTabs(MainActivity.this, groupUrlString);
                     });
 
                     // Set the swipe action on Meetup events list to refresh the search
