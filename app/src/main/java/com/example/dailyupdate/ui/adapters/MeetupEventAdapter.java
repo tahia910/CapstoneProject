@@ -20,14 +20,6 @@ import butterknife.ButterKnife;
 
 public class MeetupEventAdapter extends RecyclerView.Adapter<MeetupEventAdapter.MeetupEventAdapterViewHolder> {
 
-    @BindView(R.id.textview_event_title) TextView eventNameTextView;
-    @BindView(R.id.textview_event_status) TextView eventStatusTextView;
-    @BindView(R.id.textview_event_date) TextView eventDateTextView;
-    @BindView(R.id.textview_event_time) TextView eventTimeTextView;
-    @BindView(R.id.textview_group_title) TextView groupNameTextView;
-    @BindView(R.id.textview_event_attendees) TextView attendeesCountTextView;
-    @BindView(R.id.bookmark_icon_meetup_main) ImageView bookmarkIcon;
-
     private Context context;
     private static ClickListener clickListener;
     private static BookmarkIconClickListener bookmarkIconListener;
@@ -47,7 +39,7 @@ public class MeetupEventAdapter extends RecyclerView.Adapter<MeetupEventAdapter.
     }
 
     public void setOnBookmarkIconClickListener(BookmarkIconClickListener bookmarkIconListener) {
-        MeetupEventAdapter.bookmarkIconListener = bookmarkIconListener;
+        this.bookmarkIconListener = bookmarkIconListener;
     }
 
     public MeetupEventAdapter(Context context, List<MeetupEvent> meetupEventList,
@@ -62,30 +54,12 @@ public class MeetupEventAdapter extends RecyclerView.Adapter<MeetupEventAdapter.
         context = parent.getContext();
         View view = LayoutInflater.from(context).inflate(R.layout.meetup_main_event_item, parent,
                 false);
-        ButterKnife.bind(this, view);
         return new MeetupEventAdapterViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(MeetupEventAdapterViewHolder viewHolder, int i) {
-        MeetupEvent meetupEvent = meetupEventList.get(i);
-        String dateWithDay = DateUtilities.getDateWithDay(meetupEvent.getEventDate());
-        String formattedTime = DateUtilities.getFormattedTime(meetupEvent.getEventTime());
-        String attendeesCountString =
-                meetupEvent.getAttendeesCount() + context.getString(R.string.meetupevent_attendees_label);
-
-        eventNameTextView.setText(meetupEvent.getEventName());
-        eventStatusTextView.setText(meetupEvent.getEventStatus());
-        eventDateTextView.setText(dateWithDay);
-        eventTimeTextView.setText(formattedTime);
-        groupNameTextView.setText(meetupEvent.getGroupNameObject().getEventGroupName());
-        attendeesCountTextView.setText(attendeesCountString);
-        if(bookmarkedEventsIds !=null){
-        if (bookmarkedEventsIds.contains(meetupEvent.getEventId())){
-            bookmarkIcon.setImageResource(R.drawable.ic_bookmarked);
-        } else {
-            bookmarkIcon.setImageResource(R.drawable.ic_bookmark);
-        }}
+        viewHolder.bindEvent(meetupEventList.get(i));
     }
 
     @Override
@@ -94,25 +68,25 @@ public class MeetupEventAdapter extends RecyclerView.Adapter<MeetupEventAdapter.
         return meetupEventList.size();
     }
 
-    public MeetupEvent getCurrentEvent(int position) {
-        return meetupEventList.get(position);
-    }
+    public class MeetupEventAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    public class MeetupEventAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, BookmarkIconClickListener {
+        @BindView(R.id.textview_event_title)
+        TextView eventNameTextView;
+        @BindView(R.id.textview_event_date)
+        TextView eventDateTextView;
+        @BindView(R.id.textview_event_time)
+        TextView eventTimeTextView;
+        @BindView(R.id.textview_group_title)
+        TextView groupNameTextView;
+        @BindView(R.id.textview_event_attendees)
+        TextView attendeesCountTextView;
+        @BindView(R.id.bookmark_icon_meetup_main)
+        ImageView bookmarkIcon;
 
         private MeetupEventAdapterViewHolder(View view) {
             super(view);
+            ButterKnife.bind(this, view);
             view.setOnClickListener(this);
-            bookmarkIcon.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    if (bookmarkIconListener != null && position != RecyclerView.NO_POSITION) {
-                        bookmarkIconListener.onBookmarkIconClick(meetupEventList.get(position),
-                                position);
-                    }
-                }
-            });
         }
 
         @Override
@@ -120,9 +94,34 @@ public class MeetupEventAdapter extends RecyclerView.Adapter<MeetupEventAdapter.
             clickListener.onItemClick(getAdapterPosition(), v);
         }
 
-        @Override
-        public void onBookmarkIconClick(MeetupEvent meetupEvent, int position) {
-            bookmarkIconListener.onBookmarkIconClick(getCurrentEvent(getAdapterPosition()), getAdapterPosition());
+        public void bindEvent(MeetupEvent meetupEvent) {
+            String dateWithDay = DateUtilities.getDateWithDay(meetupEvent.getEventDate());
+            String formattedTime = DateUtilities.getFormattedTime(meetupEvent.getEventTime());
+            String attendeesCountString =
+                    meetupEvent.getAttendeesCount() + context.getString(R.string.meetupevent_attendees_label);
+
+            eventNameTextView.setText(meetupEvent.getEventName());
+            eventDateTextView.setText(dateWithDay);
+            eventTimeTextView.setText(formattedTime);
+            groupNameTextView.setText(meetupEvent.getGroupNameObject().getEventGroupName());
+            attendeesCountTextView.setText(attendeesCountString);
+            if (bookmarkedEventsIds != null) {
+                if (bookmarkedEventsIds.contains(meetupEvent.getEventId())) {
+                    bookmarkIcon.setImageResource(R.drawable.ic_bookmarked);
+                } else {
+                    bookmarkIcon.setImageResource(R.drawable.ic_bookmark);
+                }
+            }
+
+            bookmarkIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (bookmarkIconListener != null && position != RecyclerView.NO_POSITION) {
+                        bookmarkIconListener.onBookmarkIconClick(meetupEvent, position);
+                    }
+                }
+            });
         }
     }
 }

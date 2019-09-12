@@ -23,7 +23,8 @@ public class AppExecutors {
 
     public static AppExecutors getInstance() {
         if (executorsInstance == null) {
-                executorsInstance = new AppExecutors(Executors.newSingleThreadExecutor(),
+                executorsInstance = new AppExecutors(
+                        Executors.newSingleThreadExecutor(),
                         Executors.newFixedThreadPool(3),
                         new MainThreadExecutor());
 

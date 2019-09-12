@@ -30,8 +30,10 @@
                 android:paddingLeft="@dimen/margin_medium"
                 android:paddingRight="@dimen/margin_medium"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_size_big"
+                android:textSize="@dimen/text_size_medium"
                 android:textStyle="bold"
+                android:ellipsize="end"
+                android:maxLines="3"
                 tools:text="@string/tools_group_title" />
 
             <TextView
