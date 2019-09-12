@@ -212,7 +212,7 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
     }
 
     private void getGitHubFragment() {
-        GitHubMainFragment gitHubFragment = GitHubMainFragment.newInstance();
+        GitHubMainFragment gitHubFragment = GitHubMainFragment.Companion.newInstance();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out);
         fragmentTransaction.replace(R.id.fragment_container, gitHubFragment).commit();
