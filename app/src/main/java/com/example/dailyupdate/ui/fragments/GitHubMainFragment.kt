@@ -114,11 +114,12 @@ class GitHubMainFragment : Fragment() {
                     (main_recycler_view.layoutManager as LinearLayoutManager).scrollToPosition(recyclerViewLastPosition)
                 }
 
-                gitHubRepoAdapter!!.setOnItemClickListener { position, v ->
-                    val gitHubRepo = gitHubRepoList[position]
-                    val gitHubRepoUrl = gitHubRepo.htmlUrl
-                    listener!!.currentGitHubRepoUrl(gitHubRepoUrl)
-                }
+                // TODO: fix the click listener
+//                gitHubRepoAdapter!!.setOnItemClickListener { position, v ->
+//                    val gitHubRepo = gitHubRepoList[position]
+//                    val gitHubRepoUrl = gitHubRepo.htmlUrl
+//                    listener!!.currentGitHubRepoUrl(gitHubRepoUrl)
+//                }
 
                 // Set the swipe action to refresh the search
                 main_swipe_refresh_layout.setOnRefreshListener {

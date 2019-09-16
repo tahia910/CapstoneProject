@@ -74,7 +74,7 @@
 
     <string name="repository_no_description">(No description available.)</string>
     <string name="repository_no_language">(Language unknown.)</string>
-    <string name="repository_stars_label">\u0020stars</string>
+    <string name="repository_stars_label">%1$s stars</string>
 
     <string name="location_not_retrieved">The location could not be retrieved. The default location will be Tokyo.</string>
     <string name="message_default_location">The default location will be Tokyo.</string>

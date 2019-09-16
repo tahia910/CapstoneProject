@@ -19,7 +19,7 @@
             android:paddingEnd="@dimen/margin_small">
 
             <TextView
-                android:id="@+id/textview_title"
+                android:id="@+id/home_github_textview_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -32,7 +32,7 @@
                 tools:text="@string/tools_repository_title" />
 
             <TextView
-                android:id="@+id/textview_description"
+                android:id="@+id/home_github_textview_description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_small"
@@ -42,23 +42,23 @@
                 android:textColor="@color/colorPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/textview_title"
-                app:layout_constraintTop_toBottomOf="@+id/textview_title"
+                app:layout_constraintStart_toStartOf="@id/home_github_textview_title"
+                app:layout_constraintTop_toBottomOf="@id/home_github_textview_title"
                 tools:text="@string/tools_repository_description" />
 
             <TextView
-                android:id="@+id/textview_language"
+                android:id="@+id/home_github_textview_language"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_small"
                 android:textColor="@color/colorPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/textview_description"
-                app:layout_constraintTop_toBottomOf="@+id/textview_description"
+                app:layout_constraintStart_toStartOf="@id/home_github_textview_description"
+                app:layout_constraintTop_toBottomOf="@id/home_github_textview_description"
                 tools:text="@string/tools_repository_language" />
 
             <TextView
-                android:id="@+id/textview_stars"
+                android:id="@+id/home_github_textview_stars"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_small"
@@ -66,7 +66,7 @@
                 android:textColor="@color/colorPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textview_description"
+                app:layout_constraintTop_toBottomOf="@id/home_github_textview_description"
                 tools:text="@string/tools_repository_stars" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

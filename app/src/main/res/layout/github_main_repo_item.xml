@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/textview_title"
+        android:id="@+id/main_github_textview_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_very_large"
@@ -15,13 +15,13 @@
         android:textColor="@color/colorPrimary"
         android:textSize="@dimen/text_size_big"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/textview_stars"
+        app:layout_constraintEnd_toStartOf="@+id/main_github_textview_stars"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/tools_repository_title" />
 
     <TextView
-        android:id="@+id/textview_description"
+        android:id="@+id/main_github_textview_description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_very_large"
@@ -29,14 +29,14 @@
         android:ellipsize="end"
         android:maxLines="2"
         android:textColor="@color/colorPrimary"
-        app:layout_constraintEnd_toStartOf="@+id/textview_language"
+        app:layout_constraintEnd_toStartOf="@id/main_github_textview_language"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textview_title"
+        app:layout_constraintTop_toBottomOf="@id/main_github_textview_title"
         tools:text="@string/tools_repository_description" />
 
     <TextView
-        android:id="@+id/textview_stars"
+        android:id="@+id/main_github_textview_stars"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_very_large"
@@ -47,17 +47,17 @@
         tools:text="@string/tools_repository_stars" />
 
     <TextView
-        android:id="@+id/textview_language"
+        android:id="@+id/main_github_textview_language"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginEnd="@dimen/margin_very_large"
         android:gravity="bottom"
         android:textColor="@color/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="@+id/textview_description"
+        app:layout_constraintBottom_toBottomOf="@id/main_github_textview_description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/textview_description"
-        app:layout_constraintTop_toBottomOf="@+id/textview_stars"
+        app:layout_constraintStart_toEndOf="@id/main_github_textview_description"
+        app:layout_constraintTop_toBottomOf="@id/main_github_textview_stars"
         tools:text="@string/tools_repository_language" />
 
     <View
@@ -68,6 +68,6 @@
         android:background="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textview_description" />
+        app:layout_constraintTop_toBottomOf="@id/main_github_textview_description" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
