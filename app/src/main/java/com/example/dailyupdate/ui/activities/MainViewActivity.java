@@ -38,7 +38,7 @@ import com.google.android.material.navigation.NavigationView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainViewActivity extends AppCompatActivity implements MeetupDialogFragment.MeetupDialogListener, GitHubDialogFragment.GitHubDialogListener, MeetupMainFragment.MeetupMainFragmentListener, GitHubMainFragment.GitHubMainFragmentListener, MeetupDetailsFragment.MeetupDetailsFragmentListener {
+public class MainViewActivity extends AppCompatActivity implements MeetupDialogFragment.MeetupDialogListener, GitHubDialogFragment.GitHubDialogListener, MeetupMainFragment.MeetupMainFragmentListener, MeetupDetailsFragment.MeetupDetailsFragmentListener {
 
     @BindView(R.id.drawer_layout) DrawerLayout mDrawer;
     @BindView(R.id.toolbar) Toolbar toolbar;
@@ -305,16 +305,6 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
         meetupDetailsFragment.setMenuVisibility(true);
         meetupDetailsFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.Dialog_FullScreen);
         meetupDetailsFragment.show(fragmentManager, Constants.TAG_EVENT_DETAILS_FRAGMENT);
-    }
-
-    /**
-     * Callback from GitHubMainFragment (fragment displaying the result of a GitHub
-     * repositories search) to open the selected GitHub repository details using WebView
-     * (Custom Tabs).
-     **/
-    @Override
-    public void currentGitHubRepoUrl(String gitHubRepoUrl) {
-        NetworkUtilities.openCustomTabs(MainViewActivity.this, gitHubRepoUrl);
     }
 
     /**

@@ -23,24 +23,8 @@ class GitHubMainFragment : Fragment() {
     private var searchKeyword: String = ""
     private var sortBy: String = ""
     private var searchOrder: String = ""
-    private var listener: GitHubMainFragmentListener? = null
     private lateinit var gitHubViewModel: GitHubViewModel
-    private var gitHubRepoAdapter: GitHubRepoAdapter? = null
     private var recyclerViewLastPosition: Int = 0
-
-    interface GitHubMainFragmentListener {
-        fun currentGitHubRepoUrl(gitHubRepoUrl: String)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is GitHubMainFragmentListener) {
-            listener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement " +
-                    "GitHubMainFragmentListener")
-        }
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -106,20 +90,14 @@ class GitHubMainFragment : Fragment() {
         gitHubViewModel.gitHubRepoList.observe(this, Observer { gitHubRepoList ->
             main_spinner.visibility = View.GONE
             if (gitHubRepoList != null) {
-                gitHubRepoAdapter = GitHubRepoAdapter(context, gitHubRepoList, 2)
-                main_recycler_view.adapter = gitHubRepoAdapter
+                val adapter = GitHubRepoAdapter()
+                adapter.setGitHubItemList(gitHubRepoList, 2)
+                main_recycler_view.adapter = adapter
 
                 // If there was a screen rotation, restore the previous position
                 if (recyclerViewLastPosition != 0) {
                     (main_recycler_view.layoutManager as LinearLayoutManager).scrollToPosition(recyclerViewLastPosition)
                 }
-
-                // TODO: fix the click listener
-//                gitHubRepoAdapter!!.setOnItemClickListener { position, v ->
-//                    val gitHubRepo = gitHubRepoList[position]
-//                    val gitHubRepoUrl = gitHubRepo.htmlUrl
-//                    listener!!.currentGitHubRepoUrl(gitHubRepoUrl)
-//                }
 
                 // Set the swipe action to refresh the search
                 main_swipe_refresh_layout.setOnRefreshListener {

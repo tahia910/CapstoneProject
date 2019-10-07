@@ -77,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
     private String userLocation;
     private SharedPreferences sharedPref;
     private GitHubViewModel gitHubViewModel;
-    private GitHubRepoAdapter gitHubRepoAdapter;
     private MeetupViewModel meetupViewModel;
     private int gitHubRecyclerViewLastPosition;
     private int gitHubRecyclerViewOption;
@@ -165,8 +164,9 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(List<GitHubRepo> gitHubRepoList) {
                 if (gitHubRepoList != null) {
                     gitHubSpinner.setVisibility(View.GONE);
-                    gitHubRepoAdapter = new GitHubRepoAdapter(MainActivity.this, gitHubRepoList, 1);
-                    gitHubRecyclerView.setAdapter(gitHubRepoAdapter);
+                    GitHubRepoAdapter adapter = new GitHubRepoAdapter();
+                    adapter.setGitHubItemList(gitHubRepoList, 1);
+                    gitHubRecyclerView.setAdapter(adapter);
 
                     // If there was a screen rotation, restore the previous position
                     if (gitHubRecyclerViewLastPosition != 0) {
@@ -176,12 +176,6 @@ public class MainActivity extends AppCompatActivity {
                             ((GridLayoutManager) gitHubRecyclerView.getLayoutManager()).scrollToPosition(gitHubRecyclerViewLastPosition);
                         }
                     }
-
-                    gitHubRepoAdapter.setOnItemClickListener((position, v) -> {
-                        GitHubRepo gitHubRepo = gitHubRepoList.get(position);
-                        String gitHubRepoUrl = gitHubRepo.getHtmlUrl();
-                        NetworkUtilities.openCustomTabs(MainActivity.this, gitHubRepoUrl);
-                    });
                 }
             }
         });
