@@ -1,6 +1,5 @@
 package com.example.dailyupdate.ui.fragments
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -87,7 +86,7 @@ class GitHubMainFragment : Fragment() {
     }
 
     private fun subscribeGitHubObserver() {
-        gitHubViewModel.gitHubRepoList.observe(this, Observer { gitHubRepoList ->
+        gitHubViewModel.gitHubRepoList.observe(viewLifecycleOwner, Observer { gitHubRepoList ->
             main_spinner.visibility = View.GONE
             if (gitHubRepoList != null) {
                 val adapter = GitHubRepoAdapter()

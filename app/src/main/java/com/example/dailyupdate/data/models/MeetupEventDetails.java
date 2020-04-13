@@ -6,6 +6,7 @@ import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+import androidx.room.RoomWarnings;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -24,6 +25,7 @@ public class MeetupEventDetails {
 
     @Embedded
     @SerializedName("group")
+    @SuppressWarnings(RoomWarnings.PRIMARY_KEY_FROM_EMBEDDED_IS_DROPPED)
     private MeetupEventGroupName meetupEventGroupName;
 
     @Ignore
