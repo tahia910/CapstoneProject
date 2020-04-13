@@ -3,7 +3,7 @@ package com.example.dailyupdate.ui.activities
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.dailyupdate.R
-//import com.example.dailyupdate.ui.fragments.PreferenceFragment
+import com.example.dailyupdate.ui.fragments.PreferenceFragment
 import kotlinx.android.synthetic.main.main_appbar_layout.*
 
 class PreferenceActivity : AppCompatActivity() {
@@ -15,8 +15,8 @@ class PreferenceActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-//        supportFragmentManager.beginTransaction().replace(R.id.fragment_container,
-//                PreferenceFragment()).commit()
+        supportFragmentManager.beginTransaction().replace(R.id.fragment_container,
+                PreferenceFragment()).commit()
     }
 
     override fun onSupportNavigateUp(): Boolean {
