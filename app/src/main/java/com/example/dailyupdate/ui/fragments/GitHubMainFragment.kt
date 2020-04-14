@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dailyupdate.R
@@ -29,7 +29,7 @@ class GitHubMainFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.main_layout, container, false)
 
-        gitHubViewModel = ViewModelProviders.of(this).get(GitHubViewModel::class.java)
+        gitHubViewModel = ViewModelProvider(this).get(GitHubViewModel::class.java)
         getSharedPreferences()
 
         return rootView

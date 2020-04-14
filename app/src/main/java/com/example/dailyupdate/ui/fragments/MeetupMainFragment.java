@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -41,16 +41,11 @@ import butterknife.ButterKnife;
 
 public class MeetupMainFragment extends Fragment {
 
-    @BindView(R.id.main_recycler_view)
-    RecyclerView recyclerView;
-    @BindView(R.id.main_layout)
-    CoordinatorLayout mainLayout;
-    @BindView(R.id.main_emptyview)
-    TextView emptyView;
-    @BindView(R.id.main_spinner)
-    ProgressBar spinner;
-    @BindView(R.id.main_swipe_refresh_layout)
-    SwipeRefreshLayout refreshLayout;
+    @BindView(R.id.main_recycler_view) RecyclerView recyclerView;
+    @BindView(R.id.main_layout) CoordinatorLayout mainLayout;
+    @BindView(R.id.main_emptyview) TextView emptyView;
+    @BindView(R.id.main_spinner) ProgressBar spinner;
+    @BindView(R.id.main_swipe_refresh_layout) SwipeRefreshLayout refreshLayout;
 
     private String searchKeyword;
     private String sortBy;
@@ -92,10 +87,9 @@ public class MeetupMainFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         spinner.setVisibility(View.VISIBLE);
 
-        databaseViewModel =
-                ViewModelProviders.of(getActivity()).get(BookmarksDatabaseViewModel.class);
-        meetupViewModel = ViewModelProviders.of(getActivity()).get(MeetupViewModel.class);
-        searchCacheViewModel = ViewModelProviders.of(this).get(LatestSearchDatabaseViewModel.class);
+        databaseViewModel = new ViewModelProvider(requireActivity()).get(BookmarksDatabaseViewModel.class);
+        meetupViewModel = new ViewModelProvider(requireActivity()).get(MeetupViewModel.class);
+        searchCacheViewModel = new ViewModelProvider(this).get(LatestSearchDatabaseViewModel.class);
         subscribeAllObservers();
         getSharedPreferences(context);
 

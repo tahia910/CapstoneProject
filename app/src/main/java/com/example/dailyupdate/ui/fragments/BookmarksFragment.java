@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,12 +33,9 @@ import butterknife.ButterKnife;
 
 public class BookmarksFragment extends Fragment {
 
-    @BindView(R.id.bookmarks_recycler_view)
-    RecyclerView recyclerView;
-    @BindView(R.id.bookmarks_emptyview)
-    TextView emptyView;
-    @BindView(R.id.bookmarks_adview)
-    AdView adView;
+    @BindView(R.id.bookmarks_recycler_view) RecyclerView recyclerView;
+    @BindView(R.id.bookmarks_emptyview) TextView emptyView;
+    @BindView(R.id.bookmarks_adview) AdView adView;
 
     private BookmarksDatabaseViewModel viewModel;
     private BookmarksFragmentListener listener;
@@ -70,7 +67,7 @@ public class BookmarksFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.bookmarks_layout, container, false);
         ButterKnife.bind(this, rootView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        viewModel = ViewModelProviders.of(this).get(BookmarksDatabaseViewModel.class);
+        viewModel = new ViewModelProvider(this).get(BookmarksDatabaseViewModel.class);
         bookmarksAdapter = new BookmarksAdapter();
         recyclerView.setAdapter(bookmarksAdapter);
 

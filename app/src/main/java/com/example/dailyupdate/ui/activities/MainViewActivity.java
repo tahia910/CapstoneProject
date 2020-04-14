@@ -21,7 +21,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 
 import com.example.dailyupdate.R;
@@ -99,7 +99,7 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
     private void openDialogOrFragment(Bundle savedInstanceState) {
         if (mainViewOption.equals(Constants.MEETUP_MAIN_KEY)) {
             ab.setTitle(getApplicationContext().getString(R.string.meetup_search_title));
-            ViewModelProviders.of(MainViewActivity.this).get(BookmarksDatabaseViewModel.class);
+            new ViewModelProvider(MainViewActivity.this).get(BookmarksDatabaseViewModel.class);
             sharedPrefMeetupSearchKeyword =
                     sharedPref.getString(getString(R.string.pref_meetup_edittext_key), "");
             // If the search keyword is empty, display the search dialog

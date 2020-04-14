@@ -24,8 +24,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -33,7 +32,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.dailyupdate.R;
-import com.example.dailyupdate.data.models.GitHubRepo;
 import com.example.dailyupdate.data.models.MeetupGroup;
 import com.example.dailyupdate.ui.adapters.GitHubRepoAdapter;
 import com.example.dailyupdate.ui.adapters.MeetupGroupAdapter;
@@ -91,8 +89,8 @@ public class MainActivity extends AppCompatActivity {
         setRecyclerViews(savedInstanceState);
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        gitHubViewModel = ViewModelProviders.of(this).get(GitHubViewModel.class);
-        meetupViewModel = ViewModelProviders.of(this).get(MeetupViewModel.class);
+        gitHubViewModel = new ViewModelProvider(this).get(GitHubViewModel.class);
+        meetupViewModel = new ViewModelProvider(this).get(MeetupViewModel.class);
         subscribeGitHubObserver();
         subscribeMeetupGroupObserver();
 
