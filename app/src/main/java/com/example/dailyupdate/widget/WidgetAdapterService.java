@@ -26,7 +26,7 @@ public class WidgetAdapterService extends RemoteViewsService {
         private Context context;
 
 
-        public WidgetListAdapter(Context applicationContext, Intent intent) {
+        WidgetListAdapter(Context applicationContext, Intent intent) {
             this.context = applicationContext;
         }
 

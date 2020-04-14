@@ -26,21 +26,11 @@ public class BookmarksDatabaseRepository {
     }
 
     public void insertEvent(MeetupEventDetails bookmarkedEvent) {
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                bookmarksDao.insertBookmarkedEvent(bookmarkedEvent);
-            }
-        });
+        AppExecutors.getInstance().diskIO().execute(() -> bookmarksDao.insertBookmarkedEvent(bookmarkedEvent));
     }
 
     public void deleteEvent(MeetupEventDetails bookmarkedEvent) {
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                bookmarksDao.deleteBookmarkedEvent(bookmarkedEvent);
-            }
-        });
+        AppExecutors.getInstance().diskIO().execute(() -> bookmarksDao.deleteBookmarkedEvent(bookmarkedEvent));
     }
 
     public LiveData<List<MeetupEventDetails>> getAllEvents() {
@@ -48,12 +38,7 @@ public class BookmarksDatabaseRepository {
     }
 
     public void deleteAllEvents() {
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                bookmarksDao.deleteAllBookmarkedEvents();
-            }
-        });
+        AppExecutors.getInstance().diskIO().execute(() -> bookmarksDao.deleteAllBookmarkedEvents());
     }
 
     public LiveData<List<String>> getAllEventsIds() {

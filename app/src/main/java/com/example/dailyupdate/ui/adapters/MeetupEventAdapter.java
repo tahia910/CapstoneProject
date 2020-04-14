@@ -94,7 +94,7 @@ public class MeetupEventAdapter extends RecyclerView.Adapter<MeetupEventAdapter.
             clickListener.onItemClick(getAdapterPosition(), v);
         }
 
-        public void bindEvent(MeetupEvent meetupEvent) {
+        void bindEvent(MeetupEvent meetupEvent) {
             String dateWithDay = DateUtilities.getDateWithDay(meetupEvent.getEventDate());
             String formattedTime = DateUtilities.getFormattedTime(meetupEvent.getEventTime());
             String attendeesCountString =
@@ -113,13 +113,10 @@ public class MeetupEventAdapter extends RecyclerView.Adapter<MeetupEventAdapter.
                 }
             }
 
-            bookmarkIcon.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    if (bookmarkIconListener != null && position != RecyclerView.NO_POSITION) {
-                        bookmarkIconListener.onBookmarkIconClick(meetupEvent, position);
-                    }
+            bookmarkIcon.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                if (bookmarkIconListener != null && position != RecyclerView.NO_POSITION) {
+                    bookmarkIconListener.onBookmarkIconClick(meetupEvent, position);
                 }
             });
         }

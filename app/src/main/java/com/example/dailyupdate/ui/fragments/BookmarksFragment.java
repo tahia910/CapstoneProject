@@ -33,9 +33,12 @@ import butterknife.ButterKnife;
 
 public class BookmarksFragment extends Fragment {
 
-    @BindView(R.id.bookmarks_recycler_view) RecyclerView recyclerView;
-    @BindView(R.id.bookmarks_emptyview) TextView emptyView;
-    @BindView(R.id.bookmarks_adview) AdView adView;
+    @BindView(R.id.bookmarks_recycler_view)
+    RecyclerView recyclerView;
+    @BindView(R.id.bookmarks_emptyview)
+    TextView emptyView;
+    @BindView(R.id.bookmarks_adview)
+    AdView adView;
 
     private BookmarksDatabaseViewModel viewModel;
     private BookmarksFragmentListener listener;
@@ -118,25 +121,22 @@ public class BookmarksFragment extends Fragment {
 
 
     private void setBookmarkedEventsList() {
-        viewModel.getAllBookmarkedEvents().observe(this, new Observer<List<MeetupEventDetails>>() {
-            @Override
-            public void onChanged(List<MeetupEventDetails> bookmarkedEventsList) {
-                if (bookmarkedEventsList.size() < 1) {
-                    recyclerView.setVisibility(View.GONE);
-                    emptyView.setVisibility(View.VISIBLE);
-                    emptyView.setText(getString(R.string.bookmarks_emptyview_message));
-                } else {
-                    recyclerView.setVisibility(View.VISIBLE);
-                    emptyView.setVisibility(View.GONE);
-                    bookmarksAdapter.submitList(bookmarkedEventsList);
+        viewModel.getAllBookmarkedEvents().observe(getViewLifecycleOwner(), (Observer<List<MeetupEventDetails>>) bookmarkedEventsList -> {
+            if (bookmarkedEventsList.size() < 1) {
+                recyclerView.setVisibility(View.GONE);
+                emptyView.setVisibility(View.VISIBLE);
+                emptyView.setText(getString(R.string.bookmarks_emptyview_message));
+            } else {
+                recyclerView.setVisibility(View.VISIBLE);
+                emptyView.setVisibility(View.GONE);
+                bookmarksAdapter.submitList(bookmarkedEventsList);
 
-                    // If there was a screen rotation, restore the previous position
-                    if (recyclerViewLastPosition != 0) {
-                        ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPosition(recyclerViewLastPosition);
-                    }
-
-                    setAdapterClickListeners(bookmarkedEventsList);
+                // If there was a screen rotation, restore the previous position
+                if (recyclerViewLastPosition != 0) {
+                    ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPosition(recyclerViewLastPosition);
                 }
+
+                setAdapterClickListeners(bookmarkedEventsList);
             }
         });
     }
@@ -147,23 +147,16 @@ public class BookmarksFragment extends Fragment {
      **/
     private void setAdapterClickListeners(List<MeetupEventDetails> bookmarkedEventsList) {
         // Open the event details
-        bookmarksAdapter.setOnItemClickListener(new BookmarksAdapter.ClickListener() {
-            @Override
-            public void onItemClick(int position, View v) {
-                MeetupEventDetails bookmarkedEvent = bookmarkedEventsList.get(position);
-                String eventId = bookmarkedEvent.getEventId();
-                String groupUrl = bookmarkedEvent.getMeetupEventGroupName().getEventGroupUrl();
-                listener.displayEventDetails(groupUrl, eventId);
-            }
+        bookmarksAdapter.setOnItemClickListener((position, v) -> {
+            MeetupEventDetails bookmarkedEvent = bookmarkedEventsList.get(position);
+            String eventId = bookmarkedEvent.getEventId();
+            String groupUrl = bookmarkedEvent.getMeetupEventGroupName().getEventGroupUrl();
+            listener.displayEventDetails(groupUrl, eventId);
         });
 
         // Delete bookmarked event
-        bookmarksAdapter.setOnBookmarkIconClickListener(new BookmarksAdapter.BookmarkIconClickListener() {
-            @Override
-            public void onBookmarkIconClick(MeetupEventDetails bookmarkedEvent) {
-                viewModel.deleteBookmarkedEvent(bookmarkedEvent);
-            }
-        });
+        bookmarksAdapter.setOnBookmarkIconClickListener(bookmarkedEvent ->
+                viewModel.deleteBookmarkedEvent(bookmarkedEvent));
     }
 
     /**

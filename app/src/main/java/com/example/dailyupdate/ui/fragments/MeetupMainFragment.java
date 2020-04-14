@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -42,11 +41,16 @@ import butterknife.ButterKnife;
 
 public class MeetupMainFragment extends Fragment {
 
-    @BindView(R.id.main_recycler_view) RecyclerView recyclerView;
-    @BindView(R.id.main_layout) CoordinatorLayout mainLayout;
-    @BindView(R.id.main_emptyview) TextView emptyView;
-    @BindView(R.id.main_spinner) ProgressBar spinner;
-    @BindView(R.id.main_swipe_refresh_layout) SwipeRefreshLayout refreshLayout;
+    @BindView(R.id.main_recycler_view)
+    RecyclerView recyclerView;
+    @BindView(R.id.main_layout)
+    CoordinatorLayout mainLayout;
+    @BindView(R.id.main_emptyview)
+    TextView emptyView;
+    @BindView(R.id.main_spinner)
+    ProgressBar spinner;
+    @BindView(R.id.main_swipe_refresh_layout)
+    SwipeRefreshLayout refreshLayout;
 
     private String searchKeyword;
     private String sortBy;
@@ -134,32 +138,28 @@ public class MeetupMainFragment extends Fragment {
      * the user when there is any new event.
      **/
     private void subscribeAllObservers() {
-        databaseViewModel.getAllBookmarkedEventsIds().observe(this, new Observer<List<String>>() {
-            @Override
-            public void onChanged(List<String> strings) {
-                if (strings != null) {
-                    bookmarkedEventsListIds = strings;
-                    // If there is any change to the database (ex: the user bookmarked/deleted an
-                    // event from the bookmark database), verify that the adapter has been set up
-                    // first, then notify the adapter to update the UI
-                    if (meetupEventAdapter != null) {
-                        // Before notifying the adapter of the change(s), save the current position
-                        // in the RecyclerView
-                        recyclerViewLastPosition =
-                                ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
-                        meetupEventAdapter.notifyDataSetChanged();
-                        // If the latest position in the RecyclerView was not at the top, scroll
-                        // back to the previous position (restore state)
-                        if (recyclerViewLastPosition != 0) {
-                            ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPosition(recyclerViewLastPosition);
-                        }
+        databaseViewModel.getAllBookmarkedEventsIds().observe(getViewLifecycleOwner(), strings -> {
+            if (strings != null) {
+                bookmarkedEventsListIds = strings;
+                // If there is any change to the database (ex: the user bookmarked/deleted an
+                // event from the bookmark database), verify that the adapter has been set up
+                // first, then notify the adapter to update the UI
+                if (meetupEventAdapter != null) {
+                    // Before notifying the adapter of the change(s), save the current position
+                    // in the RecyclerView
+                    recyclerViewLastPosition =
+                            ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+                    meetupEventAdapter.notifyDataSetChanged();
+                    // If the latest position in the RecyclerView was not at the top, scroll
+                    // back to the previous position (restore state)
+                    if (recyclerViewLastPosition != 0) {
+                        ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPosition(recyclerViewLastPosition);
                     }
                 }
+            }
 
-                meetupViewModel.getMeetupEventList().observe(MeetupMainFragment.this,
-                        new Observer<List<MeetupEvent>>() {
-                    @Override
-                    public void onChanged(List<MeetupEvent> meetupEventList) {
+            meetupViewModel.getMeetupEventList().observe(getViewLifecycleOwner(),
+                    meetupEventList -> {
                         spinner.setVisibility(View.GONE);
                         if (meetupEventList != null) {
                             meetupEventAdapter = new MeetupEventAdapter(getContext(),
@@ -167,7 +167,7 @@ public class MeetupMainFragment extends Fragment {
                             recyclerView.setAdapter(meetupEventAdapter);
                             // If there was a screen rotation, restore the previous position
                             if (recyclerViewLastPosition != 0) {
-                                    ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPosition(recyclerViewLastPosition);
+                                ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPosition(recyclerViewLastPosition);
                             }
 
                             setNotifications(getContext());
@@ -179,39 +179,34 @@ public class MeetupMainFragment extends Fragment {
                             emptyView.setVisibility(View.VISIBLE);
                             emptyView.setText(R.string.meetup_events_error_message);
                         }
-                    }
-                });
-            }
+                    });
         });
     }
 
     private void subscribeCachedDatabase(List<MeetupEvent> meetupEventList) {
-        searchCacheViewModel.getAllLatestSearchLive().observe(MeetupMainFragment.this,
-                new Observer<List<String>>() {
-            @Override
-            public void onChanged(List<String> cachedEventsIds) {
-                // If cached list is not empty, check if the list is the same
-                if (cachedEventsIds.size() > 1) {
-                    List<String> currentListIds = new ArrayList<>();
-                    for (int i = 0; i < meetupEventList.size(); i++) {
-                        String currentEventId = meetupEventList.get(i).getEventId();
-                        currentListIds.add(currentEventId);
-                    }
-                    // Compare last search IDs and current search IDs.
-                    // Only the same items will be kept in the current search IDs.
-                    // https://www.w3resource.com/java-tutorial/arraylist/arraylist_retainall.php
-                    currentListIds.retainAll(cachedEventsIds);
-                    if (currentListIds.size() != cachedEventsIds.size()) {
-                        // Delete the previous search and insert the new one
-                        searchCacheViewModel.deleteAllEvents();
+        searchCacheViewModel.getAllLatestSearchLive().observe(getViewLifecycleOwner(),
+                cachedEventsIds -> {
+                    // If cached list is not empty, check if the list is the same
+                    if (cachedEventsIds.size() > 1) {
+                        List<String> currentListIds = new ArrayList<>();
+                        for (int i = 0; i < meetupEventList.size(); i++) {
+                            String currentEventId = meetupEventList.get(i).getEventId();
+                            currentListIds.add(currentEventId);
+                        }
+                        // Compare last search IDs and current search IDs.
+                        // Only the same items will be kept in the current search IDs.
+                        // https://www.w3resource.com/java-tutorial/arraylist/arraylist_retainall.php
+                        currentListIds.retainAll(cachedEventsIds);
+                        if (currentListIds.size() != cachedEventsIds.size()) {
+                            // Delete the previous search and insert the new one
+                            searchCacheViewModel.deleteAllEvents();
+                            insertNewCacheList(meetupEventList);
+                        }
+                    } else {
+                        // The cached list was empty so put the current search items in the database
                         insertNewCacheList(meetupEventList);
                     }
-                } else {
-                    // The cached list was empty so put the current search items in the database
-                    insertNewCacheList(meetupEventList);
-                }
-            }
-        });
+                });
     }
 
     private void insertNewCacheList(List<MeetupEvent> meetupEventList) {
@@ -256,13 +251,10 @@ public class MeetupMainFragment extends Fragment {
         });
 
         // Set the swipe action to refresh the search
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                meetupViewModel.searchMeetupEvents(searchLocation, sortBy,
-                        Constants.MEETUP_TECH_CATEGORY_NUMBER, searchKeyword);
-                refreshLayout.setRefreshing(false);
-            }
+        refreshLayout.setOnRefreshListener(() -> {
+            meetupViewModel.searchMeetupEvents(searchLocation, sortBy,
+                    Constants.MEETUP_TECH_CATEGORY_NUMBER, searchKeyword);
+            refreshLayout.setRefreshing(false);
         });
     }
 
@@ -288,16 +280,14 @@ public class MeetupMainFragment extends Fragment {
         } else {
             // Display a Snackbar to ask if the user wants to get notifications for current search
             Snackbar snackbar = Snackbar.make(mainLayout,
-                    getString(R.string.notification_snackbar_label), Snackbar.LENGTH_LONG).setAction(getString(R.string.notification_snackbar_action), new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    JobUtilities.scheduleUpdateJob(context);
-                    sharedPref.edit().putBoolean(getString(R.string.pref_notification_key), true).apply();
-                    Toast.makeText(context,
-                            getString(R.string.toast_notification_set_confirmation),
-                            Toast.LENGTH_LONG).show();
-                }
-            });
+                    getString(R.string.notification_snackbar_label), Snackbar.LENGTH_LONG)
+                    .setAction(getString(R.string.notification_snackbar_action), view -> {
+                        JobUtilities.scheduleUpdateJob(context);
+                        sharedPref.edit().putBoolean(getString(R.string.pref_notification_key), true).apply();
+                        Toast.makeText(context,
+                                getString(R.string.toast_notification_set_confirmation),
+                                Toast.LENGTH_LONG).show();
+                    });
             snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
             snackbar.show();
         }

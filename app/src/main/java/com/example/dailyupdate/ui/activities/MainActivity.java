@@ -158,22 +158,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void subscribeGitHubObserver() {
-        gitHubViewModel.getGitHubRepoList().observe(this, new Observer<List<GitHubRepo>>() {
-            @Override
-            public void onChanged(List<GitHubRepo> gitHubRepoList) {
-                if (gitHubRepoList != null) {
-                    gitHubSpinner.setVisibility(View.GONE);
-                    GitHubRepoAdapter adapter = new GitHubRepoAdapter();
-                    adapter.setGitHubItemList(gitHubRepoList, 1);
-                    gitHubRecyclerView.setAdapter(adapter);
+        gitHubViewModel.getGitHubRepoList().observe(this, gitHubRepoList -> {
+            if (gitHubRepoList != null) {
+                gitHubSpinner.setVisibility(View.GONE);
+                GitHubRepoAdapter adapter = new GitHubRepoAdapter();
+                adapter.setGitHubItemList(gitHubRepoList, 1);
+                gitHubRecyclerView.setAdapter(adapter);
 
-                    // If there was a screen rotation, restore the previous position
-                    if (gitHubRecyclerViewLastPosition != 0) {
-                        if (gitHubRecyclerViewOption == 1) {
-                            ((LinearLayoutManager) gitHubRecyclerView.getLayoutManager()).scrollToPosition(gitHubRecyclerViewLastPosition);
-                        } else {
-                            ((GridLayoutManager) gitHubRecyclerView.getLayoutManager()).scrollToPosition(gitHubRecyclerViewLastPosition);
-                        }
+                // If there was a screen rotation, restore the previous position
+                if (gitHubRecyclerViewLastPosition != 0) {
+                    if (gitHubRecyclerViewOption == 1) {
+                        ((LinearLayoutManager) gitHubRecyclerView.getLayoutManager()).scrollToPosition(gitHubRecyclerViewLastPosition);
+                    } else {
+                        ((GridLayoutManager) gitHubRecyclerView.getLayoutManager()).scrollToPosition(gitHubRecyclerViewLastPosition);
                     }
                 }
             }
@@ -181,36 +178,33 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void subscribeMeetupGroupObserver() {
-        meetupViewModel.getMeetupGroupList().observe(this, new Observer<List<MeetupGroup>>() {
-            @Override
-            public void onChanged(List<MeetupGroup> meetupGroupList) {
-                if (meetupGroupList != null) {
-                    meetupSpinner.setVisibility(View.GONE);
-                    MeetupGroupAdapter meetupGroupAdapter =
-                            new MeetupGroupAdapter(MainActivity.this, meetupGroupList);
-                    meetupRecyclerView.setAdapter(meetupGroupAdapter);
+        meetupViewModel.getMeetupGroupList().observe(this, meetupGroupList -> {
+            if (meetupGroupList != null) {
+                meetupSpinner.setVisibility(View.GONE);
+                MeetupGroupAdapter meetupGroupAdapter =
+                        new MeetupGroupAdapter(MainActivity.this, meetupGroupList);
+                meetupRecyclerView.setAdapter(meetupGroupAdapter);
 
-                    // If there was a screen rotation, restore the previous position
-                    if (meetupRecyclerViewLastPosition != 0) {
-                        ((GridLayoutManager) meetupRecyclerView.getLayoutManager()).scrollToPosition(meetupRecyclerViewLastPosition);
-                    }
-
-                    // Display the group details using WebView(Custom Tabs)
-                    meetupGroupAdapter.setOnItemClickListener((position, v) -> {
-                        MeetupGroup meetupGroup = meetupGroupList.get(position);
-                        String groupUrlString = meetupGroup.getGroupUrl();
-                        NetworkUtilities.openCustomTabs(MainActivity.this, groupUrlString);
-                    });
-
-                    // Set the swipe action on Meetup events list to refresh the search
-                    meetupRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                        @Override
-                        public void onRefresh() {
-                            checkLocationPermission();
-                            meetupRefreshLayout.setRefreshing(false);
-                        }
-                    });
+                // If there was a screen rotation, restore the previous position
+                if (meetupRecyclerViewLastPosition != 0) {
+                    ((GridLayoutManager) meetupRecyclerView.getLayoutManager()).scrollToPosition(meetupRecyclerViewLastPosition);
                 }
+
+                // Display the group details using WebView(Custom Tabs)
+                meetupGroupAdapter.setOnItemClickListener((position, v) -> {
+                    MeetupGroup meetupGroup = meetupGroupList.get(position);
+                    String groupUrlString = meetupGroup.getGroupUrl();
+                    NetworkUtilities.openCustomTabs(MainActivity.this, groupUrlString);
+                });
+
+                // Set the swipe action on Meetup events list to refresh the search
+                meetupRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        checkLocationPermission();
+                        meetupRefreshLayout.setRefreshing(false);
+                    }
+                });
             }
         });
     }
@@ -380,7 +374,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void selectDrawerItem(MenuItem menuItem) {
+    private void selectDrawerItem(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.nav_home:
                 break;

@@ -36,23 +36,21 @@ public class MeetupGroupApiClient {
         return RetrofitInstance.getMeetupService().getMeetupGroupList(Constants.MEETUP_API_KEY,
                 location, category, responsePageNumber);
     }
+
     public void queryMeetupApiForGroups(String location, int category,
                                         int responsePageNumber) {
-        AppExecutors.getInstance().networkIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Response response = getMeetupRetrofitResponse(location, category, responsePageNumber).execute();
-                    if (response.code() == 200) {
-                        List<MeetupGroup> responseList = (List<MeetupGroup>) response.body();
-                        meetupGroupList.postValue(responseList);
-                    } else {
-                        meetupGroupList.postValue(null);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+        AppExecutors.getInstance().networkIO().execute(() -> {
+            try {
+                Response response = getMeetupRetrofitResponse(location, category, responsePageNumber).execute();
+                if (response.code() == 200) {
+                    List<MeetupGroup> responseList = (List<MeetupGroup>) response.body();
+                    meetupGroupList.postValue(responseList);
+                } else {
                     meetupGroupList.postValue(null);
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
+                meetupGroupList.postValue(null);
             }
         });
     }

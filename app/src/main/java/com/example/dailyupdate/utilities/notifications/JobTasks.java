@@ -41,54 +41,51 @@ public class JobTasks {
     public static void searchForNewEvents(Context context, ArrayList<String> latestSearchIds) {
         getSharedPreferences(context);
 
-        AppExecutors.getInstance().networkIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Response response = getMeetupRetrofitResponse(searchLocation, sortBy, searchKeyword).execute();
-                    if (response.code() == 200) {
-                        MeetupEventResponse eventResponse =
-                                (MeetupEventResponse) response.body();
-                        List<MeetupEvent> eventList = eventResponse.getMeetupEventsList();
-                        // Make a list of the retrieved events IDs
-                        ArrayList<String> newSearchEventIds = new ArrayList<>();
-                        for (int i = 0; i < eventList.size(); i++) {
-                            MeetupEvent currentItem = eventList.get(i);
-                            String eventId = currentItem.getEventId();
-                            newSearchEventIds.add(eventId);
-                        }
-
-                        // Compare last search IDs and current search IDs
-                        // Only the same items will be kept in the current search IDs
-                        // https://www.w3resource.com/java-tutorial/arraylist/arraylist_retainall.php
-                        newSearchEventIds.retainAll(latestSearchIds);
-
-                        // If there is any size difference, then there are new events available
-                        if (newSearchEventIds.size() != latestSearchIds.size()) {
-                            // Create notification to warn the user there are new events
-                            Intent getNotification = new Intent(context, AppService.class);
-                            getNotification.setAction(Constants.ACTION_GET_NOTIFICATION);
-                            PendingIntent getNotificationPendingIntent = PendingIntent.getService(context
-                                    , Constants.ACTION_GET_NOTIFICATION_PENDING_INTENT_ID,
-                                    getNotification, PendingIntent.FLAG_UPDATE_CURRENT);
-                            try {
-                                getNotificationPendingIntent.send();
-                            } catch (PendingIntent.CanceledException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
+        AppExecutors.getInstance().networkIO().execute(() -> {
+            try {
+                Response response = getMeetupRetrofitResponse(searchLocation, sortBy, searchKeyword).execute();
+                if (response.code() == 200) {
+                    MeetupEventResponse eventResponse =
+                            (MeetupEventResponse) response.body();
+                    List<MeetupEvent> eventList = eventResponse.getMeetupEventsList();
+                    // Make a list of the retrieved events IDs
+                    ArrayList<String> newSearchEventIds = new ArrayList<>();
+                    for (int i = 0; i < eventList.size(); i++) {
+                        MeetupEvent currentItem = eventList.get(i);
+                        String eventId = currentItem.getEventId();
+                        newSearchEventIds.add(eventId);
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+
+                    // Compare last search IDs and current search IDs
+                    // Only the same items will be kept in the current search IDs
+                    // https://www.w3resource.com/java-tutorial/arraylist/arraylist_retainall.php
+                    newSearchEventIds.retainAll(latestSearchIds);
+
+                    // If there is any size difference, then there are new events available
+                    if (newSearchEventIds.size() != latestSearchIds.size()) {
+                        // Create notification to warn the user there are new events
+                        Intent getNotification = new Intent(context, AppService.class);
+                        getNotification.setAction(Constants.ACTION_GET_NOTIFICATION);
+                        PendingIntent getNotificationPendingIntent = PendingIntent.getService(context
+                                , Constants.ACTION_GET_NOTIFICATION_PENDING_INTENT_ID,
+                                getNotification, PendingIntent.FLAG_UPDATE_CURRENT);
+                        try {
+                            getNotificationPendingIntent.send();
+                        } catch (PendingIntent.CanceledException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }
 
     private static Call<MeetupEventResponse> getMeetupRetrofitResponse(String location,
-                                                                      String sortBy,
-                                                                String searchKeyword) {
+                                                                       String sortBy,
+                                                                       String searchKeyword) {
         return RetrofitInstance.getMeetupService().getMeetupEventList(Constants.MEETUP_API_KEY,
                 location, sortBy, Constants.MEETUP_TECH_CATEGORY_NUMBER, searchKeyword);
     }

@@ -40,24 +40,21 @@ public class MeetupEventApiClient {
 
     public void queryMeetupApiForEvents(String location, String sortBy, int category,
                                         String searchKeyword) {
-        AppExecutors.getInstance().networkIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Response response = getMeetupRetrofitResponse(location, sortBy, category,
-                            searchKeyword).execute();
-                    if (response.code() == 200) {
-                        MeetupEventResponse meetupEventResponse =
-                                (MeetupEventResponse) response.body();
-                        List<MeetupEvent> responseList = meetupEventResponse.getMeetupEventsList();
-                        meetupEventList.postValue(responseList);
-                    } else {
-                        meetupEventList.postValue(null);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+        AppExecutors.getInstance().networkIO().execute(() -> {
+            try {
+                Response response = getMeetupRetrofitResponse(location, sortBy, category,
+                        searchKeyword).execute();
+                if (response.code() == 200) {
+                    MeetupEventResponse meetupEventResponse =
+                            (MeetupEventResponse) response.body();
+                    List<MeetupEvent> responseList = meetupEventResponse.getMeetupEventsList();
+                    meetupEventList.postValue(responseList);
+                } else {
                     meetupEventList.postValue(null);
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
+                meetupEventList.postValue(null);
             }
         });
     }

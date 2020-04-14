@@ -24,21 +24,11 @@ public class LatestSearchDatabaseRepository {
     }
 
     public void insertSearchItem(List<LatestSearch> latestSearch) {
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                dao.insertLatestSearch(latestSearch);
-            }
-        });
+        AppExecutors.getInstance().diskIO().execute(() -> dao.insertLatestSearch(latestSearch));
     }
 
     public void deleteAllEvents() {
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                dao.deleteAllLatestSearch();
-            }
-        });
+        AppExecutors.getInstance().diskIO().execute(() -> dao.deleteAllLatestSearch());
     }
 
     public LiveData<List<String>> getAllLatestSearchLive() {

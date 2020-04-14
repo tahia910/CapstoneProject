@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.dailyupdate.R;
@@ -29,16 +28,16 @@ import com.example.dailyupdate.utilities.DateUtilities;
 import com.example.dailyupdate.viewmodels.BookmarksDatabaseViewModel;
 import com.example.dailyupdate.viewmodels.MeetupViewModel;
 
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MeetupDetailsFragment extends DialogFragment {
 
     private static final String TAG = MeetupDetailsFragment.class.getSimpleName();
-    @BindView(R.id.spinner_meetup_detail) ProgressBar spinner;
-    @BindView(R.id.emptyview_meetup_detail) TextView emptyView;
+    @BindView(R.id.spinner_meetup_detail)
+    ProgressBar spinner;
+    @BindView(R.id.emptyview_meetup_detail)
+    TextView emptyView;
 
     @BindView(R.id.textview_event_title_meetup_detail)
     TextView eventTitleTextView;
@@ -63,10 +62,14 @@ public class MeetupDetailsFragment extends DialogFragment {
     @BindView(R.id.textview_description_meetup_detail)
     TextView descriptionTextView;
 
-    @BindView(R.id.imageview_group_icon_meetup_detail) ImageView groupIcon;
-    @BindView(R.id.imageview_status_icon_meetup_detail) ImageView statusIcon;
-    @BindView(R.id.imageview_time_icon_meetup_detail) ImageView timeIcon;
-    @BindView(R.id.imageview_place_icon_meetup_detail) ImageView placeIcon;
+    @BindView(R.id.imageview_group_icon_meetup_detail)
+    ImageView groupIcon;
+    @BindView(R.id.imageview_status_icon_meetup_detail)
+    ImageView statusIcon;
+    @BindView(R.id.imageview_time_icon_meetup_detail)
+    ImageView timeIcon;
+    @BindView(R.id.imageview_place_icon_meetup_detail)
+    ImageView placeIcon;
 
     private ImageView backIcon;
     private ImageView bookmarkIcon;
@@ -161,50 +164,41 @@ public class MeetupDetailsFragment extends DialogFragment {
 
     private void checkAlreadyBookmarked() {
         bookmarkIcon = dialog.findViewById(R.id.bookmark_icon_meetup_detail);
-        databaseViewModel.getAllBookmarkedEventsIds().observe(this, new Observer<List<String>>() {
-            @Override
-            public void onChanged(List<String> strings) {
-                if (strings != null) {
-                    if (strings.contains(eventId)) {
-                        alreadyBookmarked = true;
-                        bookmarkIcon.setImageResource(R.drawable.ic_bookmarked_white);
-                    } else {
-                        alreadyBookmarked = false;
-                        bookmarkIcon.setImageResource(R.drawable.ic_bookmark_white);
-                    }
-                    setBookmarkIconClickListener();
+        databaseViewModel.getAllBookmarkedEventsIds().observe(getViewLifecycleOwner(), strings -> {
+            if (strings != null) {
+                if (strings.contains(eventId)) {
+                    alreadyBookmarked = true;
+                    bookmarkIcon.setImageResource(R.drawable.ic_bookmarked_white);
+                } else {
+                    alreadyBookmarked = false;
+                    bookmarkIcon.setImageResource(R.drawable.ic_bookmark_white);
                 }
+                setBookmarkIconClickListener();
             }
         });
     }
 
     private void setBookmarkIconClickListener() {
-        bookmarkIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (alreadyBookmarked) {
-                    alreadyBookmarked = false;
-                    databaseViewModel.deleteBookmarkedEvent(currentEvent);
-                    bookmarkIcon.setImageResource(R.drawable.ic_bookmark_white);
-                } else {
-                    alreadyBookmarked = true;
-                    databaseViewModel.insertBookmarkedEvent(currentEvent);
-                    bookmarkIcon.setImageResource(R.drawable.ic_bookmarked_white);
-                }
+        bookmarkIcon.setOnClickListener(v -> {
+            if (alreadyBookmarked) {
+                alreadyBookmarked = false;
+                databaseViewModel.deleteBookmarkedEvent(currentEvent);
+                bookmarkIcon.setImageResource(R.drawable.ic_bookmark_white);
+            } else {
+                alreadyBookmarked = true;
+                databaseViewModel.insertBookmarkedEvent(currentEvent);
+                bookmarkIcon.setImageResource(R.drawable.ic_bookmarked_white);
             }
         });
     }
 
 
     private void subscribeMeetupEventDetailsObserver() {
-        meetupViewModel.getMeetupEventDetails().observe(this, new Observer<MeetupEventDetails>() {
-            @Override
-            public void onChanged(MeetupEventDetails currentMeetupEvent) {
-                if (currentMeetupEvent != null) {
-                    spinner.setVisibility(View.INVISIBLE);
-                    currentEvent = currentMeetupEvent;
-                    setEventInformation(currentEvent);
-                }
+        meetupViewModel.getMeetupEventDetails().observe(getViewLifecycleOwner(), currentMeetupEvent -> {
+            if (currentMeetupEvent != null) {
+                spinner.setVisibility(View.INVISIBLE);
+                currentEvent = currentMeetupEvent;
+                setEventInformation(currentEvent);
             }
         });
     }
@@ -263,19 +257,16 @@ public class MeetupDetailsFragment extends DialogFragment {
         placeIcon.setVisibility(View.VISIBLE);
         addressTextView.setText(addressString);
 
-        addressTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri geoLocation = Uri.parse("geo:0,0?q=" + addressString);
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(geoLocation);
-                if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-                    startActivity(intent);
-                } else {
-                    Log.d(TAG,
-                            "Couldn't call " + geoLocation.toString() + ", no receiving apps " +
-                                    "installed");
-                }
+        addressTextView.setOnClickListener(v -> {
+            Uri geoLocation = Uri.parse("geo:0,0?q=" + addressString);
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(geoLocation);
+            if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                startActivity(intent);
+            } else {
+                Log.d(TAG,
+                        "Couldn't call " + geoLocation.toString() + ", no receiving apps " +
+                                "installed");
             }
         });
     }
@@ -289,15 +280,15 @@ public class MeetupDetailsFragment extends DialogFragment {
 
     @Override
     public void onResume() {
-        ViewGroup.LayoutParams params = getDialog().getWindow().getAttributes();
-        if (getResources().getConfiguration().smallestScreenWidthDp <= 600){
+        WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
+        if (getResources().getConfiguration().smallestScreenWidthDp <= 600) {
             // If the user is using a mobile, the dialog will take the full screen
             params.width = WindowManager.LayoutParams.MATCH_PARENT;
         }
         // Else, the dialog will be displayed on top of the previous fragment (bookmarked events
         // list or search result)
         params.height = WindowManager.LayoutParams.MATCH_PARENT;
-        getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
+        getDialog().getWindow().setAttributes(params);
         super.onResume();
     }
 }

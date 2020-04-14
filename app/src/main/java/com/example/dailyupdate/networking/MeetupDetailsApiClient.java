@@ -35,22 +35,19 @@ public class MeetupDetailsApiClient {
     }
 
     public void queryMeetupApiForEventDetails(String groupId, String eventId) {
-        AppExecutors.getInstance().networkIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Response response = getMeetupRetrofitResponse(groupId, eventId).execute();
-                    if (response.code() == 200) {
-                        MeetupEventDetails eventDetailsResponse =
-                                (MeetupEventDetails) response.body();
-                        meetupEventDetails.postValue(eventDetailsResponse);
-                    } else {
-                        meetupEventDetails.postValue(null);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+        AppExecutors.getInstance().networkIO().execute(() -> {
+            try {
+                Response response = getMeetupRetrofitResponse(groupId, eventId).execute();
+                if (response.code() == 200) {
+                    MeetupEventDetails eventDetailsResponse =
+                            (MeetupEventDetails) response.body();
+                    meetupEventDetails.postValue(eventDetailsResponse);
+                } else {
                     meetupEventDetails.postValue(null);
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
+                meetupEventDetails.postValue(null);
             }
         });
     }

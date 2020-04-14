@@ -64,10 +64,8 @@ public class NotificationUtilities {
         PendingIntent ignoreUpdatePendingIntent = PendingIntent.getService(context,
                 Constants.ACTION_IGNORE_PENDING_INTENT_ID , ignoreUpdateIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
-        NotificationCompat.Action ignoreUpdateAction =
-                new NotificationCompat.Action(R.drawable.ic_cancel, context.getString(R.string.notif_action_ignore),
-                        ignoreUpdatePendingIntent);
-        return ignoreUpdateAction;
+        return new NotificationCompat.Action(R.drawable.ic_cancel, context.getString(R.string.notif_action_ignore),
+                ignoreUpdatePendingIntent);
     }
 
     private static NotificationCompat.Action openSearchAction(Context context){
@@ -76,10 +74,8 @@ public class NotificationUtilities {
         PendingIntent ignoreUpdatePendingIntent = PendingIntent.getService(context,
                 Constants.ACTION_OPEN_SEARCH_PENDING_INTENT_ID, ignoreUpdateIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
-        NotificationCompat.Action ignoreUpdateAction =
-                new NotificationCompat.Action(R.drawable.ic_open, context.getString(R.string.notif_action_open),
-                        ignoreUpdatePendingIntent);
-        return ignoreUpdateAction;
+        return new NotificationCompat.Action(R.drawable.ic_open, context.getString(R.string.notif_action_open),
+                ignoreUpdatePendingIntent);
     }
 
     private static PendingIntent contentIntent(Context context) {

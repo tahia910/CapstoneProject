@@ -31,11 +31,16 @@ import butterknife.ButterKnife;
 public class BookmarksAdapter extends ListAdapter<MeetupEventDetails,
         BookmarksAdapter.BookmarksAdapterViewHolder> {
 
-    @BindView(R.id.textview_event_title) TextView eventNameTextView;
-    @BindView(R.id.textview_event_date) TextView eventDateTextView;
-    @BindView(R.id.textview_event_time) TextView eventTimeTextView;
-    @BindView(R.id.textview_group_title) TextView eventGroupTextView;
-    @BindView(R.id.bookmarks_icon_bookmarks_item) ImageView bookmarkIcon;
+    @BindView(R.id.textview_event_title)
+    TextView eventNameTextView;
+    @BindView(R.id.textview_event_date)
+    TextView eventDateTextView;
+    @BindView(R.id.textview_event_time)
+    TextView eventTimeTextView;
+    @BindView(R.id.textview_group_title)
+    TextView eventGroupTextView;
+    @BindView(R.id.bookmarks_icon_bookmarks_item)
+    ImageView bookmarkIcon;
 
     private static ClickListener clickListener;
     private static BookmarkIconClickListener bookmarkIconListener;
@@ -50,24 +55,24 @@ public class BookmarksAdapter extends ListAdapter<MeetupEventDetails,
     // wouldn't be available in constructor.)
     private static final DiffUtil.ItemCallback<MeetupEventDetails> DIFF_CALLBACK =
             new DiffUtil.ItemCallback<MeetupEventDetails>() {
-        @Override
-        public boolean areItemsTheSame(@NonNull MeetupEventDetails oldItem,
-                                       @NonNull MeetupEventDetails newItem) {
-            return oldItem.getEventId().equals(newItem.getEventId());
-        }
+                @Override
+                public boolean areItemsTheSame(@NonNull MeetupEventDetails oldItem,
+                                               @NonNull MeetupEventDetails newItem) {
+                    return oldItem.getEventId().equals(newItem.getEventId());
+                }
 
-        @Override
-        public boolean areContentsTheSame(@NonNull MeetupEventDetails oldItem,
-                                          @NonNull MeetupEventDetails newItem) {
-            // Must check if all values are the same in order to make sure it is the same item
-            // Can't use oldItem.equals(newItem) as it will always be false (different Java object)
-            return oldItem.getEventName().equals(newItem.getEventName())
-                    && oldItem.getMeetupEventGroupName().getEventGroupUrl()
-                    .equals(newItem.getMeetupEventGroupName().getEventGroupUrl())
-                    && oldItem.getEventTime().equals(newItem.getEventTime())
-                    && oldItem.getEventDate().equals(newItem.getEventDate());
-        }
-    };
+                @Override
+                public boolean areContentsTheSame(@NonNull MeetupEventDetails oldItem,
+                                                  @NonNull MeetupEventDetails newItem) {
+                    // Must check if all values are the same in order to make sure it is the same item
+                    // Can't use oldItem.equals(newItem) as it will always be false (different Java object)
+                    return oldItem.getEventName().equals(newItem.getEventName())
+                            && oldItem.getMeetupEventGroupName().getEventGroupUrl()
+                            .equals(newItem.getMeetupEventGroupName().getEventGroupUrl())
+                            && oldItem.getEventTime().equals(newItem.getEventTime())
+                            && oldItem.getEventDate().equals(newItem.getEventDate());
+                }
+            };
 
     public interface ClickListener {
         void onItemClick(int position, View v);
@@ -115,13 +120,10 @@ public class BookmarksAdapter extends ListAdapter<MeetupEventDetails,
         private BookmarksAdapterViewHolder(View view) {
             super(view);
             view.setOnClickListener(this);
-            bookmarkIcon.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    if (bookmarkIconListener != null && position != RecyclerView.NO_POSITION) {
-                        bookmarkIconListener.onBookmarkIconClick(getItem(position));
-                    }
+            bookmarkIcon.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                if (bookmarkIconListener != null && position != RecyclerView.NO_POSITION) {
+                    bookmarkIconListener.onBookmarkIconClick(getItem(position));
                 }
             });
         }

@@ -30,9 +30,12 @@ import butterknife.ButterKnife;
 
 public class BookmarksActivity extends AppCompatActivity implements BookmarksFragment.BookmarksFragmentListener, MeetupDetailsFragment.MeetupDetailsFragmentListener {
 
-    @BindView(R.id.drawer_layout) DrawerLayout mDrawer;
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.nav_view) NavigationView navigationView;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout mDrawer;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.nav_view)
+    NavigationView navigationView;
 
     private ActionBarDrawerToggle mDrawerToggle;
     private FragmentManager fragmentManager;
@@ -172,7 +175,7 @@ public class BookmarksActivity extends AppCompatActivity implements BookmarksFra
         });
     }
 
-    public void selectDrawerItem(MenuItem menuItem) {
+    private void selectDrawerItem(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.nav_home:
                 NavUtils.navigateUpFromSameTask(this);

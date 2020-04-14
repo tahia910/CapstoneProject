@@ -86,9 +86,8 @@ public class GitHubDialogFragment extends DialogFragment {
             bindViews();
             getDialogValues();
             listener.onGitHubDialogPositiveClick(GitHubDialogFragment.this);
-        }).setNegativeButton(R.string.cancel_label, (dialog, id) -> {
-            listener.onGitHubDialogNegativeClick(GitHubDialogFragment.this);
-        });
+        }).setNegativeButton(R.string.cancel_label, (dialog, id) ->
+                listener.onGitHubDialogNegativeClick(GitHubDialogFragment.this));
         return builder.create();
     }
 

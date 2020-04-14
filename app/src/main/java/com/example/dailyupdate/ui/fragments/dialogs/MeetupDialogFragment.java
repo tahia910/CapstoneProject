@@ -81,17 +81,12 @@ public class MeetupDialogFragment extends DialogFragment {
             searchLocation = getArguments().getString(Constants.KEY_MEETUP_DIALOG_LOCATION);
         }
         sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
-        builder.setPositiveButton(R.string.save_label, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                bindViews();
-                getDialogValues();
-                listener.onMeetupDialogPositiveClick(MeetupDialogFragment.this);
-            }
-        }).setNegativeButton(R.string.cancel_label, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                listener.onMeetupDialogNegativeClick(MeetupDialogFragment.this);
-            }
-        });
+        builder.setPositiveButton(R.string.save_label, (dialog, id) -> {
+            bindViews();
+            getDialogValues();
+            listener.onMeetupDialogPositiveClick(MeetupDialogFragment.this);
+        }).setNegativeButton(R.string.cancel_label, (dialog, id) ->
+                listener.onMeetupDialogNegativeClick(MeetupDialogFragment.this));
         return builder.create();
     }
 

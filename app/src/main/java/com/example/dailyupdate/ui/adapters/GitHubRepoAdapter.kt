@@ -31,9 +31,9 @@ class GitHubRepoAdapter : RecyclerView.Adapter<GitHubRepoAdapter.GitHubRepoViewH
         val context = parent.context
         val view: View
         // Use a different layout for Home and GitHub Search
-        when (currentLayoutOption) {
-            1 -> view = LayoutInflater.from(context).inflate(R.layout.home_githubrepo_item, parent, false)
-            2 -> view = LayoutInflater.from(context).inflate(R.layout.github_main_repo_item, parent, false)
+        view = when (currentLayoutOption) {
+            1 -> LayoutInflater.from(context).inflate(R.layout.home_githubrepo_item, parent, false)
+            2 -> LayoutInflater.from(context).inflate(R.layout.github_main_repo_item, parent, false)
             else -> throw IllegalArgumentException("Unknown layout")
         }
         val holder = GitHubRepoViewHolder(view)
@@ -41,7 +41,7 @@ class GitHubRepoAdapter : RecyclerView.Adapter<GitHubRepoAdapter.GitHubRepoViewH
         //Open the selected GitHub repository details using WebView(Custom Tabs)
         view.setOnClickListener {
             val position = holder.adapterPosition
-            NetworkUtilities.openCustomTabs(context, gitHubRepoList[position].htmlUrl);
+            NetworkUtilities.openCustomTabs(context, gitHubRepoList[position].htmlUrl)
         }
         return holder
     }

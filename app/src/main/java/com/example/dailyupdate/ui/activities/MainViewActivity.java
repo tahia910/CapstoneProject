@@ -31,7 +31,6 @@ import com.example.dailyupdate.ui.fragments.dialogs.GitHubDialogFragment;
 import com.example.dailyupdate.ui.fragments.dialogs.MeetupDetailsFragment;
 import com.example.dailyupdate.ui.fragments.dialogs.MeetupDialogFragment;
 import com.example.dailyupdate.utilities.Constants;
-import com.example.dailyupdate.utilities.NetworkUtilities;
 import com.example.dailyupdate.viewmodels.BookmarksDatabaseViewModel;
 import com.google.android.material.navigation.NavigationView;
 
@@ -351,7 +350,7 @@ public class MainViewActivity extends AppCompatActivity implements MeetupDialogF
         });
     }
 
-    public void selectDrawerItem(MenuItem menuItem) {
+    private void selectDrawerItem(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.nav_home:
                 NavUtils.navigateUpFromSameTask(this);

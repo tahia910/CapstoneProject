@@ -57,25 +57,22 @@ public class GitHubApiClient {
      * then update the LiveData object with the response
      **/
     public void queryGitHubApi(String searchKeyword, String sortBy) {
-        AppExecutors.getInstance().networkIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Response response = getGitHubRetrofitResponse(searchKeyword, sortBy).execute();
-                    // HTTP response status code 200 means that the request was successful
-                    if (response.code() == 200) {
-                        GitHubResponse gitHubResponse = (GitHubResponse) response.body();
-                        List<GitHubRepo> gitHubRepoListResponse = gitHubResponse.getGitHubRepo();
-                        // Update the LiveData
-                        gitHubRepoList.postValue(gitHubRepoListResponse);
-                    } else {
-                        // The request was not successful, update the LiveData accordingly
-                        gitHubRepoList.postValue(null);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+        AppExecutors.getInstance().networkIO().execute(() -> {
+            try {
+                Response response = getGitHubRetrofitResponse(searchKeyword, sortBy).execute();
+                // HTTP response status code 200 means that the request was successful
+                if (response.code() == 200) {
+                    GitHubResponse gitHubResponse = (GitHubResponse) response.body();
+                    List<GitHubRepo> gitHubRepoListResponse = gitHubResponse.getGitHubRepo();
+                    // Update the LiveData
+                    gitHubRepoList.postValue(gitHubRepoListResponse);
+                } else {
+                    // The request was not successful, update the LiveData accordingly
                     gitHubRepoList.postValue(null);
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
+                gitHubRepoList.postValue(null);
             }
         });
     }
@@ -84,23 +81,20 @@ public class GitHubApiClient {
      * Similar to queryGitHubApi() method above, but with an additional "sortOrder" criteria
      **/
     public void queryGitHubApiWithOrder(String searchKeyword, String sortBy, String sortOrder) {
-        AppExecutors.getInstance().networkIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Response response = getGitHubRetrofitResponseWithOrder(searchKeyword, sortBy,
-                            sortOrder).execute();
-                    if (response.code() == 200) {
-                        GitHubResponse gitHubResponse = (GitHubResponse) response.body();
-                        List<GitHubRepo> gitHubRepoListResponse = gitHubResponse.getGitHubRepo();
-                        gitHubRepoList.postValue(gitHubRepoListResponse);
-                    } else {
-                        gitHubRepoList.postValue(null);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+        AppExecutors.getInstance().networkIO().execute(() -> {
+            try {
+                Response response = getGitHubRetrofitResponseWithOrder(searchKeyword, sortBy,
+                        sortOrder).execute();
+                if (response.code() == 200) {
+                    GitHubResponse gitHubResponse = (GitHubResponse) response.body();
+                    List<GitHubRepo> gitHubRepoListResponse = gitHubResponse.getGitHubRepo();
+                    gitHubRepoList.postValue(gitHubRepoListResponse);
+                } else {
                     gitHubRepoList.postValue(null);
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
+                gitHubRepoList.postValue(null);
             }
         });
     }
