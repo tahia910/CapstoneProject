@@ -53,7 +53,7 @@ class GitHubMainFragment : Fragment() {
                 main_emptyview.visibility = View.VISIBLE
                 main_emptyview.text = getString(R.string.no_internet_connection)
             } else {
-                gitHubViewModel.searchGitHubRepoListWithOrder(searchKeyword, sortBy, searchOrder)
+                gitHubViewModel.searchGitHubRepoList(searchKeyword, sortBy, searchOrder)
             }
         }
         super.onViewCreated(view, savedInstanceState)
@@ -100,7 +100,7 @@ class GitHubMainFragment : Fragment() {
 
                 // Set the swipe action to refresh the search
                 main_swipe_refresh_layout.setOnRefreshListener {
-                    gitHubViewModel.searchGitHubRepoListWithOrder(searchKeyword, sortBy, searchOrder)
+                    gitHubViewModel.searchGitHubRepoList(searchKeyword, sortBy, searchOrder)
                     main_swipe_refresh_layout.isRefreshing = false
                 }
             } else {
