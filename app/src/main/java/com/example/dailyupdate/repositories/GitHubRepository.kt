@@ -8,7 +8,7 @@ import com.example.dailyupdate.networking.RetrofitInstance
 import com.example.dailyupdate.utilities.Resource
 import kotlinx.coroutines.CoroutineScope
 
-class GitHubRepository private constructor() {
+class GitHubRepository {
 
     fun searchRepositoriesFromGitHubApiWithOrder(searchKeyword: String,
                                                  sortBy: String,

@@ -25,7 +25,7 @@
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/admob_app_sample_id"/>
 
-        <activity android:name=".ui.activities.MainActivity"
+        <activity android:name=".ui.activities.HomeActivity"
             android:theme="@style/AppTheme.Home">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,43 +37,43 @@
             android:theme="@style/AppTheme.Search">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.MainActivity"/>
+                android:value=".ui.activities.HomeActivity"/>
         </activity>
         <activity
             android:name=".ui.activities.PreferenceActivity"
             android:label="@string/preference_label" />
-        <activity
-            android:name=".ui.activities.BookmarksActivity"
-            android:label="@string/bookmarks_label"
-            android:launchMode="singleTop"
-            android:theme="@style/AppTheme.Bookmark">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.MainActivity"/>
-        </activity>
+<!--        <activity-->
+<!--            android:name=".ui.activities.BookmarksActivity"-->
+<!--            android:label="@string/bookmarks_label"-->
+<!--            android:launchMode="singleTop"-->
+<!--            android:theme="@style/AppTheme.Bookmark">-->
+<!--            <meta-data-->
+<!--                android:name="android.support.PARENT_ACTIVITY"-->
+<!--                android:value=".ui.activities.HomeActivity"/>-->
+<!--        </activity>-->
 
-        <receiver android:name=".widget.BookmarksWidget">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
+<!--        <receiver android:name=".widget.BookmarksWidget">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />-->
+<!--            </intent-filter>-->
 
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/bookmarks_widget_info" />
-        </receiver>
+<!--            <meta-data-->
+<!--                android:name="android.appwidget.provider"-->
+<!--                android:resource="@xml/bookmarks_widget_info" />-->
+<!--        </receiver>-->
 
-        <service android:name=".widget.WidgetAdapterService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+<!--        <service android:name=".widget.WidgetAdapterService"-->
+<!--            android:permission="android.permission.BIND_REMOTEVIEWS"/>-->
 
-        <service android:name=".widget.WidgetService" />
-        <service android:name=".utilities.AppService" />
-        <service
-            android:name=".utilities.notifications.UpdateFirebaseJobService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
-            </intent-filter>
-        </service>
+<!--        <service android:name=".widget.WidgetService" />-->
+<!--        <service android:name=".utilities.AppService" />-->
+<!--        <service-->
+<!--            android:name=".utilities.notifications.UpdateFirebaseJobService"-->
+<!--            android:exported="false">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>-->
+<!--            </intent-filter>-->
+<!--        </service>-->
 
     </application>
 

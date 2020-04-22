@@ -7,7 +7,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitInstance {
     private static Retrofit gitHubRetrofit;
-    private static Retrofit meetupRetrofit;
 
     private static GitHubService gitHubService =
             getGitHubRetrofitInstance().create(GitHubService.class);
@@ -24,23 +23,5 @@ public class RetrofitInstance {
                     .build();
         }
         return gitHubRetrofit;
-    }
-
-
-    private static MeetupService meetupService =
-            getMeetupRetrofitInstance().create(MeetupService.class);
-
-    public static MeetupService getMeetupService() {
-        return meetupService;
-    }
-
-    private static Retrofit getMeetupRetrofitInstance() {
-        if (meetupRetrofit == null) {
-            meetupRetrofit = new retrofit2.Retrofit.Builder()
-                    .baseUrl(Constants.MEETUP_BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-        }
-        return meetupRetrofit;
     }
 }

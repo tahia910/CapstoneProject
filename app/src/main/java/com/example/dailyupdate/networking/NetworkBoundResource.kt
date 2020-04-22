@@ -9,7 +9,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.lang.Exception
 
 abstract class NetworkBoundResource<ResultType, RequestType>(scope: CoroutineScope) {
 
@@ -42,11 +41,7 @@ abstract class NetworkBoundResource<ResultType, RequestType>(scope: CoroutineSco
             e.printStackTrace()
             setValue(Resource.error(customErrorMsg() ?: "Error", null))
         }
-
-
     }
-
-//    protected open fun onFetchFailed() {}
 
     fun asLiveData() = result as LiveData<Resource<ResultType>>
 
@@ -54,10 +49,7 @@ abstract class NetworkBoundResource<ResultType, RequestType>(scope: CoroutineSco
     protected abstract fun processResponse(response: RequestType): ResultType
 
     @WorkerThread
-    open fun saveCallResult(item: ResultType){}
-
-//    @MainThread
-//    protected abstract fun shouldFetch(data: ResultType?): Boolean
+    open fun saveCallResult(item: ResultType) {}
 
     @MainThread
     protected abstract suspend fun createCall(): RequestType

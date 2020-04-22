@@ -25,14 +25,11 @@ import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dailyupdate.R
-import com.example.dailyupdate.data.models.MeetupGroup
 import com.example.dailyupdate.ui.adapters.GitHubRepoAdapter
-import com.example.dailyupdate.ui.adapters.MeetupGroupAdapter
 import com.example.dailyupdate.utilities.Constants
 import com.example.dailyupdate.utilities.NetworkUtilities
 import com.example.dailyupdate.utilities.Status
 import com.example.dailyupdate.viewmodels.GitHubViewModel
-import com.example.dailyupdate.viewmodels.MeetupViewModel
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationRequest
@@ -44,16 +41,15 @@ import kotlinx.android.synthetic.main.home_layout.*
 import java.io.IOException
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity() {
 
     private var mFusedLocationClient: FusedLocationProviderClient? = null
     private var userLocation: String? = null
     private var sharedPref: SharedPreferences? = null
     private lateinit var gitHubViewModel: GitHubViewModel
-    private lateinit var meetupViewModel: MeetupViewModel
     private var gitHubRecyclerViewLastPosition = 0
     private var gitHubRecyclerViewOption = 0
-    private var meetupRecyclerViewLastPosition = 0
+//    private var meetupRecyclerViewLastPosition = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,9 +59,8 @@ class MainActivity : AppCompatActivity() {
         setRecyclerViews(savedInstanceState)
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
         gitHubViewModel = ViewModelProvider(this).get(GitHubViewModel::class.java)
-        meetupViewModel = ViewModelProvider(this).get(MeetupViewModel::class.java)
         subscribeGitHubObserver()
-        subscribeMeetupGroupObserver()
+//        subscribeMeetupGroupObserver()
 
         // Check if the network is available first, display empty view if there is no connection
         val isConnected = NetworkUtilities.checkNetworkAvailability(this)
@@ -74,7 +69,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
             // Check location permission before retrieving the Meetup groups
-            checkLocationPermission()
+//            checkLocationPermission()
 
             // Retrieve GitHub repositories
             gitHubViewModel.searchGitHubRepoList(Constants.GITHUB_DEFAULT_SEARCH_KEYWORD,
@@ -98,8 +93,8 @@ class MainActivity : AppCompatActivity() {
             Constants.DEFAULT_LOCATION
         }
         // Retrieve the Meetup groups based on the criterias above
-        meetupViewModel.searchMeetupGroups(userLocation, Constants.MEETUP_TECH_CATEGORY_NUMBER,
-                Constants.MEETUP_GROUP_RESPONSE_PAGE)
+//        meetupViewModel.searchMeetupGroups(userLocation, Constants.MEETUP_TECH_CATEGORY_NUMBER,
+//                Constants.MEETUP_GROUP_RESPONSE_PAGE)
     }
 
     /**
@@ -119,8 +114,8 @@ class MainActivity : AppCompatActivity() {
         gitHubRecyclerViewLastPosition = (home_github_recycler_view.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
         outState.putInt(Constants.KEY_GITHUB_RECYCLERVIEW_POSITION, gitHubRecyclerViewLastPosition)
         outState.putInt(Constants.KEY_GITHUB_RECYCLERVIEW_OPTION, gitHubRecyclerViewOption)
-        meetupRecyclerViewLastPosition = (home_meetup_recycler_view.layoutManager as GridLayoutManager).findFirstCompletelyVisibleItemPosition()
-        outState.putInt(Constants.KEY_MEETUP_RECYCLERVIEW_POSITION, meetupRecyclerViewLastPosition)
+//        meetupRecyclerViewLastPosition = (home_meetup_recycler_view.layoutManager as GridLayoutManager).findFirstCompletelyVisibleItemPosition()
+//        outState.putInt(Constants.KEY_MEETUP_RECYCLERVIEW_POSITION, meetupRecyclerViewLastPosition)
     }
 
     private fun subscribeGitHubObserver() {
@@ -151,33 +146,33 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun subscribeMeetupGroupObserver() {
-        meetupViewModel.meetupGroupList.observe(this, Observer { meetupGroupList: List<MeetupGroup>? ->
-            if (meetupGroupList != null) {
-                home_meetup_spinner.visibility = View.GONE
-                val meetupGroupAdapter = MeetupGroupAdapter(this@MainActivity, meetupGroupList)
-                home_meetup_recycler_view.adapter = meetupGroupAdapter
-
-                // If there was a screen rotation, restore the previous position
-                if (meetupRecyclerViewLastPosition != 0) {
-                    (home_meetup_recycler_view.layoutManager as GridLayoutManager?)!!.scrollToPosition(meetupRecyclerViewLastPosition)
-                }
-
-                // Display the group details using WebView(Custom Tabs)
-                meetupGroupAdapter.setOnItemClickListener { position: Int, v: View? ->
-                    val meetupGroup: MeetupGroup = meetupGroupList.get(position)
-                    val groupUrlString: String = meetupGroup.groupUrl
-                    NetworkUtilities.openCustomTabs(this@MainActivity, groupUrlString)
-                }
-
-                // Set the swipe action on Meetup events list to refresh the search
-                swipe_refresh_layout.setOnRefreshListener {
-                    checkLocationPermission()
-                    swipe_refresh_layout.isRefreshing = false
-                }
-            }
-        })
-    }
+//    private fun subscribeMeetupGroupObserver() {
+//        meetupViewModel.meetupGroupList.observe(this, Observer { meetupGroupList: List<MeetupGroup>? ->
+//            if (meetupGroupList != null) {
+//                home_meetup_spinner.visibility = View.GONE
+//                val meetupGroupAdapter = MeetupGroupAdapter(this@MainActivity, meetupGroupList)
+//                home_meetup_recycler_view.adapter = meetupGroupAdapter
+//
+//                // If there was a screen rotation, restore the previous position
+//                if (meetupRecyclerViewLastPosition != 0) {
+//                    (home_meetup_recycler_view.layoutManager as GridLayoutManager?)!!.scrollToPosition(meetupRecyclerViewLastPosition)
+//                }
+//
+//                // Display the group details using WebView(Custom Tabs)
+//                meetupGroupAdapter.setOnItemClickListener { position: Int, v: View? ->
+//                    val meetupGroup: MeetupGroup = meetupGroupList.get(position)
+//                    val groupUrlString: String = meetupGroup.groupUrl
+//                    NetworkUtilities.openCustomTabs(this@MainActivity, groupUrlString)
+//                }
+//
+//                // Set the swipe action on Meetup events list to refresh the search
+//                swipe_refresh_layout.setOnRefreshListener {
+//                    checkLocationPermission()
+//                    swipe_refresh_layout.isRefreshing = false
+//                }
+//            }
+//        })
+//    }
 
     /**
      * Set up the toolbar and drawer
@@ -198,7 +193,7 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState != null) {
             gitHubRecyclerViewLastPosition = savedInstanceState.getInt(Constants.KEY_GITHUB_RECYCLERVIEW_POSITION)
             gitHubRecyclerViewOption = savedInstanceState.getInt(Constants.KEY_GITHUB_RECYCLERVIEW_OPTION)
-            meetupRecyclerViewLastPosition = savedInstanceState.getInt(Constants.KEY_MEETUP_RECYCLERVIEW_POSITION)
+//            meetupRecyclerViewLastPosition = savedInstanceState.getInt(Constants.KEY_MEETUP_RECYCLERVIEW_POSITION)
         }
         if (resources.configuration.smallestScreenWidthDp <= 600 && resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             // If the user is using a mobile and the orientation is portrait mode, then the
@@ -261,7 +256,7 @@ class MainActivity : AppCompatActivity() {
     private fun checkLocationPermission() {
         if (ActivityCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // Ask for permission
-            ActivityCompat.requestPermissions(this@MainActivity, arrayOf(ACCESS_COARSE_LOCATION),
+            ActivityCompat.requestPermissions(this@HomeActivity, arrayOf(ACCESS_COARSE_LOCATION),
                     Constants.PERMISSIONS_REQUEST_COARSE_LOCATION)
         } else {
             // Permission is already granted
@@ -331,23 +326,16 @@ class MainActivity : AppCompatActivity() {
             R.id.nav_home -> {
             }
             R.id.nav_bookmarks -> {
-                val bookmarkIntent = Intent(this, BookmarksActivity::class.java)
-                val bundle = ActivityOptions.makeSceneTransitionAnimation(this).toBundle()
-                startActivity(bookmarkIntent, bundle)
+//                val bookmarkIntent = Intent(this, BookmarksActivity::class.java)
+//                val bundle = ActivityOptions.makeSceneTransitionAnimation(this).toBundle()
+//                startActivity(bookmarkIntent, bundle)
             }
             R.id.nav_github -> {
-                val gitHubIntent = Intent(this@MainActivity, MainViewActivity::class.java)
+                val gitHubIntent = Intent(this@HomeActivity, MainViewActivity::class.java)
                 gitHubIntent.putExtra(Constants.MAIN_KEY, Constants.GITHUB_MAIN_KEY)
 
                 val bundle = ActivityOptions.makeSceneTransitionAnimation(this).toBundle()
                 startActivity(gitHubIntent, bundle)
-            }
-            R.id.nav_meetup -> {
-                val meetupIntent = Intent(this@MainActivity, MainViewActivity::class.java)
-                meetupIntent.putExtra(Constants.MAIN_KEY, Constants.MEETUP_MAIN_KEY)
-
-                val bundle = ActivityOptions.makeSceneTransitionAnimation(this).toBundle()
-                startActivity(meetupIntent, bundle)
             }
             else -> {
             }

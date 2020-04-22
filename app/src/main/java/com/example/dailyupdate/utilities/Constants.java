@@ -8,7 +8,6 @@ public class Constants {
 
     // API request related
     public static final String GITHUB_BASE_URL = "https://api.github.com/";
-    public static final String MEETUP_BASE_URL = "https://api.meetup.com";
     public static final String MEETUP_API_KEY = BuildConfig.MEETUP_API_KEY;
 
     // Default search criterias
@@ -26,8 +25,6 @@ public class Constants {
     public static final String MAIN_KEY = "mainKey";
     public static final String MEETUP_MAIN_KEY = "meetupMainKey";
     public static final String GITHUB_MAIN_KEY = "gitHubMainKey";
-    public static final String KEY_GROUP_URL = "keyGroupUrl";
-    public static final String KEY_EVENT_ID = "keyEventId";
 
     // Fragment tags
     public static final String TAG_EVENT_DETAILS_FRAGMENT = "meetupEventDetailsFragment";

@@ -17,26 +17,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import com.example.dailyupdate.R
 import com.example.dailyupdate.ui.fragments.GitHubMainFragment
-import com.example.dailyupdate.ui.fragments.MeetupMainFragment
-import com.example.dailyupdate.ui.fragments.MeetupMainFragment.MeetupMainFragmentListener
 import com.example.dailyupdate.ui.fragments.dialogs.GitHubDialogFragment
 import com.example.dailyupdate.ui.fragments.dialogs.GitHubDialogFragment.GitHubDialogListener
-import com.example.dailyupdate.ui.fragments.dialogs.MeetupDetailsFragment
-import com.example.dailyupdate.ui.fragments.dialogs.MeetupDetailsFragment.MeetupDetailsFragmentListener
-import com.example.dailyupdate.ui.fragments.dialogs.MeetupDialogFragment
-import com.example.dailyupdate.ui.fragments.dialogs.MeetupDialogFragment.MeetupDialogListener
 import com.example.dailyupdate.utilities.Constants
-import com.example.dailyupdate.viewmodels.BookmarksDatabaseViewModel
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.main_appbar_layout.*
 import kotlinx.android.synthetic.main.main_drawer.*
 
 class MainViewActivity :
         AppCompatActivity(),
-        MeetupDialogListener,
-        GitHubDialogListener,
-        MeetupMainFragmentListener,
-        MeetupDetailsFragmentListener {
+        GitHubDialogListener{
 
     private var mainViewOption: String? = null
     private var sharedPref: SharedPreferences? = null
@@ -75,23 +65,24 @@ class MainViewActivity :
      * Decide which fragment or dialog to display from this activity.
      */
     private fun openDialogOrFragment(savedInstanceState: Bundle?) {
-        if (mainViewOption == Constants.MEETUP_MAIN_KEY) {
-            supportActionBar?.title = applicationContext.getString(R.string.meetup_search_title)
-            ViewModelProvider(this@MainViewActivity).get(BookmarksDatabaseViewModel::class.java)
-            sharedPrefMeetupSearchKeyword = sharedPref!!.getString(getString(R.string.pref_meetup_edittext_key), "")
-            // If the search keyword is empty, display the search dialog
-            if (sharedPrefMeetupSearchKeyword!!.isNotEmpty()) {
-                // If the savedInstanceState is not null, the previous fragment will restore
-                // itself automatically, so do not add another one on top
-                if (savedInstanceState == null) {
-                    supportFragmentManager.beginTransaction()
-                            .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                            .replace(R.id.fragment_container, MeetupMainFragment.newInstance()).commit()
-                }
-            } else {
-                getSearchDialog()
-            }
-        } else if (mainViewOption == Constants.GITHUB_MAIN_KEY) {
+//        if (mainViewOption == Constants.MEETUP_MAIN_KEY) {
+//            supportActionBar?.title = applicationContext.getString(R.string.meetup_search_title)
+//            ViewModelProvider(this@MainViewActivity).get(BookmarksDatabaseViewModel::class.java)
+//            sharedPrefMeetupSearchKeyword = sharedPref!!.getString(getString(R.string.pref_meetup_edittext_key), "")
+//            // If the search keyword is empty, display the search dialog
+//            if (sharedPrefMeetupSearchKeyword!!.isNotEmpty()) {
+//                // If the savedInstanceState is not null, the previous fragment will restore
+//                // itself automatically, so do not add another one on top
+//                if (savedInstanceState == null) {
+//                    supportFragmentManager.beginTransaction()
+//                            .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+//                            .replace(R.id.fragment_container, MeetupMainFragment.newInstance()).commit()
+//                }
+//            } else {
+//                getSearchDialog()
+//            }
+//        } else
+            if (mainViewOption == Constants.GITHUB_MAIN_KEY) {
             supportActionBar?.title = applicationContext.getString(R.string.github_search_title)
             sharedPrefGitHubSearchKeyword = sharedPref!!.getString(getString(R.string.pref_github_edittext_key), "")
             if (sharedPrefGitHubSearchKeyword!!.isNotEmpty()) {
@@ -159,11 +150,11 @@ class MainViewActivity :
                 putString(Constants.KEY_MEETUP_DIALOG_LOCATION, meetupDialogLatestLocation)
             }
 
-            MeetupDialogFragment().apply {
-                arguments = args
-                enterTransition = R.anim.fade_in
-                exitTransition = R.anim.fade_out
-            }.show(supportFragmentManager, "meetup_search")
+//            MeetupDialogFragment().apply {
+//                arguments = args
+//                enterTransition = R.anim.fade_in
+//                exitTransition = R.anim.fade_out
+//            }.show(supportFragmentManager, "meetup_search")
 
         } else if (mainViewOption == Constants.GITHUB_MAIN_KEY) {
             val args = Bundle().apply {
@@ -184,34 +175,34 @@ class MainViewActivity :
      * Callback from MeetupDialogFragment (Meetup events search dialog) to display the result of the
      * inputted search after the user clicked on the "Search" button.
      */
-    override fun onMeetupDialogPositiveClick(dialog: DialogFragment) {
-        sharedPrefMeetupSearchKeyword = sharedPref!!.getString(getString(R.string.pref_meetup_edittext_key), "")
-        if (sharedPrefMeetupSearchKeyword!!.isNotEmpty()) {
-            supportFragmentManager.beginTransaction()
-                    .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                    .replace(R.id.fragment_container, MeetupMainFragment.newInstance()).commit()
-        } else {
-            setEmptyView()
-            Toast.makeText(this, getString(R.string.mainview_toast_empty_search),
-                    Toast.LENGTH_LONG).show()
-        }
-    }
+//    override fun onMeetupDialogPositiveClick(dialog: DialogFragment) {
+//        sharedPrefMeetupSearchKeyword = sharedPref!!.getString(getString(R.string.pref_meetup_edittext_key), "")
+//        if (sharedPrefMeetupSearchKeyword!!.isNotEmpty()) {
+//            supportFragmentManager.beginTransaction()
+//                    .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+//                    .replace(R.id.fragment_container, MeetupMainFragment.newInstance()).commit()
+//        } else {
+//            setEmptyView()
+//            Toast.makeText(this, getString(R.string.mainview_toast_empty_search),
+//                    Toast.LENGTH_LONG).show()
+//        }
+//    }
 
-    override fun onMeetupDialogNegativeClick(dialog: DialogFragment) {
-        setEmptyView()
-        Toast.makeText(this, getString(R.string.mainview_toast_empty_search),
-                Toast.LENGTH_LONG).show()
-    }
+//    override fun onMeetupDialogNegativeClick(dialog: DialogFragment) {
+//        setEmptyView()
+//        Toast.makeText(this, getString(R.string.mainview_toast_empty_search),
+//                Toast.LENGTH_LONG).show()
+//    }
 
     /**
      * Callback from the Meetup event search dialog, sending the user latest input before
      * the dialog was destroyed.
      */
-    override fun restoreMeetupDialogState(bundle: Bundle) {
-        meetupDialogLatestSearchKeyword = bundle.getString(Constants.KEY_MEETUP_DIALOG_SEARCH_KEYWORD)
-        meetupDialogLatestSortBy = bundle.getString(Constants.KEY_MEETUP_DIALOG_SORT)
-        meetupDialogLatestLocation = bundle.getString(Constants.KEY_MEETUP_DIALOG_LOCATION)
-    }
+//    override fun restoreMeetupDialogState(bundle: Bundle) {
+//        meetupDialogLatestSearchKeyword = bundle.getString(Constants.KEY_MEETUP_DIALOG_SEARCH_KEYWORD)
+//        meetupDialogLatestSortBy = bundle.getString(Constants.KEY_MEETUP_DIALOG_SORT)
+//        meetupDialogLatestLocation = bundle.getString(Constants.KEY_MEETUP_DIALOG_LOCATION)
+//    }
 
     /**
      * Callback from GitHubDialogFragment (GitHub search dialog) to display the result of the
@@ -251,23 +242,23 @@ class MainViewActivity :
      * to open the details of a selected event in a dialog.
      * Check if the fragment is already displayed just in case.
      */
-    override fun currentEventInfo(groupUrl: String, eventId: String) {
-        val originalFragment =
-                supportFragmentManager.findFragmentByTag(Constants.TAG_EVENT_DETAILS_FRAGMENT) as MeetupDetailsFragment?
-        originalFragment?.dismiss()
-
-        MeetupDetailsFragment.newInstance(groupUrl, eventId).apply {
-            setHasOptionsMenu(true)
-            setMenuVisibility(true)
-            setStyle(DialogFragment.STYLE_NORMAL, R.style.Dialog_FullScreen)
-        }.show(supportFragmentManager, Constants.TAG_EVENT_DETAILS_FRAGMENT)
-    }
+//    override fun currentEventInfo(groupUrl: String, eventId: String) {
+//        val originalFragment =
+//                supportFragmentManager.findFragmentByTag(Constants.TAG_EVENT_DETAILS_FRAGMENT) as MeetupDetailsFragment?
+//        originalFragment?.dismiss()
+//
+//        MeetupDetailsFragment.newInstance(groupUrl, eventId).apply {
+//            setHasOptionsMenu(true)
+//            setMenuVisibility(true)
+//            setStyle(DialogFragment.STYLE_NORMAL, R.style.Dialog_FullScreen)
+//        }.show(supportFragmentManager, Constants.TAG_EVENT_DETAILS_FRAGMENT)
+//    }
 
     /**
      * MeetupDetailsFragment callback used for the BookmarksActivity, where there is a
      * possibility that the fragment gets displayed twice due to the widget.
      */
-    override fun closedFragmentCallback() {}
+//    override fun closedFragmentCallback() {}
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.search_menu, menu)
@@ -309,22 +300,15 @@ class MainViewActivity :
         when (menuItem.itemId) {
             R.id.nav_home -> NavUtils.navigateUpFromSameTask(this)
             R.id.nav_bookmarks -> {
-                val bookmarkIntent = Intent(this, BookmarksActivity::class.java)
-                val bundle = ActivityOptions.makeSceneTransitionAnimation(this).toBundle()
-                startActivity(bookmarkIntent, bundle)
+//                val bookmarkIntent = Intent(this, BookmarksActivity::class.java)
+//                val bundle = ActivityOptions.makeSceneTransitionAnimation(this).toBundle()
+//                startActivity(bookmarkIntent, bundle)
             }
             R.id.nav_github -> if (mainViewOption != Constants.GITHUB_MAIN_KEY) {
                 val gitHubIntent = Intent(this, MainViewActivity::class.java)
                 gitHubIntent.putExtra(Constants.MAIN_KEY, Constants.GITHUB_MAIN_KEY)
                 val bundle = ActivityOptions.makeSceneTransitionAnimation(this).toBundle()
                 startActivity(gitHubIntent, bundle)
-            }
-            R.id.nav_meetup -> if (mainViewOption != Constants.MEETUP_MAIN_KEY) {
-                val meetupIntent = Intent(this, MainViewActivity::class.java)
-                meetupIntent.putExtra(Constants.MAIN_KEY, Constants.MEETUP_MAIN_KEY)
-
-                val bundle = ActivityOptions.makeSceneTransitionAnimation(this).toBundle()
-                startActivity(meetupIntent, bundle)
             }
             else -> {
             }
