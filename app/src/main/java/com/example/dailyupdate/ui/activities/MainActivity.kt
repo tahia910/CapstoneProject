@@ -25,12 +25,12 @@ import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dailyupdate.R
-import com.example.dailyupdate.data.models.GitHubRepo
 import com.example.dailyupdate.data.models.MeetupGroup
 import com.example.dailyupdate.ui.adapters.GitHubRepoAdapter
 import com.example.dailyupdate.ui.adapters.MeetupGroupAdapter
 import com.example.dailyupdate.utilities.Constants
 import com.example.dailyupdate.utilities.NetworkUtilities
+import com.example.dailyupdate.utilities.Status
 import com.example.dailyupdate.viewmodels.GitHubViewModel
 import com.example.dailyupdate.viewmodels.MeetupViewModel
 import com.google.android.gms.ads.MobileAds
@@ -124,20 +124,28 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun subscribeGitHubObserver() {
-        gitHubViewModel.gitHubRepoList.observe(this, Observer { gitHubRepoList: List<GitHubRepo>? ->
-            if (gitHubRepoList != null) {
-                home_github_spinner.visibility = View.GONE
-                val adapter = GitHubRepoAdapter()
-                adapter.setGitHubItemList(gitHubRepoList, 1)
-                home_github_recycler_view.adapter = adapter
+        gitHubViewModel.gitHubRepoList.observe(this, Observer {
+            when (it?.status) {
+                Status.SUCCESS -> {
+                    if (it.data != null) {
+                        home_github_spinner.visibility = View.GONE
+                        val adapter = GitHubRepoAdapter()
+                        adapter.setGitHubItemList(it.data, 1)
+                        home_github_recycler_view.adapter = adapter
 
-                // If there was a screen rotation, restore the previous position
-                if (gitHubRecyclerViewLastPosition != 0) {
-                    if (gitHubRecyclerViewOption == 1) {
-                        (home_github_recycler_view.layoutManager as LinearLayoutManager?)!!.scrollToPosition(gitHubRecyclerViewLastPosition)
-                    } else {
-                        (home_github_recycler_view.layoutManager as GridLayoutManager?)!!.scrollToPosition(gitHubRecyclerViewLastPosition)
+                        // If there was a screen rotation, restore the previous position
+                        if (gitHubRecyclerViewLastPosition != 0) {
+                            if (gitHubRecyclerViewOption == 1) {
+                                (home_github_recycler_view.layoutManager as LinearLayoutManager?)!!.scrollToPosition(gitHubRecyclerViewLastPosition)
+                            } else {
+                                (home_github_recycler_view.layoutManager as GridLayoutManager?)!!.scrollToPosition(gitHubRecyclerViewLastPosition)
+                            }
+                        }
                     }
+                }
+                Status.LOADING -> {
+                }
+                Status.ERROR -> {
                 }
             }
         })

@@ -14,6 +14,7 @@ import com.example.dailyupdate.R
 import com.example.dailyupdate.ui.adapters.GitHubRepoAdapter
 import com.example.dailyupdate.utilities.Constants
 import com.example.dailyupdate.utilities.NetworkUtilities
+import com.example.dailyupdate.utilities.Status
 import com.example.dailyupdate.viewmodels.GitHubViewModel
 import kotlinx.android.synthetic.main.main_layout.*
 
@@ -86,27 +87,35 @@ class GitHubMainFragment : Fragment() {
     }
 
     private fun subscribeGitHubObserver() {
-        gitHubViewModel.gitHubRepoList.observe(viewLifecycleOwner, Observer { gitHubRepoList ->
-            main_spinner.visibility = View.GONE
-            if (gitHubRepoList != null) {
-                val adapter = GitHubRepoAdapter()
-                adapter.setGitHubItemList(gitHubRepoList, 2)
-                main_recycler_view.adapter = adapter
+        gitHubViewModel.gitHubRepoList.observe(viewLifecycleOwner, Observer {
+            when (it.status) {
+                Status.SUCCESS -> {
+                    main_spinner.visibility = View.GONE
+                    if (it.data != null) {
+                        val adapter = GitHubRepoAdapter()
+                        adapter.setGitHubItemList(it.data, 2)
+                        main_recycler_view.adapter = adapter
 
-                // If there was a screen rotation, restore the previous position
-                if (recyclerViewLastPosition != 0) {
-                    (main_recycler_view.layoutManager as LinearLayoutManager).scrollToPosition(recyclerViewLastPosition)
-                }
+                        // If there was a screen rotation, restore the previous position
+                        if (recyclerViewLastPosition != 0) {
+                            (main_recycler_view.layoutManager as LinearLayoutManager).scrollToPosition(recyclerViewLastPosition)
+                        }
 
-                // Set the swipe action to refresh the search
-                main_swipe_refresh_layout.setOnRefreshListener {
-                    gitHubViewModel.searchGitHubRepoList(searchKeyword, sortBy, searchOrder)
-                    main_swipe_refresh_layout.isRefreshing = false
+                        // Set the swipe action to refresh the search
+                        main_swipe_refresh_layout.setOnRefreshListener {
+                            gitHubViewModel.searchGitHubRepoList(searchKeyword, sortBy, searchOrder)
+                            main_swipe_refresh_layout.isRefreshing = false
+                        }
+                    } else {
+                        main_recycler_view.visibility = View.INVISIBLE
+                        main_emptyview.visibility = View.VISIBLE
+                        main_emptyview.text = getString(R.string.github_error_message)
+                    }
                 }
-            } else {
-                main_recycler_view.visibility = View.INVISIBLE
-                main_emptyview.visibility = View.VISIBLE
-                main_emptyview.text = getString(R.string.github_error_message)
+                Status.LOADING -> {
+                }
+                Status.ERROR -> {
+                }
             }
         })
     }
